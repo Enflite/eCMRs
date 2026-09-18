@@ -20,6 +20,25 @@ TABLE_NAME = "ue_ecmrs"  # confirmed from the real ToExcel export, not "ue_ecmr"
 # MaintainFromSpec in the form XML instead, mimicking the real JobOrders form's own Job
 # field exactly. See generate_form.py.
 
+# Custom Property Class name for each fixed-value-list property - QCPriorityType (reusing a
+# real system class) came back blank in the live IDO Properties export, so these get their own.
+PROPERTY_CLASS_OVERRIDES = {
+    "status": "ue_CmrStatusType",
+    "priority": "ue_CmrPriorityType",
+    "initial_change": "ue_CmrInitialChangeType",
+}
+
+# UNCONFIRMED syntax: no real IDO Properties export seen so far (including the live
+# ToExcel_IdoProperties_3.csv) has a populated Inline List value to copy the exact delimiter
+# from - every real example checked is blank. Comma-separated is the best guess (matches the
+# plain-string convention used elsewhere in this same CSV format). If Application Studio
+# rejects this on import, the error message will show the expected real format directly.
+INLINE_LISTS = {
+    "status": "CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval",
+    "priority": "High,Medium,Low",
+    "initial_change": "Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver)",
+}
+
 HEADER = ["DevelopmentFlagGridCol", "Property Name", "IDO Name", "Property Class",
           "Column Table Alias", "Table Name", "Property Type", "Column Name", "Description",
           "Sequence", "Pseudo Key", "Data Type", "Length", "Display Decimal Position",
@@ -45,9 +64,11 @@ def build_row(seq, col, pname, dtype, length, decimal, coldtype, labelid, requir
     # generate_schema_csv.py's COLDTYPE_OVERRIDES for why (and job_num's specific case).
     default_value = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""
     col_data_type = COLDTYPE_OVERRIDES.get(col, dtype)
+    property_class = PROPERTY_CLASS_OVERRIDES.get(col, "")
+    inline_list = INLINE_LISTS.get(col, "")
     fields = [
-        "1", pname, IDO_NAME, "", TABLE_ALIAS, TABLE_NAME, "Bound to Column", col, desc,
-        str(seq), "0", dtype, length, "", default_value, col_data_type, "", "", required, readonly,
+        "1", pname, IDO_NAME, property_class, TABLE_ALIAS, TABLE_NAME, "Bound to Column", col, desc,
+        str(seq), "0", dtype, length, "", default_value, col_data_type, inline_list, "", required, readonly,
         "", "", "", labelid, "", "", "", "", "", "", "", "", decimal, readonly, "", "", "", "", "",
     ]
     return "\t".join(q(i, v) for i, v in enumerate(fields))
