@@ -26,7 +26,7 @@ AUTO_GENERATED_COLUMNS = {"created_by", "create_date"}
 
 # bind_to, property_name, data_type, length, decimal, column_data_type, label_string_id, required, readonly, description
 FIELDS = [
-    ("cmr_num", "CmrNum", "NumSortedString", "10", "", "QCChangeMaterialRequestNum", "", "", "", "CMR number, key, auto-generated via AUTONUMBER on the table. Real system convention (confirmed on the real QC_CMRs form's own CmrNum field, PropertyClassName QCChangeMaterialRequestNum, DATATYPE(NUMSORTCHAR) LENGTH(10)) - it's a sortable numeric STRING, not a true integer."),
+    ("cmr_num", "CmrNum", "NumSortedString", "10", "", "", "", "", "", "CMR number, key, auto-generated via AUTONUMBER on the table. Kept as nvarchar/NumSortedString (not a true int) - both QCSeq and QCInteger came back invalid Data Types in this environment's picker, and changing the SQL column's own type hit a DF_ue_ecmrs_cmr_num default-constraint dependency error. Stored as digits in a string column, AUTONUMBER(STEP(1)) still gives sequential, unique values starting at 1 - the actual requirement - without fighting either problem."),
     ("status", "Status", "String", "40", "", "char", "sStatus", "", "", "Overall CMR status. Fixed value list not yet confirmed - Inline List can be added once real values are decided."),
     ("workflow_status", "WorkflowStatus", "String", "40", "", "char", "", "", "", "Workflow status. Fixed value list not yet confirmed."),
     ("priority", "Priority", "String", "12", "", "QCPriorityType", "sPriority", "", "", "Reuses the system's own QCPriorityType - gives real High/Medium/Low validation without a custom Inline List."),
@@ -106,7 +106,9 @@ def main():
         w = csv.writer(fh)
         w.writerow(TABLE_HEADER)
         for (col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc) in FIELDS:
-            table_type = "Integer" if dtype == "Integer" else ("Bit" if dtype == "Byte" else ("String" if dtype == "NumSortedString" else dtype))
+            table_type = ("int" if dtype in ("Integer", "Long Integer") else
+                          ("Bit" if dtype == "Byte" else
+                           ("String" if dtype == "NumSortedString" else dtype)))
             pk = "Y" if col == "cmr_num" else "N"
             nullable = "No" if col == "cmr_num" else "Yes"
             default = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""

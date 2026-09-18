@@ -16,6 +16,7 @@ TABLE_NAME = "ue_ecmrs"
 
 SYSTEM_TYPE = {
     "Integer": "int",
+    "Long Integer": "int",
     "String": "nvarchar",
     "Byte": "tinyint",
     "Date": "datetime",
