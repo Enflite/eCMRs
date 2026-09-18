@@ -1,0 +1,72 @@
+Column Name,Data Type,Length,Decimal Places,Nullable,Primary Key,Default Value,Description
+cmr_num,Integer,,,No,Y,AUTONUMBER(STEP(1)),"CMR number, key, auto-generated."
+status,String,20,,Yes,N,,Overall CMR status. Fixed value list not yet confirmed.
+workflow_status,String,30,,Yes,N,,Workflow status. Fixed value list not yet confirmed.
+create_date,DateTime,,,No,N,NOW(),Set once at creation.
+created_by,String,30,,No,N,,Set once at creation.
+priority,String,10,,No,N,,High/Medium/Low expected - confirm exact list.
+item,String,30,,Yes,N,,
+item_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
+wc,String,10,,Yes,N,,
+wc_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
+dept,String,10,,Yes,N,,
+dept_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
+initial_change,String,20,,Yes,N,,Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver). Drives the Requirements cascade.
+additional_changes,Text,,,Yes,N,,Long/growing note.
+requested_action,Text,,,Yes,N,,
+general_note,Text,,,Yes,N,,
+revision,String,10,,Yes,N,,Drawing Revision.
+latest_revision,String,10,,Yes,N,,
+next_assy_item,String,30,,Yes,N,,Next Level Assembly item.
+next_assy_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
+vendor,String,15,,Yes,N,,
+vendor_name,String,60,,Yes,N,,"Read-only display, populated by lookup."
+qty,Decimal,,4,Yes,N,,
+job_num,String,15,,Yes,N,,"Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."
+po_num,String,15,,Yes,N,,
+po_line,String,10,,Yes,N,,
+rfq_num,String,15,,Yes,N,,
+eo_num,String,15,,Yes,N,,
+mdl,String,40,,Yes,N,,
+poc,String,60,,Yes,N,,"Point of contact, free text."
+req_costing,Boolean,,,No,N,False,Cascades off initial_change.
+cost_review_complete,Boolean,,,No,N,False,
+req_documentation,Boolean,,,No,N,False,Cascades off initial_change.
+documentation_review_complete,Boolean,,,No,N,False,
+req_tool_machine,Boolean,,,No,N,False,Cascades off initial_change.
+machinery_review_complete,Boolean,,,No,N,False,
+req_process,Boolean,,,No,N,False,Cascades off initial_change.
+process_review_complete,Boolean,,,No,N,False,
+req_material,Boolean,,,No,N,False,Cascades off initial_change.
+material_review_complete,Boolean,,,No,N,False,
+general_review_complete,Boolean,,,No,N,False,
+sox_impacted,Boolean,,,No,N,False,"Sarbanes-Oxley impact flag, standalone (not part of the 5-category cascade)."
+hold_on_po,Boolean,,,No,N,False,
+auth_supplier_ship,Boolean,,,No,N,False,
+qc_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
+eng_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
+assigned_empnum,String,10,,Yes,N,,
+assigned_username,String,30,,Yes,N,,"Read-only display, auto-populated when assigned_empnum is selected."
+assigned_buyer,String,30,,Yes,N,,
+qc_reviewer_empnum,String,10,,Yes,N,,
+qc_reviewer_username,String,30,,Yes,N,,"Read-only display, auto-populated when qc_reviewer_empnum is selected."
+eng_reviewer_empnum,String,10,,Yes,N,,
+eng_reviewer_username,String,30,,Yes,N,,"Read-only display, auto-populated when eng_reviewer_empnum is selected."
+planning_reviewer_empnum,String,10,,Yes,N,,
+planning_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when planning_reviewer_empnum is selected."
+planning_complete,Boolean,,,No,N,False,
+purchasing_reviewer_empnum,String,10,,Yes,N,,
+purchasing_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when purchasing_reviewer_empnum is selected."
+purchasing_complete,Boolean,,,No,N,False,
+cm_reviewer_empnum,String,10,,Yes,N,,
+cm_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when cm_reviewer_empnum is selected."
+cm_complete,Boolean,,,No,N,False,
+due_date,Date,,,Yes,N,,
+internal_review_date,Date,,,Yes,N,,
+close_date,Date,,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
+closed_by,String,30,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
+general_close_date,Date,,,Yes,N,,Purpose unclear vs. close_date - confirm before relying on it.
+general_closed_by,String,30,,Yes,N,,Same caveat as general_close_date.
+qc_rca_notes,Text,,,Yes,N,,"Root cause analysis notes, QC."
+eng_rca_notes,Text,,,Yes,N,,"Root cause analysis notes, Engineering."
+closed,Boolean,,,No,N,False,Enable gated by all req_*/*_review_complete pairs matching - see cew_Closed in the form.
