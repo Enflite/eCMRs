@@ -284,7 +284,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,64,128]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>eCMRs — Change Management Request</EffectiveCaption>
             </Component>
             <Component Name="hdr_CMR_DETAILS">
@@ -305,7 +305,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>CMR DETAILS</EffectiveCaption>
             </Component>
             <Component Name="l_cmr_num">
@@ -764,6 +764,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>UpdateItemDescription</SelectionEvent>
                <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -849,6 +850,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>UpdateWcDescription</SelectionEvent>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -934,6 +936,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>UpdateDeptDescription</SelectionEvent>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1103,6 +1106,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.NextAssyItem</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>UpdateNextAssyDescription</SelectionEvent>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1229,6 +1233,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Vendor</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>UpdateVendorName</SelectionEvent>
                <ComboListSource>STDOLE SLVendors( PROPERTIES(VendNum, Name) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1864,7 +1869,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>QUALITY</EffectiveCaption>
             </Component>
             <Component Name="c_req_costing">
@@ -2349,7 +2354,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>ENGINEERING</EffectiveCaption>
             </Component>
             <Component Name="l_eng_disposition">
@@ -2540,7 +2545,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>IMPLEMENTATION</EffectiveCaption>
             </Component>
             <Component Name="l_assigned_empnum">
@@ -3023,6 +3028,26 @@ Inherits GlobalScript
 End Class
 End Namespace
 )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateItemDescription" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLItems( READMODE(UNCOMMITTED) DISTINCT() FILTER(Item= FP(Item))  MOV()  SONON() SETP(ItemDescription=Description) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateWcDescription" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLWcs( READMODE(UNCOMMITTED) DISTINCT() FILTER(Wc= FP(Wc))  MOV()  SONON() SETP(WcDescription=Description) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateDeptDescription" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLDepts( READMODE(UNCOMMITTED) DISTINCT() FILTER(Dept= FP(Dept))  MOV()  SONON() SETP(DeptDescription=Description) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateVendorName" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLVendors( READMODE(UNCOMMITTED) DISTINCT() FILTER(VendNum= FP(Vendor))  MOV()  SONON() SETP(VendorName=Name) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateNextAssyDescription" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLItems( READMODE(UNCOMMITTED) DISTINCT() FILTER(Item= FP(NextAssyItem))  MOV()  SONON() SETP(NextAssyDescription=Description) )</Response>
             </EventHandler>
             <EventHandler Name="UpdateAssignedUsername" Sequence="0">
                <ResponseType>49</ResponseType>

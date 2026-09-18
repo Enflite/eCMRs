@@ -115,13 +115,23 @@ GRID_COLUMNS = [
 ]
 PANE_ZERO_SIZE = 40.25
 
-EMPLOYEE_LOOKUP_EVENTS = [
-    ("assigned_empnum", "assigned_username", "Username", "UpdateAssignedUsername"),
-    ("qc_reviewer_empnum", "qc_reviewer_username", "Username", "UpdateQCReviewerUsername"),
-    ("eng_reviewer_empnum", "eng_reviewer_username", "Username", "UpdateEngReviewerUsername"),
-    ("planning_reviewer_empnum", "planning_reviewer_name", "Name", "UpdatePlanningReviewerName"),
-    ("purchasing_reviewer_empnum", "purchasing_reviewer_name", "Name", "UpdatePurchasingReviewerName"),
-    ("cm_reviewer_empnum", "cm_reviewer_name", "Name", "UpdateCMReviewerName"),
+# (trigger_column, display_column, event_name, SL_table, filter_property, source_property)
+# Confirmed real patterns: item/next_assy_item/vendor match the legacy form's own
+# UpdateDescriptionNextAssy/UpdateVendorDescription handlers exactly (just adapted to our
+# property names). wc/dept are inferred from the same STDOLE table already used in their
+# own ComboListSource, which already carries a Description property.
+LOOKUP_EVENTS = [
+    ("item", "item_description", "UpdateItemDescription", "SLItems", "Item", "Description"),
+    ("wc", "wc_description", "UpdateWcDescription", "SLWcs", "Wc", "Description"),
+    ("dept", "dept_description", "UpdateDeptDescription", "SLDepts", "Dept", "Description"),
+    ("vendor", "vendor_name", "UpdateVendorName", "SLVendors", "VendNum", "Name"),
+    ("next_assy_item", "next_assy_description", "UpdateNextAssyDescription", "SLItems", "Item", "Description"),
+    ("assigned_empnum", "assigned_username", "UpdateAssignedUsername", "SLEmployees", "EmpNum", "Username"),
+    ("qc_reviewer_empnum", "qc_reviewer_username", "UpdateQCReviewerUsername", "SLEmployees", "EmpNum", "Username"),
+    ("eng_reviewer_empnum", "eng_reviewer_username", "UpdateEngReviewerUsername", "SLEmployees", "EmpNum", "Username"),
+    ("planning_reviewer_empnum", "planning_reviewer_name", "UpdatePlanningReviewerName", "SLEmployees", "EmpNum", "Name"),
+    ("purchasing_reviewer_empnum", "purchasing_reviewer_name", "UpdatePurchasingReviewerName", "SLEmployees", "EmpNum", "Name"),
+    ("cm_reviewer_empnum", "cm_reviewer_name", "UpdateCMReviewerName", "SLEmployees", "EmpNum", "Name"),
 ]
 
 _tab = [0]
@@ -178,8 +188,8 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4):
     lines.append("               <Binding>1</Binding>")
     if ctype == TYPE_CHECKBOX and column == "closed":
         lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
-    if column in [e[0] for e in EMPLOYEE_LOOKUP_EVENTS]:
-        ev = [e[3] for e in EMPLOYEE_LOOKUP_EVENTS if e[0] == column][0]
+    if column in [e[0] for e in LOOKUP_EVENTS]:
+        ev = [e[2] for e in LOOKUP_EVENTS if e[0] == column][0]
         lines.append(f"               <SelectionEvent>{ev}</SelectionEvent>")
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
@@ -256,7 +266,7 @@ def emit_header(text, y):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>{esc(text)}</EffectiveCaption>
             </Component>
 """
@@ -280,7 +290,7 @@ def emit_title(text, y):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,64,128]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>{esc(text)}</EffectiveCaption>
             </Component>
 """
@@ -403,10 +413,10 @@ End Namespace
             </EventHandler>
 """
 
-for empnum_col, display_col, prop, event_name in EMPLOYEE_LOOKUP_EVENTS:
+for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in LOOKUP_EVENTS:
     EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP({PROP[empnum_col]}))  MOV()  SONON() SETP({PROP[display_col]}={prop}) )</Response>
+               <Response>{sl_table}( READMODE(UNCOMMITTED) DISTINCT() FILTER({filter_prop}= FP({PROP[trigger_col]}))  MOV()  SONON() SETP({PROP[display_col]}={source_prop}) )</Response>
             </EventHandler>
 """
 
