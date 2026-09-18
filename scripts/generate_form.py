@@ -46,23 +46,28 @@ LAYOUT = [
     (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
 
-    (HEADER, "PRIORITY / ITEM / CHANGE"),
-    (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Item:", "item", TYPE_COMBO, SL_ITEMS)),
-    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
-    (PAIR, f("WC Description:", "wc_description", TYPE_EDIT, readonly=True), f("Dept:", "dept", TYPE_COMBO, SL_DEPTS)),
-    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True), f("Initial Change:", "initial_change", TYPE_COMBO)),
+    (HEADER, "CHANGE DETAILS"),
+    (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Additional Changes:", "additional_changes", TYPE_MULTILINE)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (SPAN, f("General Note:", "general_note", TYPE_MULTILINE)),
+
+    (HEADER, "ITEM DETAILS"),
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
+
+    (HEADER, "SOURCING / PURCHASING"),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Qty:", "qty", TYPE_EDIT), f("Job Num:", "job_num", TYPE_EDIT)),
+    (PAIR, f("Job Num:", "job_num", TYPE_EDIT), None),
     (PAIR, f("PO Num:", "po_num", TYPE_EDIT), f("PO Line:", "po_line", TYPE_EDIT)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
 
-    (HEADER, "REQUIREMENTS / REVIEW COMPLETE"),
+    (HEADER, "QUALITY"),
     (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Costing Review Complete", "cost_review_complete", TYPE_CHECKBOX, readonly=True)),
     (PAIR, f("Req: Documentation", "req_documentation", TYPE_CHECKBOX), f("Documentation Review Complete", "documentation_review_complete", TYPE_CHECKBOX, readonly=True)),
     (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Tool/Machine Review Complete", "machinery_review_complete", TYPE_CHECKBOX, readonly=True)),
@@ -70,15 +75,18 @@ LAYOUT = [
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), f("Material Review Complete", "material_review_complete", TYPE_CHECKBOX, readonly=True)),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
+    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_EDIT), None),
+    (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT, readonly=True)),
+    (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
-    (HEADER, "DISPOSITION"),
-    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_EDIT), f("Engineering Disposition:", "eng_disposition", TYPE_EDIT)),
+    (HEADER, "ENGINEERING"),
+    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_EDIT), None),
+    (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT, readonly=True)),
+    (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
-    (HEADER, "ASSIGNMENT / REVIEWERS"),
+    (HEADER, "IMPLEMENTATION"),
     (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT, readonly=True)),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
-    (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT, readonly=True)),
     (PAIR, f("Planning Reviewer:", "planning_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Planning Reviewer Name:", "planning_reviewer_name", TYPE_EDIT, readonly=True)),
     (PAIR, f("Planning Complete", "planning_complete", TYPE_CHECKBOX), None),
     (PAIR, f("Purchasing Reviewer:", "purchasing_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Purchasing Reviewer Name:", "purchasing_reviewer_name", TYPE_EDIT, readonly=True)),
@@ -86,18 +94,29 @@ LAYOUT = [
     (PAIR, f("CM Reviewer:", "cm_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("CM Reviewer Name:", "cm_reviewer_name", TYPE_EDIT, readonly=True)),
     (PAIR, f("CM Complete", "cm_complete", TYPE_CHECKBOX), None),
 
-    (HEADER, "DATES"),
+    (HEADER, "DATES / CLOSE"),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("General Close Date:", "general_close_date", TYPE_DATE), f("General Closed By:", "general_closed_by", TYPE_EDIT)),
-
-    (HEADER, "NOTES"),
-    (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
-    (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
-
-    (HEADER, "CLOSE"),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 ]
+
+# Grid pane (left side) - a master-list overview of multiple records at once, matching the
+# real legacy form's FormCollectionGrid. Separate coordinate space from the detail pane below,
+# scoped by ContainerName="FormCollectionGrid" and sized via the Form's own PaneZeroSize.
+GRID_COLUMNS = [
+    ("cmr_num", "CMR Num", 10),
+    ("status", "Status", 14),
+    ("priority", "Priority", 10),
+    ("item", "Item", 14),
+    ("dept", "Dept", 10),
+    ("wc", "WC", 10),
+    ("created_by", "Created By", 14),
+    ("create_date", "Create Date", 14),
+    ("due_date", "Due Date", 14),
+    ("closed", "Closed", 8),
+]
+PANE_ZERO_SIZE = 40.25
 
 EMPLOYEE_LOOKUP_EVENTS = [
     ("assigned_empnum", "assigned_username", "Username", "UpdateAssignedUsername"),
@@ -269,6 +288,63 @@ def emit_title(text, y):
             </Component>
 """
 
+def emit_grid_pane(pane_height):
+    """Master-list grid on the left (Pane 0) - a full-height, narrow sidebar listing
+    multiple records at once, matching the real legacy form's FormCollectionGrid
+    (Height there matched the whole form's Height, Width was under half the form's
+    Width - tall and narrow, not wide and short). Uses its own local coordinate space,
+    separate from the detail pane's components, with PaneZeroSize as the splitter width."""
+    out = [f"""            <Component Name="FormCollectionGrid">
+               <DeviceID>-1</DeviceID>
+               <Type>14</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>{pane_height:.2f}</Height>
+               <ListHeight>2</ListHeight>
+               <Width>{PANE_ZERO_SIZE:.2f}</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>objects</DataSource>
+               <Binding>3</Binding>
+               <Flags>384</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <DefaultFrom>StdGrid()</DefaultFrom>
+               <Post301Format />
+            </Component>
+"""]
+    x = 0
+    for i, (column, caption, width) in enumerate(GRID_COLUMNS):
+        out.append(f"""            <Component Name="grid_{column}">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>{x}</LeftPos>
+               <Height>{pane_height:.2f}</Height>
+               <ListHeight>0</ListHeight>
+               <Width>{width}</Width>
+               <Caption>{esc(caption)}</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>{i}</ContainerSequence>
+               <DataSource>object.{PROP[column]}</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <MenuName>StdDefault</MenuName>
+               <Post301Format />
+               <EffectiveCaption>{esc(caption)}</EffectiveCaption>
+            </Component>
+""")
+        x += width
+    return "".join(out)
+
 def build_components():
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
@@ -296,7 +372,8 @@ def build_components():
             y += 5.8
     return "".join(out), y
 
-COMPONENTS_XML, TOTAL_HEIGHT = build_components()
+DETAIL_XML, TOTAL_HEIGHT = build_components()
+COMPONENTS_XML = emit_grid_pane(TOTAL_HEIGHT) + DETAIL_XML
 
 EVENT_HANDLERS = """
             <EventHandler Name="SetCloseInfo" Sequence="0">
@@ -347,7 +424,8 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <Width>100</Width>
+         <Width>140</Width>
+         <PaneZeroSize>{PANE_ZERO_SIZE:.2f}</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
          <MasterDeviceID>0</MasterDeviceID>
