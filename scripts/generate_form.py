@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 """Generates the eCMRs Form Sync XML export from the field-mapping.md field list."""
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
+from generate_schema_csv import FIELDS as _SCHEMA_FIELDS
+
+# snake_case column -> real PascalCase IDO Property Name, single source of truth
+# shared with generate_schema_csv.py so the form's object.* bindings never drift
+# out of sync with what's actually created in Application Studio.
+PROP = {col: pname for (col, pname, *_rest) in _SCHEMA_FIELDS}
+PROP["created_by"] = "CreatedBy"   # auto-generated system property, not in _SCHEMA_FIELDS
+PROP["create_date"] = "CreateDate"  # auto-generated system property, not in _SCHEMA_FIELDS
 
 TYPE_STATIC = 0
 TYPE_EDIT = 1
@@ -147,7 +158,7 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4):
     lines.append("               <MaxCharacters>0</MaxCharacters>")
     lines.append("               <ContainerName />")
     lines.append("               <ContainerSequence>0</ContainerSequence>")
-    lines.append(f"               <DataSource>object.{column}</DataSource>")
+    lines.append(f"               <DataSource>object.{PROP[column]}</DataSource>")
     lines.append("               <Binding>1</Binding>")
     if ctype == TYPE_CHECKBOX and column == "closed":
         lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
@@ -185,7 +196,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.{column}</DataSource>
+               <DataSource>object.{PROP[column]}</DataSource>
                <Binding>1</Binding>
 """
         if column == "closed":
@@ -296,7 +307,7 @@ End Namespace
 for empnum_col, display_col, prop, event_name in EMPLOYEE_LOOKUP_EVENTS:
     EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP({empnum_col}))  MOV()  SONON() SETP({display_col}={prop}) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP({PROP[empnum_col]}))  MOV()  SONON() SETP({PROP[display_col]}={prop}) )</Response>
             </EventHandler>
 """
 
@@ -321,13 +332,13 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 {EVENT_HANDLERS}         </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_ecmrs( ORDERBY(cmr_num desc) LOCKMODE(Row) )</Value>
+               <Value>ue_ecmrs( ORDERBY({PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
             </Variable>
             <Variable Name="cew_Closed">
-               <Value>Enabled:#C(c_closed), #P(req_costing) = #P(cost_review_complete) &amp; #P(req_documentation) = #P(documentation_review_complete) &amp; #P(req_tool_machine) = #P(machinery_review_complete) &amp; #P(req_process) = #P(process_review_complete) &amp; #P(req_material) = #P(material_review_complete), "True"</Value>
+               <Value>Enabled:#C(c_closed), #P({PROP['req_costing']}) = #P({PROP['cost_review_complete']}) &amp; #P({PROP['req_documentation']}) = #P({PROP['documentation_review_complete']}) &amp; #P({PROP['req_tool_machine']}) = #P({PROP['machinery_review_complete']}) &amp; #P({PROP['req_process']}) = #P({PROP['process_review_complete']}) &amp; #P({PROP['req_material']}) = #P({PROP['material_review_complete']}), "True"</Value>
                <Value2 />
                <Value3 />
                <Description />

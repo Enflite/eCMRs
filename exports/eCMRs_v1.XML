@@ -69,7 +69,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.cmr_num</DataSource>
+               <DataSource>object.CmrNum</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -111,7 +111,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.status</DataSource>
+               <DataSource>object.Status</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -153,7 +153,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.workflow_status</DataSource>
+               <DataSource>object.WorkflowStatus</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -195,7 +195,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.create_date</DataSource>
+               <DataSource>object.CreateDate</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -237,7 +237,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.created_by</DataSource>
+               <DataSource>object.CreatedBy</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -300,7 +300,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.priority</DataSource>
+               <DataSource>object.Priority</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -342,7 +342,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.item</DataSource>
+               <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
                <Flags>1</Flags>
@@ -385,7 +385,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.item_description</DataSource>
+               <DataSource>object.ItemDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -427,7 +427,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.wc</DataSource>
+               <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
                <Flags>1</Flags>
@@ -470,7 +470,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.wc_description</DataSource>
+               <DataSource>object.WcDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -512,7 +512,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.dept</DataSource>
+               <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
                <Flags>1</Flags>
@@ -555,7 +555,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.dept_description</DataSource>
+               <DataSource>object.DeptDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -597,7 +597,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.initial_change</DataSource>
+               <DataSource>object.InitialChange</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -639,7 +639,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.additional_changes</DataSource>
+               <DataSource>object.AdditionalChanges</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -681,7 +681,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.requested_action</DataSource>
+               <DataSource>object.RequestedAction</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -723,7 +723,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.general_note</DataSource>
+               <DataSource>object.GeneralNote</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -765,7 +765,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.revision</DataSource>
+               <DataSource>object.Revision</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -807,7 +807,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.latest_revision</DataSource>
+               <DataSource>object.LatestRevision</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -849,7 +849,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.next_assy_item</DataSource>
+               <DataSource>object.NextAssyItem</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -891,7 +891,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.next_assy_description</DataSource>
+               <DataSource>object.NextAssyDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -933,7 +933,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.vendor</DataSource>
+               <DataSource>object.Vendor</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLVendors( PROPERTIES(VendNum, Name) )</ComboListSource>
                <Flags>1</Flags>
@@ -976,7 +976,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.vendor_name</DataSource>
+               <DataSource>object.VendorName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1018,7 +1018,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.qty</DataSource>
+               <DataSource>object.Qty</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1060,7 +1060,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.job_num</DataSource>
+               <DataSource>object.JobNum</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1102,7 +1102,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.po_num</DataSource>
+               <DataSource>object.PoNum</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1144,7 +1144,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.po_line</DataSource>
+               <DataSource>object.PoLine</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1186,7 +1186,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.rfq_num</DataSource>
+               <DataSource>object.RfqNum</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1228,7 +1228,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.eo_num</DataSource>
+               <DataSource>object.EoNum</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1270,7 +1270,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.mdl</DataSource>
+               <DataSource>object.Mdl</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1312,7 +1312,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.poc</DataSource>
+               <DataSource>object.Poc</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1354,7 +1354,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.req_costing</DataSource>
+               <DataSource>object.ReqCosting</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1375,7 +1375,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.cost_review_complete</DataSource>
+               <DataSource>object.CostReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1396,7 +1396,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.req_documentation</DataSource>
+               <DataSource>object.ReqDocumentation</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1417,7 +1417,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.documentation_review_complete</DataSource>
+               <DataSource>object.DocumentationReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1438,7 +1438,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.req_tool_machine</DataSource>
+               <DataSource>object.ReqToolMachine</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1459,7 +1459,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.machinery_review_complete</DataSource>
+               <DataSource>object.MachineryReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1480,7 +1480,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.req_process</DataSource>
+               <DataSource>object.ReqProcess</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1501,7 +1501,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.process_review_complete</DataSource>
+               <DataSource>object.ProcessReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1522,7 +1522,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.req_material</DataSource>
+               <DataSource>object.ReqMaterial</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1543,7 +1543,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.material_review_complete</DataSource>
+               <DataSource>object.MaterialReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1564,7 +1564,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.general_review_complete</DataSource>
+               <DataSource>object.GeneralReviewComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1585,7 +1585,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.sox_impacted</DataSource>
+               <DataSource>object.SoxImpacted</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1606,7 +1606,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.hold_on_po</DataSource>
+               <DataSource>object.HoldOnPo</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1627,7 +1627,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.auth_supplier_ship</DataSource>
+               <DataSource>object.AuthSupplierShip</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1690,7 +1690,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.qc_disposition</DataSource>
+               <DataSource>object.QcDisposition</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1732,7 +1732,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.eng_disposition</DataSource>
+               <DataSource>object.EngDisposition</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1795,7 +1795,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.assigned_empnum</DataSource>
+               <DataSource>object.AssignedEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdateAssignedUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -1839,7 +1839,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.assigned_username</DataSource>
+               <DataSource>object.AssignedUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -1881,7 +1881,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.assigned_buyer</DataSource>
+               <DataSource>object.AssignedBuyer</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
@@ -1924,7 +1924,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.qc_reviewer_empnum</DataSource>
+               <DataSource>object.QcReviewerEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdateQCReviewerUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -1968,7 +1968,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.qc_reviewer_username</DataSource>
+               <DataSource>object.QcReviewerUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2010,7 +2010,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.eng_reviewer_empnum</DataSource>
+               <DataSource>object.EngReviewerEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdateEngReviewerUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -2054,7 +2054,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.eng_reviewer_username</DataSource>
+               <DataSource>object.EngReviewerUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2096,7 +2096,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.planning_reviewer_empnum</DataSource>
+               <DataSource>object.PlanningReviewerEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdatePlanningReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -2140,7 +2140,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.planning_reviewer_name</DataSource>
+               <DataSource>object.PlanningReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2161,7 +2161,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.planning_complete</DataSource>
+               <DataSource>object.PlanningComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2203,7 +2203,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.purchasing_reviewer_empnum</DataSource>
+               <DataSource>object.PurchasingReviewerEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdatePurchasingReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -2247,7 +2247,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.purchasing_reviewer_name</DataSource>
+               <DataSource>object.PurchasingReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2268,7 +2268,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.purchasing_complete</DataSource>
+               <DataSource>object.PurchasingComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2310,7 +2310,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.cm_reviewer_empnum</DataSource>
+               <DataSource>object.CmReviewerEmpNum</DataSource>
                <Binding>1</Binding>
                <SelectionEvent>UpdateCMReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
@@ -2354,7 +2354,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.cm_reviewer_name</DataSource>
+               <DataSource>object.CmReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2375,7 +2375,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.cm_complete</DataSource>
+               <DataSource>object.CmComplete</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2438,7 +2438,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.due_date</DataSource>
+               <DataSource>object.DueDate</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2480,7 +2480,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.internal_review_date</DataSource>
+               <DataSource>object.InternalReviewDate</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2522,7 +2522,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.close_date</DataSource>
+               <DataSource>object.CloseDate</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2564,7 +2564,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.closed_by</DataSource>
+               <DataSource>object.ClosedBy</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
@@ -2606,7 +2606,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.general_close_date</DataSource>
+               <DataSource>object.GeneralCloseDate</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2648,7 +2648,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.general_closed_by</DataSource>
+               <DataSource>object.GeneralClosedBy</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2711,7 +2711,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.qc_rca_notes</DataSource>
+               <DataSource>object.QcRcaNotes</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2753,7 +2753,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.eng_rca_notes</DataSource>
+               <DataSource>object.EngRcaNotes</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2795,7 +2795,7 @@
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.closed</DataSource>
+               <DataSource>object.Closed</DataSource>
                <Binding>1</Binding>
                <EventToGenerate>SetCloseInfo</EventToGenerate>
                <Flags>1</Flags>
@@ -2837,38 +2837,38 @@ End Namespace
             </EventHandler>
             <EventHandler Name="UpdateAssignedUsername" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(assigned_empnum))  MOV()  SONON() SETP(assigned_username=Username) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(AssignedEmpNum))  MOV()  SONON() SETP(AssignedUsername=Username) )</Response>
             </EventHandler>
             <EventHandler Name="UpdateQCReviewerUsername" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(qc_reviewer_empnum))  MOV()  SONON() SETP(qc_reviewer_username=Username) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(QcReviewerEmpNum))  MOV()  SONON() SETP(QcReviewerUsername=Username) )</Response>
             </EventHandler>
             <EventHandler Name="UpdateEngReviewerUsername" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(eng_reviewer_empnum))  MOV()  SONON() SETP(eng_reviewer_username=Username) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(EngReviewerEmpNum))  MOV()  SONON() SETP(EngReviewerUsername=Username) )</Response>
             </EventHandler>
             <EventHandler Name="UpdatePlanningReviewerName" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(planning_reviewer_empnum))  MOV()  SONON() SETP(planning_reviewer_name=Name) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(PlanningReviewerEmpNum))  MOV()  SONON() SETP(PlanningReviewerName=Name) )</Response>
             </EventHandler>
             <EventHandler Name="UpdatePurchasingReviewerName" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(purchasing_reviewer_empnum))  MOV()  SONON() SETP(purchasing_reviewer_name=Name) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(PurchasingReviewerEmpNum))  MOV()  SONON() SETP(PurchasingReviewerName=Name) )</Response>
             </EventHandler>
             <EventHandler Name="UpdateCMReviewerName" Sequence="0">
                <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(cm_reviewer_empnum))  MOV()  SONON() SETP(cm_reviewer_name=Name) )</Response>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(CmReviewerEmpNum))  MOV()  SONON() SETP(CmReviewerName=Name) )</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_ecmrs( ORDERBY(cmr_num desc) LOCKMODE(Row) )</Value>
+               <Value>ue_ecmrs( ORDERBY(CmrNum desc) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
             </Variable>
             <Variable Name="cew_Closed">
-               <Value>Enabled:#C(c_closed), #P(req_costing) = #P(cost_review_complete) &amp; #P(req_documentation) = #P(documentation_review_complete) &amp; #P(req_tool_machine) = #P(machinery_review_complete) &amp; #P(req_process) = #P(process_review_complete) &amp; #P(req_material) = #P(material_review_complete), "True"</Value>
+               <Value>Enabled:#C(c_closed), #P(ReqCosting) = #P(CostReviewComplete) &amp; #P(ReqDocumentation) = #P(DocumentationReviewComplete) &amp; #P(ReqToolMachine) = #P(MachineryReviewComplete) &amp; #P(ReqProcess) = #P(ProcessReviewComplete) &amp; #P(ReqMaterial) = #P(MaterialReviewComplete), "True"</Value>
                <Value2 />
                <Value3 />
                <Description />
