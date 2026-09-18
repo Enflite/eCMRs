@@ -1,70 +1,70 @@
-Bind To,Property Name,Property Class,Data Type,Length,Decimal,Column Data Type,Description
-cmr_num,CmrNum,,Integer,,,,"CMR number, key, auto-generated via AUTONUMBER on the table."
-status,Status,,String,20,,,Overall CMR status. Fixed value list not yet confirmed.
-workflow_status,WorkflowStatus,,String,30,,,Workflow status. Fixed value list not yet confirmed.
-priority,Priority,,String,10,,,High/Medium/Low expected - confirm exact list.
-item,Item,,String,30,,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
-item_description,ItemDescription,,String,60,,,"Read-only display, populated by lookup."
-wc,Wc,,String,10,,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
-wc_description,WcDescription,,String,60,,,"Read-only display, populated by lookup."
-dept,Dept,,String,10,,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
-dept_description,DeptDescription,,String,60,,,"Read-only display, populated by lookup."
-initial_change,InitialChange,,String,20,,,Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver). Drives the Requirements cascade.
-additional_changes,AdditionalChanges,,String,2000,,,Long/growing note.
-requested_action,RequestedAction,,String,2000,,,
-general_note,GeneralNote,,String,2000,,,
-revision,Revision,,String,10,,,Drawing Revision.
-latest_revision,LatestRevision,,String,10,,,
-next_assy_item,NextAssyItem,,String,30,,,STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(item)') RECORDCAP(0)) - Next Level Assembly item.
-next_assy_description,NextAssyDescription,,String,60,,,"Read-only display, populated by lookup."
-vendor,Vendor,,String,15,,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
-vendor_name,VendorName,,String,60,,,"Read-only display, populated by lookup."
-qty,Qty,,Decimal,,4,,
-job_num,JobNum,,String,15,,,"Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."
-po_num,PoNum,,String,15,,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"
-po_line,PoLine,,String,10,,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
-rfq_num,RfqNum,,String,15,,,
-eo_num,EoNum,,String,15,,,
-mdl,Mdl,,String,40,,,
-poc,Poc,,String,60,,,"Point of contact, free text."
-req_costing,ReqCosting,,Byte,,,FlagNyType,Cascades off InitialChange.
-cost_review_complete,CostReviewComplete,,Byte,,,FlagNyType,
-req_documentation,ReqDocumentation,,Byte,,,FlagNyType,Cascades off InitialChange.
-documentation_review_complete,DocumentationReviewComplete,,Byte,,,FlagNyType,
-req_tool_machine,ReqToolMachine,,Byte,,,FlagNyType,Cascades off InitialChange.
-machinery_review_complete,MachineryReviewComplete,,Byte,,,FlagNyType,
-req_process,ReqProcess,,Byte,,,FlagNyType,Cascades off InitialChange.
-process_review_complete,ProcessReviewComplete,,Byte,,,FlagNyType,
-req_material,ReqMaterial,,Byte,,,FlagNyType,Cascades off InitialChange.
-material_review_complete,MaterialReviewComplete,,Byte,,,FlagNyType,
-general_review_complete,GeneralReviewComplete,,Byte,,,FlagNyType,
-sox_impacted,SoxImpacted,,Byte,,,FlagNyType,"Standalone, not part of the 5-category cascade."
-hold_on_po,HoldOnPo,,Byte,,,FlagNyType,
-auth_supplier_ship,AuthSupplierShip,,Byte,,,FlagNyType,
-qc_disposition,QcDisposition,,String,20,,,Fixed value list not yet confirmed.
-eng_disposition,EngDisposition,,String,20,,,Fixed value list not yet confirmed.
-assigned_empnum,AssignedEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-assigned_username,AssignedUsername,,String,30,,,"Read-only display, auto-populated when AssignedEmpNum is selected."
-assigned_buyer,AssignedBuyer,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_empnum,QcReviewerEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_username,QcReviewerUsername,,String,30,,,"Read-only display, auto-populated when QcReviewerEmpNum is selected."
-eng_reviewer_empnum,EngReviewerEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-eng_reviewer_username,EngReviewerUsername,,String,30,,,"Read-only display, auto-populated when EngReviewerEmpNum is selected."
-planning_reviewer_empnum,PlanningReviewerEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-planning_reviewer_name,PlanningReviewerName,,String,60,,,"Read-only display, auto-populated when PlanningReviewerEmpNum is selected."
-planning_complete,PlanningComplete,,Byte,,,FlagNyType,
-purchasing_reviewer_empnum,PurchasingReviewerEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-purchasing_reviewer_name,PurchasingReviewerName,,String,60,,,"Read-only display, auto-populated when PurchasingReviewerEmpNum is selected."
-purchasing_complete,PurchasingComplete,,Byte,,,FlagNyType,
-cm_reviewer_empnum,CmReviewerEmpNum,,String,10,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-cm_reviewer_name,CmReviewerName,,String,60,,,"Read-only display, auto-populated when CmReviewerEmpNum is selected."
-cm_complete,CmComplete,,Byte,,,FlagNyType,
-due_date,DueDate,,DateTime,,,,
-internal_review_date,InternalReviewDate,,DateTime,,,,
-close_date,CloseDate,,DateTime,,,,"Auto-set by the Closed workflow, not user-typed."
-closed_by,ClosedBy,,String,30,,,"Auto-set by the Closed workflow, not user-typed."
-general_close_date,GeneralCloseDate,,DateTime,,,,Purpose unclear vs. CloseDate - confirm before relying on it.
-general_closed_by,GeneralClosedBy,,String,30,,,Same caveat as GeneralCloseDate.
-qc_rca_notes,QcRcaNotes,,String,2000,,,"Root cause analysis notes, QC."
-eng_rca_notes,EngRcaNotes,,String,2000,,,"Root cause analysis notes, Engineering."
-closed,Closed,,Byte,,,FlagNyType,Enable gated by every ReqX/XReviewComplete pair matching - see cew_Closed in the form.
+Bind To,Property Name,Property Class,Data Type,Length,Decimal,Column Data Type,Label String ID,Required,Read Only,Description
+cmr_num,CmrNum,,Integer,,,,,,,"CMR number, key, auto-generated via AUTONUMBER on the table."
+status,Status,,String,40,,char,sStatus,,,Overall CMR status. Fixed value list not yet confirmed - Inline List can be added once real values are decided.
+workflow_status,WorkflowStatus,,String,40,,char,,,,Workflow status. Fixed value list not yet confirmed.
+priority,Priority,,String,12,,QCPriorityType,sPriority,,,Reuses the system's own QCPriorityType - gives real High/Medium/Low validation without a custom Inline List.
+item,Item,,String,30,,ItemType,sItem,,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
+item_description,ItemDescription,,String,40,,DescriptionType,sDescription,,1,"Read-only, auto-populated by lookup."
+wc,Wc,,String,6,,WcType,sWC,,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
+wc_description,WcDescription,,String,40,,DescriptionType,sDescription,,1,"Read-only, auto-populated by lookup."
+dept,Dept,,String,6,,DeptType,sDepartment,,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
+dept_description,DeptDescription,,String,40,,DescriptionType,sDescription,,1,"Read-only, auto-populated by lookup."
+initial_change,InitialChange,,String,40,,char,,,,"Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver) - add via the Inline List '...' editor, not this import. Drives the Requirements cascade."
+additional_changes,AdditionalChanges,,String,1000,,char,sChanges,,,Long/growing note - matches RsCrcvrChangeAll's real Length/type.
+requested_action,RequestedAction,,String,1000,,QCLongCharType,sNote,,,
+general_note,GeneralNote,,String,1000,,QCLongCharType,sNote,,,
+revision,Revision,,String,8,,RevisionType,sRevision,,,Drawing Revision.
+latest_revision,LatestRevision,,String,8,,RevisionType,sRevision,,,
+next_assy_item,NextAssyItem,,String,30,,ItemType,sItem,,,STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(item)') RECORDCAP(0)) - Next Level Assembly item.
+next_assy_description,NextAssyDescription,,String,40,,DescriptionType,sDescription,,1,"Read-only, auto-populated by lookup."
+vendor,Vendor,,String,15,,char,,,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
+vendor_name,VendorName,,String,255,,LongDescType,,,1,"Read-only, auto-populated by lookup."
+qty,Qty,,Decimal,,4,,,,,
+job_num,JobNum,,String,15,,char,,,,"Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."
+po_num,PoNum,,String,15,,char,,,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"
+po_line,PoLine,,String,10,,char,,,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
+rfq_num,RfqNum,,String,15,,char,,,,
+eo_num,EoNum,,String,15,,char,,,,
+mdl,Mdl,,String,40,,char,,,,
+poc,Poc,,String,60,,char,,,,"Point of contact, free text."
+req_costing,ReqCosting,,Byte,,,ListYesNoType,,0,,Cascades off InitialChange.
+cost_review_complete,CostReviewComplete,,Byte,,,ListYesNoType,,0,,
+req_documentation,ReqDocumentation,,Byte,,,ListYesNoType,,0,,Cascades off InitialChange.
+documentation_review_complete,DocumentationReviewComplete,,Byte,,,ListYesNoType,,0,,
+req_tool_machine,ReqToolMachine,,Byte,,,ListYesNoType,,0,,Cascades off InitialChange.
+machinery_review_complete,MachineryReviewComplete,,Byte,,,ListYesNoType,,0,,
+req_process,ReqProcess,,Byte,,,ListYesNoType,,0,,Cascades off InitialChange.
+process_review_complete,ProcessReviewComplete,,Byte,,,ListYesNoType,,0,,
+req_material,ReqMaterial,,Byte,,,ListYesNoType,,0,,Cascades off InitialChange.
+material_review_complete,MaterialReviewComplete,,Byte,,,ListYesNoType,,0,,
+general_review_complete,GeneralReviewComplete,,Byte,,,ListYesNoType,,0,,
+sox_impacted,SoxImpacted,,Byte,,,ListYesNoType,sRSQCSarbanesImpact,0,,"Standalone, not part of the 5-category cascade."
+hold_on_po,HoldOnPo,,Byte,,,ListYesNoType,,0,,
+auth_supplier_ship,AuthSupplierShip,,Byte,,,ListYesNoType,,0,,
+qc_disposition,QcDisposition,,String,20,,char,,,,Fixed value list not yet confirmed.
+eng_disposition,EngDisposition,,String,20,,char,,,,Fixed value list not yet confirmed.
+assigned_empnum,AssignedEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+assigned_username,AssignedUsername,,String,128,,UsernameType,sUserName,,1,"Read-only, auto-populated when AssignedEmpNum is selected."
+assigned_buyer,AssignedBuyer,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+qc_reviewer_empnum,QcReviewerEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+qc_reviewer_username,QcReviewerUsername,,String,128,,UsernameType,sUserName,,1,"Read-only, auto-populated when QcReviewerEmpNum is selected."
+eng_reviewer_empnum,EngReviewerEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+eng_reviewer_username,EngReviewerUsername,,String,128,,UsernameType,sUserName,,1,"Read-only, auto-populated when EngReviewerEmpNum is selected."
+planning_reviewer_empnum,PlanningReviewerEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+planning_reviewer_name,PlanningReviewerName,,String,255,,LongDescType,,,1,"Read-only, auto-populated when PlanningReviewerEmpNum is selected."
+planning_complete,PlanningComplete,,Byte,,,ListYesNoType,,0,,
+purchasing_reviewer_empnum,PurchasingReviewerEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+purchasing_reviewer_name,PurchasingReviewerName,,String,255,,LongDescType,,,1,"Read-only, auto-populated when PurchasingReviewerEmpNum is selected."
+purchasing_complete,PurchasingComplete,,Byte,,,ListYesNoType,,0,,
+cm_reviewer_empnum,CmReviewerEmpNum,,NumSortedString,7,,EmpNumType,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+cm_reviewer_name,CmReviewerName,,String,255,,LongDescType,,,1,"Read-only, auto-populated when CmReviewerEmpNum is selected."
+cm_complete,CmComplete,,Byte,,,ListYesNoType,,0,,
+due_date,DueDate,,Date,,,DateType,sDate,,,
+internal_review_date,InternalReviewDate,,Date,,,DateType,sDate,,,
+close_date,CloseDate,,Date,,,DateType,sDate,,1,"Auto-set by the Closed workflow, not user-typed."
+closed_by,ClosedBy,,String,128,,UsernameType,sRSQCClosedBy,,1,"Auto-set by the Closed workflow, not user-typed."
+general_close_date,GeneralCloseDate,,Date,,,DateType,sDate,,,Purpose unclear vs. CloseDate - confirm before relying on it.
+general_closed_by,GeneralClosedBy,,NumSortedString,7,,EmpNumType,sEmployee,,,Same caveat as GeneralCloseDate.
+qc_rca_notes,QcRcaNotes,,String,1000,,QCLongCharType,sNote,,,"Root cause analysis notes, QC."
+eng_rca_notes,EngRcaNotes,,String,1000,,QCLongCharType,sNote,,,"Root cause analysis notes, Engineering."
+closed,Closed,,Byte,,,ListYesNoType,sClosed,0,,Enable gated by every ReqX/XReviewComplete pair matching - see cew_Closed in the form.

@@ -1,24 +1,24 @@
 Column Name,Data Type,Length,Decimal Places,Nullable,Primary Key,Default Value,Description
 cmr_num,Integer,,,No,Y,AUTONUMBER(STEP(1)),"CMR number, key, auto-generated via AUTONUMBER on the table."
-status,String,20,,Yes,N,,Overall CMR status. Fixed value list not yet confirmed.
-workflow_status,String,30,,Yes,N,,Workflow status. Fixed value list not yet confirmed.
-priority,String,10,,Yes,N,,High/Medium/Low expected - confirm exact list.
+status,String,40,,Yes,N,,Overall CMR status. Fixed value list not yet confirmed - Inline List can be added once real values are decided.
+workflow_status,String,40,,Yes,N,,Workflow status. Fixed value list not yet confirmed.
+priority,String,12,,Yes,N,,Reuses the system's own QCPriorityType - gives real High/Medium/Low validation without a custom Inline List.
 item,String,30,,Yes,N,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
-item_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
-wc,String,10,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
-wc_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
-dept,String,10,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
-dept_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
-initial_change,String,20,,Yes,N,,Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver). Drives the Requirements cascade.
-additional_changes,String,2000,,Yes,N,,Long/growing note.
-requested_action,String,2000,,Yes,N,,
-general_note,String,2000,,Yes,N,,
-revision,String,10,,Yes,N,,Drawing Revision.
-latest_revision,String,10,,Yes,N,,
+item_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+wc,String,6,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
+wc_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+dept,String,6,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
+dept_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+initial_change,String,40,,Yes,N,,"Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver) - add via the Inline List '...' editor, not this import. Drives the Requirements cascade."
+additional_changes,String,1000,,Yes,N,,Long/growing note - matches RsCrcvrChangeAll's real Length/type.
+requested_action,String,1000,,Yes,N,,
+general_note,String,1000,,Yes,N,,
+revision,String,8,,Yes,N,,Drawing Revision.
+latest_revision,String,8,,Yes,N,,
 next_assy_item,String,30,,Yes,N,,STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(item)') RECORDCAP(0)) - Next Level Assembly item.
-next_assy_description,String,60,,Yes,N,,"Read-only display, populated by lookup."
+next_assy_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
 vendor,String,15,,Yes,N,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
-vendor_name,String,60,,Yes,N,,"Read-only display, populated by lookup."
+vendor_name,String,255,,Yes,N,,"Read-only, auto-populated by lookup."
 qty,Decimal,,4,Yes,N,,
 job_num,String,15,,Yes,N,,"Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."
 po_num,String,15,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"
@@ -43,28 +43,28 @@ hold_on_po,Bit,,,Yes,N,,
 auth_supplier_ship,Bit,,,Yes,N,,
 qc_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
 eng_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
-assigned_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-assigned_username,String,30,,Yes,N,,"Read-only display, auto-populated when AssignedEmpNum is selected."
-assigned_buyer,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_username,String,30,,Yes,N,,"Read-only display, auto-populated when QcReviewerEmpNum is selected."
-eng_reviewer_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-eng_reviewer_username,String,30,,Yes,N,,"Read-only display, auto-populated when EngReviewerEmpNum is selected."
-planning_reviewer_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-planning_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when PlanningReviewerEmpNum is selected."
+assigned_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+assigned_username,String,128,,Yes,N,,"Read-only, auto-populated when AssignedEmpNum is selected."
+assigned_buyer,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+qc_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+qc_reviewer_username,String,128,,Yes,N,,"Read-only, auto-populated when QcReviewerEmpNum is selected."
+eng_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+eng_reviewer_username,String,128,,Yes,N,,"Read-only, auto-populated when EngReviewerEmpNum is selected."
+planning_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+planning_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when PlanningReviewerEmpNum is selected."
 planning_complete,Bit,,,Yes,N,,
-purchasing_reviewer_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-purchasing_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when PurchasingReviewerEmpNum is selected."
+purchasing_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+purchasing_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when PurchasingReviewerEmpNum is selected."
 purchasing_complete,Bit,,,Yes,N,,
-cm_reviewer_empnum,String,10,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-cm_reviewer_name,String,60,,Yes,N,,"Read-only display, auto-populated when CmReviewerEmpNum is selected."
+cm_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+cm_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when CmReviewerEmpNum is selected."
 cm_complete,Bit,,,Yes,N,,
-due_date,DateTime,,,Yes,N,,
-internal_review_date,DateTime,,,Yes,N,,
-close_date,DateTime,,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
-closed_by,String,30,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
-general_close_date,DateTime,,,Yes,N,,Purpose unclear vs. CloseDate - confirm before relying on it.
-general_closed_by,String,30,,Yes,N,,Same caveat as GeneralCloseDate.
-qc_rca_notes,String,2000,,Yes,N,,"Root cause analysis notes, QC."
-eng_rca_notes,String,2000,,Yes,N,,"Root cause analysis notes, Engineering."
+due_date,Date,,,Yes,N,,
+internal_review_date,Date,,,Yes,N,,
+close_date,Date,,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
+closed_by,String,128,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
+general_close_date,Date,,,Yes,N,,Purpose unclear vs. CloseDate - confirm before relying on it.
+general_closed_by,String,7,,Yes,N,,Same caveat as GeneralCloseDate.
+qc_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, QC."
+eng_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, Engineering."
 closed,Bit,,,Yes,N,,Enable gated by every ReqX/XReviewComplete pair matching - see cew_Closed in the form.
