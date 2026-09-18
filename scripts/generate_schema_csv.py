@@ -47,7 +47,7 @@ FIELDS = [
     ("vendor", "Vendor", "String", "15", "", "char", "", "", "", SL_VENDORS),
     ("vendor_name", "VendorName", "String", "255", "", "LongDescType", "", "", "1", "Read-only, auto-populated by lookup."),
     ("qty", "Qty", "Decimal", "", "4", "QtyUnit", "", "", "", ""),
-    ("job_num", "JobNum", "String", "15", "", "char", "", "", "", "Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."),
+    ("job_num", "JobNum", "String", "15", "", "char", "", "", "", "Real combo (SLMatltrans). The legacy leading-zero exact-match bug is fixed here via an Input Mask (AA00000000) that auto-pads the typed value to match the stored DK00084716-style format before the filter reads it - see generate_ido_import.py."),
     ("po_num", "PoNum", "String", "15", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"),
     ("po_line", "PoLine", "String", "10", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"),
     ("rfq_num", "RfqNum", "String", "15", "", "char", "", "", "", ""),
