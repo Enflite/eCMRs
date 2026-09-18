@@ -437,7 +437,11 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
       <Form Name="eCMRs" Scope="1" ScopeName="[NULL]">
          <Caption>eCMRs</Caption>
          <Type>0</Type>
-         <StandardOperations>953</StandardOperations>
+         <!-- 1019, not the legacy QC_CMRs value of 953: that legacy form deliberately disabled New
+              because record creation happened on a separate QC_CreateChangeRequest form (995).
+              This form is single-screen browse+create, so it needs New enabled - 1019 matches the
+              real JobOrders form (also single-screen full CRUD) exactly: 953 | 1019's extra bits (66). -->
+         <StandardOperations>1019</StandardOperations>
          <Flags>202</Flags>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
