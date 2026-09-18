@@ -26,7 +26,7 @@ AUTO_GENERATED_COLUMNS = {"created_by", "create_date"}
 
 # bind_to, property_name, data_type, length, decimal, column_data_type, label_string_id, required, readonly, description
 FIELDS = [
-    ("cmr_num", "CmrNum", "Integer", "", "", "", "", "", "", "CMR number, key, auto-generated via AUTONUMBER on the table."),
+    ("cmr_num", "CmrNum", "NumSortedString", "10", "", "QCChangeMaterialRequestNum", "", "", "", "CMR number, key, auto-generated via AUTONUMBER on the table. Real system convention (confirmed on the real QC_CMRs form's own CmrNum field, PropertyClassName QCChangeMaterialRequestNum, DATATYPE(NUMSORTCHAR) LENGTH(10)) - it's a sortable numeric STRING, not a true integer."),
     ("status", "Status", "String", "40", "", "char", "sStatus", "", "", "Overall CMR status. Fixed value list not yet confirmed - Inline List can be added once real values are decided."),
     ("workflow_status", "WorkflowStatus", "String", "40", "", "char", "", "", "", "Workflow status. Fixed value list not yet confirmed."),
     ("priority", "Priority", "String", "12", "", "QCPriorityType", "sPriority", "", "", "Reuses the system's own QCPriorityType - gives real High/Medium/Low validation without a custom Inline List."),
@@ -46,7 +46,7 @@ FIELDS = [
     ("next_assy_description", "NextAssyDescription", "String", "40", "", "DescriptionType", "sDescription", "", "1", "Read-only, auto-populated by lookup."),
     ("vendor", "Vendor", "String", "15", "", "char", "", "", "", SL_VENDORS),
     ("vendor_name", "VendorName", "String", "255", "", "LongDescType", "", "", "1", "Read-only, auto-populated by lookup."),
-    ("qty", "Qty", "Decimal", "", "4", "", "", "", "", ""),
+    ("qty", "Qty", "Decimal", "", "4", "QtyUnit", "", "", "", ""),
     ("job_num", "JobNum", "String", "15", "", "char", "", "", "", "Free-text for v1 - legacy SLMatltrans filter had a leading-zero bug, not carried over."),
     ("po_num", "PoNum", "String", "15", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"),
     ("po_line", "PoLine", "String", "10", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"),
