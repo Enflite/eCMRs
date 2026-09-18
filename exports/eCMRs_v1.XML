@@ -1,0 +1,2879 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FormsAndObjectsExport Version="010000">
+   <Forms Type="1">
+      <Form Name="eCMRs" Scope="1" ScopeName="[NULL]">
+         <Caption>eCMRs</Caption>
+         <Type>0</Type>
+         <StandardOperations>953</StandardOperations>
+         <Flags>202</Flags>
+         <Height>110.2</Height>
+         <LeftPos>0</LeftPos>
+         <TopPos>0</TopPos>
+         <Width>100</Width>
+         <HelpContextID>-1</HelpContextID>
+         <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
+         <MasterDeviceID>0</MasterDeviceID>
+         <Components>
+            <Component Name="hdr_IDENTITY">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>1.000</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>IDENTITY</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>IDENTITY</EffectiveCaption>
+            </Component>
+            <Component Name="l_cmr_num">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>3.050</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>CMR Num:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>CMR Num:</EffectiveCaption>
+            </Component>
+            <Component Name="c_cmr_num">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>1</TabOrder>
+               <TopPos>2.900</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.cmr_num</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_status">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>3.050</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Status:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Status:</EffectiveCaption>
+            </Component>
+            <Component Name="c_status">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>2</TabOrder>
+               <TopPos>2.900</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.status</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_workflow_status">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>4.800</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Workflow Status:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Workflow Status:</EffectiveCaption>
+            </Component>
+            <Component Name="c_workflow_status">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>3</TabOrder>
+               <TopPos>4.650</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.workflow_status</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_create_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>4.800</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Create Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Create Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_create_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>4</TabOrder>
+               <TopPos>4.650</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.create_date</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_created_by">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>6.550</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Created By:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Created By:</EffectiveCaption>
+            </Component>
+            <Component Name="c_created_by">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>5</TabOrder>
+               <TopPos>6.400</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.created_by</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_PRIORITY___ITEM___CHANGE">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>8.150</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>PRIORITY / ITEM / CHANGE</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>PRIORITY / ITEM / CHANGE</EffectiveCaption>
+            </Component>
+            <Component Name="l_priority">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>10.200</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Priority:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Priority:</EffectiveCaption>
+            </Component>
+            <Component Name="c_priority">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>6</TabOrder>
+               <TopPos>10.050</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.priority</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_item">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>10.200</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Item:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Item:</EffectiveCaption>
+            </Component>
+            <Component Name="c_item">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>7</TabOrder>
+               <TopPos>10.050</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.item</DataSource>
+               <Binding>1</Binding>
+               <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_item_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>11.950</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Item Description:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Item Description:</EffectiveCaption>
+            </Component>
+            <Component Name="c_item_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>8</TabOrder>
+               <TopPos>11.800</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.item_description</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_wc">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>11.950</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Work Center:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Work Center:</EffectiveCaption>
+            </Component>
+            <Component Name="c_wc">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>9</TabOrder>
+               <TopPos>11.800</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.wc</DataSource>
+               <Binding>1</Binding>
+               <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_wc_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>13.700</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>WC Description:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>WC Description:</EffectiveCaption>
+            </Component>
+            <Component Name="c_wc_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>10</TabOrder>
+               <TopPos>13.550</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.wc_description</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_dept">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>13.700</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Dept:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Dept:</EffectiveCaption>
+            </Component>
+            <Component Name="c_dept">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>11</TabOrder>
+               <TopPos>13.550</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.dept</DataSource>
+               <Binding>1</Binding>
+               <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_dept_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>15.450</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Dept Description:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Dept Description:</EffectiveCaption>
+            </Component>
+            <Component Name="c_dept_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>12</TabOrder>
+               <TopPos>15.300</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.dept_description</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_initial_change">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>15.450</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Initial Change:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Initial Change:</EffectiveCaption>
+            </Component>
+            <Component Name="c_initial_change">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>13</TabOrder>
+               <TopPos>15.300</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.initial_change</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_additional_changes">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>17.050</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>Additional Changes:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Additional Changes:</EffectiveCaption>
+            </Component>
+            <Component Name="c_additional_changes">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>14</TabOrder>
+               <TopPos>18.150</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>4.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.additional_changes</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>22.850</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>Requested Action:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Requested Action:</EffectiveCaption>
+            </Component>
+            <Component Name="c_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>15</TabOrder>
+               <TopPos>23.950</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>4.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.requested_action</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_general_note">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>28.650</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>General Note:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>General Note:</EffectiveCaption>
+            </Component>
+            <Component Name="c_general_note">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>16</TabOrder>
+               <TopPos>29.750</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>4.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.general_note</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_revision">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>34.600</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Drawing Revision:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Drawing Revision:</EffectiveCaption>
+            </Component>
+            <Component Name="c_revision">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>17</TabOrder>
+               <TopPos>34.450</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.revision</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_latest_revision">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>34.600</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Latest Revision:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Latest Revision:</EffectiveCaption>
+            </Component>
+            <Component Name="c_latest_revision">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>18</TabOrder>
+               <TopPos>34.450</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.latest_revision</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_next_assy_item">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>36.350</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Next Lvl Assy:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Next Lvl Assy:</EffectiveCaption>
+            </Component>
+            <Component Name="c_next_assy_item">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>19</TabOrder>
+               <TopPos>36.200</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.next_assy_item</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>36.350</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Next Lvl Assy Desc:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Next Lvl Assy Desc:</EffectiveCaption>
+            </Component>
+            <Component Name="c_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>20</TabOrder>
+               <TopPos>36.200</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.next_assy_description</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_vendor">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>38.100</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Vendor:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Vendor:</EffectiveCaption>
+            </Component>
+            <Component Name="c_vendor">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>21</TabOrder>
+               <TopPos>37.950</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.vendor</DataSource>
+               <Binding>1</Binding>
+               <ComboListSource>STDOLE SLVendors( PROPERTIES(VendNum, Name) )</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>38.100</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Vendor Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Vendor Name:</EffectiveCaption>
+            </Component>
+            <Component Name="c_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>22</TabOrder>
+               <TopPos>37.950</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.vendor_name</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_qty">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>39.850</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Qty:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Qty:</EffectiveCaption>
+            </Component>
+            <Component Name="c_qty">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>23</TabOrder>
+               <TopPos>39.700</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.qty</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_job_num">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>39.850</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Job Num:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Job Num:</EffectiveCaption>
+            </Component>
+            <Component Name="c_job_num">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>24</TabOrder>
+               <TopPos>39.700</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.job_num</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_po_num">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>41.600</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>PO Num:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>PO Num:</EffectiveCaption>
+            </Component>
+            <Component Name="c_po_num">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>25</TabOrder>
+               <TopPos>41.450</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.po_num</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_po_line">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>41.600</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>PO Line:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>PO Line:</EffectiveCaption>
+            </Component>
+            <Component Name="c_po_line">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>26</TabOrder>
+               <TopPos>41.450</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.po_line</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_rfq_num">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>43.350</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>RFQ Num:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>RFQ Num:</EffectiveCaption>
+            </Component>
+            <Component Name="c_rfq_num">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>27</TabOrder>
+               <TopPos>43.200</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.rfq_num</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_eo_num">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>43.350</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>EO Num:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>EO Num:</EffectiveCaption>
+            </Component>
+            <Component Name="c_eo_num">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>28</TabOrder>
+               <TopPos>43.200</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.eo_num</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_mdl">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>45.100</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>MDL:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>MDL:</EffectiveCaption>
+            </Component>
+            <Component Name="c_mdl">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>29</TabOrder>
+               <TopPos>44.950</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.mdl</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_poc">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>45.100</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>POC:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>POC:</EffectiveCaption>
+            </Component>
+            <Component Name="c_poc">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>30</TabOrder>
+               <TopPos>44.950</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.poc</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_REQUIREMENTS___REVIEW_COMPLETE">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>46.700</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>REQUIREMENTS / REVIEW COMPLETE</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>REQUIREMENTS / REVIEW COMPLETE</EffectiveCaption>
+            </Component>
+            <Component Name="c_req_costing">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>31</TabOrder>
+               <TopPos>48.600</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Req: Costing</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.req_costing</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_cost_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>32</TabOrder>
+               <TopPos>48.600</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Costing Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.cost_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_req_documentation">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>33</TabOrder>
+               <TopPos>50.350</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Req: Documentation</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.req_documentation</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_documentation_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>34</TabOrder>
+               <TopPos>50.350</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Documentation Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.documentation_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_req_tool_machine">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>35</TabOrder>
+               <TopPos>52.100</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Req: Tool/Machine</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.req_tool_machine</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_machinery_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>36</TabOrder>
+               <TopPos>52.100</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Tool/Machine Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.machinery_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_req_process">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>37</TabOrder>
+               <TopPos>53.850</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Req: Process</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.req_process</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_process_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>38</TabOrder>
+               <TopPos>53.850</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Process Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.process_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_req_material">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>39</TabOrder>
+               <TopPos>55.600</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Req: Material</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.req_material</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_material_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>40</TabOrder>
+               <TopPos>55.600</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Material Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.material_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_general_review_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>41</TabOrder>
+               <TopPos>57.350</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>General Review Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.general_review_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_sox_impacted">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>42</TabOrder>
+               <TopPos>57.350</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>SOX Impacted</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.sox_impacted</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_hold_on_po">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>43</TabOrder>
+               <TopPos>59.100</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Hold On PO</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.hold_on_po</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_auth_supplier_ship">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>44</TabOrder>
+               <TopPos>59.100</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Authorization For Supplier To Ship</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.auth_supplier_ship</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_DISPOSITION">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>60.850</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>DISPOSITION</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>DISPOSITION</EffectiveCaption>
+            </Component>
+            <Component Name="l_qc_disposition">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>62.900</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>QC Disposition:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>QC Disposition:</EffectiveCaption>
+            </Component>
+            <Component Name="c_qc_disposition">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>45</TabOrder>
+               <TopPos>62.750</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.qc_disposition</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_eng_disposition">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>62.900</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Engineering Disposition:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Engineering Disposition:</EffectiveCaption>
+            </Component>
+            <Component Name="c_eng_disposition">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>46</TabOrder>
+               <TopPos>62.750</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.eng_disposition</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_ASSIGNMENT___REVIEWERS">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>64.500</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>ASSIGNMENT / REVIEWERS</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>ASSIGNMENT / REVIEWERS</EffectiveCaption>
+            </Component>
+            <Component Name="l_assigned_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>66.550</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Assigned:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Assigned:</EffectiveCaption>
+            </Component>
+            <Component Name="c_assigned_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>47</TabOrder>
+               <TopPos>66.400</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.assigned_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdateAssignedUsername</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_assigned_username">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>66.550</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Assigned (Username):</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Assigned (Username):</EffectiveCaption>
+            </Component>
+            <Component Name="c_assigned_username">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>48</TabOrder>
+               <TopPos>66.400</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.assigned_username</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_assigned_buyer">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>68.300</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Assigned Buyer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Assigned Buyer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_assigned_buyer">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>49</TabOrder>
+               <TopPos>68.150</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.assigned_buyer</DataSource>
+               <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_qc_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>70.050</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>QC Reviewer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>QC Reviewer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_qc_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>50</TabOrder>
+               <TopPos>69.900</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.qc_reviewer_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdateQCReviewerUsername</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_qc_reviewer_username">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>70.050</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>QC Reviewer (Username):</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>QC Reviewer (Username):</EffectiveCaption>
+            </Component>
+            <Component Name="c_qc_reviewer_username">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>51</TabOrder>
+               <TopPos>69.900</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.qc_reviewer_username</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_eng_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>71.800</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Engineering Reviewer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Engineering Reviewer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_eng_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>52</TabOrder>
+               <TopPos>71.650</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.eng_reviewer_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdateEngReviewerUsername</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_eng_reviewer_username">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>71.800</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Eng Reviewer (Username):</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Eng Reviewer (Username):</EffectiveCaption>
+            </Component>
+            <Component Name="c_eng_reviewer_username">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>53</TabOrder>
+               <TopPos>71.650</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.eng_reviewer_username</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_planning_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>73.550</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Planning Reviewer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Planning Reviewer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_planning_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>54</TabOrder>
+               <TopPos>73.400</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.planning_reviewer_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdatePlanningReviewerName</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_planning_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>73.550</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Planning Reviewer Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Planning Reviewer Name:</EffectiveCaption>
+            </Component>
+            <Component Name="c_planning_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>55</TabOrder>
+               <TopPos>73.400</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.planning_reviewer_name</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_planning_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>56</TabOrder>
+               <TopPos>75.150</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Planning Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.planning_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_purchasing_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>77.050</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Purchasing Reviewer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Purchasing Reviewer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_purchasing_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>57</TabOrder>
+               <TopPos>76.900</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.purchasing_reviewer_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdatePurchasingReviewerName</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_purchasing_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>77.050</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Purchasing Reviewer Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Purchasing Reviewer Name:</EffectiveCaption>
+            </Component>
+            <Component Name="c_purchasing_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>58</TabOrder>
+               <TopPos>76.900</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.purchasing_reviewer_name</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_purchasing_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>59</TabOrder>
+               <TopPos>78.650</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Purchasing Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.purchasing_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_cm_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>80.550</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>CM Reviewer:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>CM Reviewer:</EffectiveCaption>
+            </Component>
+            <Component Name="c_cm_reviewer_empnum">
+               <DeviceID>-1</DeviceID>
+               <Type>27</Type>
+               <TabOrder>60</TabOrder>
+               <TopPos>80.400</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.cm_reviewer_empnum</DataSource>
+               <Binding>1</Binding>
+               <SelectionEvent>UpdateCMReviewerName</SelectionEvent>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_cm_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>80.550</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>CM Reviewer Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>CM Reviewer Name:</EffectiveCaption>
+            </Component>
+            <Component Name="c_cm_reviewer_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>61</TabOrder>
+               <TopPos>80.400</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.cm_reviewer_name</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="c_cm_complete">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>62</TabOrder>
+               <TopPos>82.150</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>CM Complete</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.cm_complete</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_DATES">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>83.900</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>DATES</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>DATES</EffectiveCaption>
+            </Component>
+            <Component Name="l_due_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>85.950</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Due Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Due Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_due_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>63</TabOrder>
+               <TopPos>85.800</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.due_date</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>85.950</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Internal Review Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Internal Review Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>64</TabOrder>
+               <TopPos>85.800</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.internal_review_date</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_close_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>87.700</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Close Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Close Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_close_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>65</TabOrder>
+               <TopPos>87.550</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.close_date</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_closed_by">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>87.700</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>Closed By:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Closed By:</EffectiveCaption>
+            </Component>
+            <Component Name="c_closed_by">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>66</TabOrder>
+               <TopPos>87.550</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.closed_by</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_general_close_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>89.450</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>General Close Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>General Close Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_general_close_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>67</TabOrder>
+               <TopPos>89.300</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.general_close_date</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_general_closed_by">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>89.450</TopPos>
+               <LeftPos>43.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.0</Width>
+               <Caption>General Closed By:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>General Closed By:</EffectiveCaption>
+            </Component>
+            <Component Name="c_general_closed_by">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>68</TabOrder>
+               <TopPos>89.300</TopPos>
+               <LeftPos>55.500</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>24</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.general_closed_by</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_NOTES">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>91.050</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>NOTES</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>NOTES</EffectiveCaption>
+            </Component>
+            <Component Name="l_qc_rca_notes">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>92.950</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>QC RCA Notes:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>QC RCA Notes:</EffectiveCaption>
+            </Component>
+            <Component Name="c_qc_rca_notes">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>69</TabOrder>
+               <TopPos>94.050</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>4.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.qc_rca_notes</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_eng_rca_notes">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>98.750</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>Eng RCA Notes:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Eng RCA Notes:</EffectiveCaption>
+            </Component>
+            <Component Name="c_eng_rca_notes">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>70</TabOrder>
+               <TopPos>99.850</TopPos>
+               <LeftPos>14.500</LeftPos>
+               <Height>4.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.eng_rca_notes</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="hdr_CLOSE">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>104.550</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>1.5</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>CLOSE</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 19,163,247]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>CLOSE</EffectiveCaption>
+            </Component>
+            <Component Name="c_closed">
+               <DeviceID>-1</DeviceID>
+               <Type>5</Type>
+               <TabOrder>71</TabOrder>
+               <TopPos>106.450</TopPos>
+               <LeftPos>2.000</LeftPos>
+               <Height>1.3</Height>
+               <ListHeight>0</ListHeight>
+               <Width>36.5</Width>
+               <Caption>Closed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.closed</DataSource>
+               <Binding>1</Binding>
+               <EventToGenerate>SetCloseInfo</EventToGenerate>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>ENABLEDWHEN(V(cew_Closed))</Post301Format>
+            </Component>
+         </Components>
+         <EventHandlers>
+
+            <EventHandler Name="SetCloseInfo" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_SetCloseInfo_0
+Inherits GlobalScript
+
+        Sub Main()
+            If ThisForm.Components("c_closed").Text &lt;&gt; "1" Then
+                ThisForm.Components("c_closed_by").Text = ""
+                ThisForm.Components("c_close_date").Text = ""
+            Else
+                ThisForm.Components("c_closed_by").Text = ThisForm.UserName
+                ThisForm.Components("c_close_date").Text = CStr(Today)
+            End If
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateAssignedUsername" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(assigned_empnum))  MOV()  SONON() SETP(assigned_username=Username) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateQCReviewerUsername" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(qc_reviewer_empnum))  MOV()  SONON() SETP(qc_reviewer_username=Username) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateEngReviewerUsername" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(eng_reviewer_empnum))  MOV()  SONON() SETP(eng_reviewer_username=Username) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdatePlanningReviewerName" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(planning_reviewer_empnum))  MOV()  SONON() SETP(planning_reviewer_name=Name) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdatePurchasingReviewerName" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(purchasing_reviewer_empnum))  MOV()  SONON() SETP(purchasing_reviewer_name=Name) )</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateCMReviewerName" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(cm_reviewer_empnum))  MOV()  SONON() SETP(cm_reviewer_name=Name) )</Response>
+            </EventHandler>
+         </EventHandlers>
+         <Variables>
+            <Variable Name="fds_DataSource">
+               <Value>ue_ecmrs( ORDERBY(cmr_num desc) LOCKMODE(Row) )</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+            <Variable Name="cew_Closed">
+               <Value>Enabled:#C(c_closed), #P(req_costing) = #P(cost_review_complete) &amp; #P(req_documentation) = #P(documentation_review_complete) &amp; #P(req_tool_machine) = #P(machinery_review_complete) &amp; #P(req_process) = #P(process_review_complete) &amp; #P(req_material) = #P(material_review_complete), "True"</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+         </Variables>
+      </Form>
+   </Forms>
+</FormsAndObjectsExport>
