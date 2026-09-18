@@ -37,8 +37,11 @@ def q(col_idx, value):
     return value
 
 def build_row(col_id, col, dtype, length, decimal, coldtype):
+    # Data Type here takes the plain base type (Decimal, Byte, Date, String...), confirmed
+    # directly - QC-module-specific semantic names (QCSeq, QCInteger, QtyUnit) are rejected
+    # for a new column on this table, only generic framework types are accepted.
     fields = [
-        col, SCHEMA, TABLE_NAME, coldtype, SYSTEM_TYPE.get(dtype, dtype), length, decimal,
+        col, SCHEMA, TABLE_NAME, dtype, SYSTEM_TYPE.get(dtype, dtype), length, decimal,
         "", "YES", "0", "", "", "0", str(col_id), "",
     ]
     return "\t".join(q(i, v) for i, v in enumerate(fields))
