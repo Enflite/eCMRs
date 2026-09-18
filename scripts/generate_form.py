@@ -245,9 +245,34 @@ def emit_header(text, y):
             </Component>
 """
 
+def emit_title(text, y):
+    return f"""            <Component Name="hdr_FormTitle">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>{y:.3f}</TopPos>
+               <LeftPos>1</LeftPos>
+               <Height>2.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>96</Width>
+               <Caption>{esc(text)}</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,64,128]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <EffectiveCaption>{esc(text)}</EffectiveCaption>
+            </Component>
+"""
+
 def build_components():
-    y = 1.0
-    out = []
+    y = 0.0
+    out = [emit_title("eCMRs — Change Management Request", y)]
+    y = 2.9
     for item in LAYOUT:
         kind = item[0]
         if kind == HEADER:
