@@ -442,7 +442,14 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
               This form is single-screen browse+create, so it needs New enabled - 1019 matches the
               real JobOrders form (also single-screen full CRUD) exactly: 953 | 1019's extra bits (66). -->
          <StandardOperations>1019</StandardOperations>
-         <Flags>202</Flags>
+         <!-- 1048778, not the legacy QC_CMRs/QC_CreateChangeRequest value of 202: every field
+              locking after being entered on a brand-new record points at something form-wide,
+              not per-field. Both legacy CMR forms share 202, but they never needed to support
+              free multi-field editing before the first Save (create happened on its own screen).
+              JobOrders - single-screen full CRUD with its own AUTONUMBER-keyed field, the closest
+              real analog to this form - carries all of 202's bits plus one extra (1048576).
+              Unconfirmed exactly what that bit does, but it's the best evidence-based lead. -->
+         <Flags>1048778</Flags>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
