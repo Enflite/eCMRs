@@ -771,7 +771,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateItemDescription</SelectionEvent>
                <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -816,7 +815,7 @@
                <DataSource>object.ItemDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -857,7 +856,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateWcDescription</SelectionEvent>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -902,7 +900,7 @@
                <DataSource>object.WcDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -943,7 +941,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateDeptDescription</SelectionEvent>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -988,7 +985,7 @@
                <DataSource>object.DeptDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -1113,7 +1110,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.NextAssyItem</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateNextAssyDescription</SelectionEvent>
                <ComboListSource>STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1158,7 +1154,7 @@
                <DataSource>object.NextAssyDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -1241,7 +1237,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Vendor</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateVendorName</SelectionEvent>
                <ComboListSource>STDOLE SLVendors( PROPERTIES(VendNum, Name) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -1286,7 +1281,7 @@
                <DataSource>object.VendorName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2255,7 +2250,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.QcReviewerEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateQCReviewerUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2300,7 +2294,7 @@
                <DataSource>object.QcReviewerUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2446,7 +2440,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.EngReviewerEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateEngReviewerUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2491,7 +2484,7 @@
                <DataSource>object.EngReviewerUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2595,7 +2588,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.AssignedEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateAssignedUsername</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2640,7 +2632,7 @@
                <DataSource>object.AssignedUsername</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2724,7 +2716,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PlanningReviewerEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdatePlanningReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2769,7 +2760,7 @@
                <DataSource>object.PlanningReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2831,7 +2822,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PurchasingReviewerEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdatePurchasingReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2876,7 +2866,7 @@
                <DataSource>object.PurchasingReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -2938,7 +2928,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.CmReviewerEmpNum</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateCMReviewerName</SelectionEvent>
                <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2983,7 +2972,7 @@
                <DataSource>object.CmReviewerName</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />
@@ -3039,50 +3028,6 @@ Inherits GlobalScript
 End Class
 End Namespace
 )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateItemDescription" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLItems( READMODE(UNCOMMITTED) DISTINCT() FILTER(Item= FP(Item))  MOV()  SONON() SETP(ItemDescription=Description) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateWcDescription" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLWcs( READMODE(UNCOMMITTED) DISTINCT() FILTER(Wc= FP(Wc))  MOV()  SONON() SETP(WcDescription=Description) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateDeptDescription" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLDepts( READMODE(UNCOMMITTED) DISTINCT() FILTER(Dept= FP(Dept))  MOV()  SONON() SETP(DeptDescription=Description) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateVendorName" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLVendors( READMODE(UNCOMMITTED) DISTINCT() FILTER(VendNum= FP(Vendor))  MOV()  SONON() SETP(VendorName=Name) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateNextAssyDescription" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLItems( READMODE(UNCOMMITTED) DISTINCT() FILTER(Item= FP(NextAssyItem))  MOV()  SONON() SETP(NextAssyDescription=Description) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateAssignedUsername" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(AssignedEmpNum))  MOV()  SONON() SETP(AssignedUsername=Username) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateQCReviewerUsername" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(QcReviewerEmpNum))  MOV()  SONON() SETP(QcReviewerUsername=Username) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateEngReviewerUsername" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(EngReviewerEmpNum))  MOV()  SONON() SETP(EngReviewerUsername=Username) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdatePlanningReviewerName" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(PlanningReviewerEmpNum))  MOV()  SONON() SETP(PlanningReviewerName=Name) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdatePurchasingReviewerName" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(PurchasingReviewerEmpNum))  MOV()  SONON() SETP(PurchasingReviewerName=Name) )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateCMReviewerName" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLEmployees( READMODE(UNCOMMITTED) DISTINCT() FILTER(EmpNum= FP(CmReviewerEmpNum))  MOV()  SONON() SETP(CmReviewerName=Name) )</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>

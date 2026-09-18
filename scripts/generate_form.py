@@ -63,13 +63,13 @@ LAYOUT = [
     (SPAN, f("Additional Changes:", "additional_changes", TYPE_MULTILINE)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (SPAN, f("General Note:", "general_note", TYPE_MULTILINE)),
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT)),
+    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT)),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT)),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT)),
     (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
@@ -88,22 +88,22 @@ LAYOUT = [
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_EDIT), None),
-    (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT, readonly=True)),
+    (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_EDIT), None),
-    (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
-    (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT)),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
-    (PAIR, f("Planning Reviewer:", "planning_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Planning Reviewer Name:", "planning_reviewer_name", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Planning Reviewer:", "planning_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Planning Reviewer Name:", "planning_reviewer_name", TYPE_EDIT)),
     (PAIR, f("Planning Complete", "planning_complete", TYPE_CHECKBOX), None),
-    (PAIR, f("Purchasing Reviewer:", "purchasing_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Purchasing Reviewer Name:", "purchasing_reviewer_name", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Purchasing Reviewer:", "purchasing_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Purchasing Reviewer Name:", "purchasing_reviewer_name", TYPE_EDIT)),
     (PAIR, f("Purchasing Complete", "purchasing_complete", TYPE_CHECKBOX), None),
-    (PAIR, f("CM Reviewer:", "cm_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("CM Reviewer Name:", "cm_reviewer_name", TYPE_EDIT, readonly=True)),
+    (PAIR, f("CM Reviewer:", "cm_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("CM Reviewer Name:", "cm_reviewer_name", TYPE_EDIT)),
     (PAIR, f("CM Complete", "cm_complete", TYPE_CHECKBOX), None),
 ]
 
@@ -124,24 +124,11 @@ GRID_COLUMNS = [
 ]
 PANE_ZERO_SIZE = 40.25
 
-# (trigger_column, display_column, event_name, SL_table, filter_property, source_property)
-# Confirmed real patterns: item/next_assy_item/vendor match the legacy form's own
-# UpdateDescriptionNextAssy/UpdateVendorDescription handlers exactly (just adapted to our
-# property names). wc/dept are inferred from the same STDOLE table already used in their
-# own ComboListSource, which already carries a Description property.
-LOOKUP_EVENTS = [
-    ("item", "item_description", "UpdateItemDescription", "SLItems", "Item", "Description"),
-    ("wc", "wc_description", "UpdateWcDescription", "SLWcs", "Wc", "Description"),
-    ("dept", "dept_description", "UpdateDeptDescription", "SLDepts", "Dept", "Description"),
-    ("vendor", "vendor_name", "UpdateVendorName", "SLVendors", "VendNum", "Name"),
-    ("next_assy_item", "next_assy_description", "UpdateNextAssyDescription", "SLItems", "Item", "Description"),
-    ("assigned_empnum", "assigned_username", "UpdateAssignedUsername", "SLEmployees", "EmpNum", "Username"),
-    ("qc_reviewer_empnum", "qc_reviewer_username", "UpdateQCReviewerUsername", "SLEmployees", "EmpNum", "Username"),
-    ("eng_reviewer_empnum", "eng_reviewer_username", "UpdateEngReviewerUsername", "SLEmployees", "EmpNum", "Username"),
-    ("planning_reviewer_empnum", "planning_reviewer_name", "UpdatePlanningReviewerName", "SLEmployees", "EmpNum", "Name"),
-    ("purchasing_reviewer_empnum", "purchasing_reviewer_name", "UpdatePurchasingReviewerName", "SLEmployees", "EmpNum", "Name"),
-    ("cm_reviewer_empnum", "cm_reviewer_name", "UpdateCMReviewerName", "SLEmployees", "EmpNum", "Name"),
-]
+# The SelectionEvent/EventHandler(ResponseType 49) companion-lookup mechanism that used to be
+# driven from a LOOKUP_EVENTS list here was removed - confirmed live that triggering any of
+# these (even the ones matching the legacy form's own working patterns byte-for-byte) jams the
+# form's edit/commit pipeline for every other field afterward, combo or plain, forever. The 11
+# description/name fields below are now plain editable fields instead (see LAYOUT).
 
 _tab = [0]
 def next_tab():
@@ -197,9 +184,10 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("               <Binding>1</Binding>")
     if ctype == TYPE_CHECKBOX and column == "closed":
         lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
-    if column in [e[0] for e in LOOKUP_EVENTS]:
-        ev = [e[2] for e in LOOKUP_EVENTS if e[0] == column][0]
-        lines.append(f"               <SelectionEvent>{ev}</SelectionEvent>")
+    # SelectionEvent -> ResponseType 49 EventHandler (FILTER()  MOV()  SONON()  SETP()) removed:
+    # confirmed live that using ANY combo wired to one of these jams the whole form's edit/commit
+    # pipeline after a single use - every other field can then only be edited once before locking,
+    # even fields with no lookup at all. ComboListSource-only combos (no SelectionEvent) are fine.
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
     if maintain_from_spec:
@@ -424,12 +412,9 @@ End Namespace
             </EventHandler>
 """
 
-for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in LOOKUP_EVENTS:
-    EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>{sl_table}( READMODE(UNCOMMITTED) DISTINCT() FILTER({filter_prop}= FP({PROP[trigger_col]}))  MOV()  SONON() SETP({PROP[display_col]}={source_prop}) )</Response>
-            </EventHandler>
-"""
+# The 11 companion-lookup EventHandlers (ResponseType 49) that used to live here are removed -
+# confirmed live that triggering any of them jams the form's edit/commit pipeline for every
+# other field afterward, even ones with no lookup at all. See emit_control().
 
 FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <FormsAndObjectsExport Version="010000">
