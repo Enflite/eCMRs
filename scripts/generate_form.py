@@ -132,13 +132,17 @@ PANE_ZERO_SIZE = 40.25
 #
 # Experimental replacement, test case: EventToGenerate (the same wiring SetCloseInfo already
 # uses safely on the Closed checkbox) pointing at a ResponseType 33 inline VB script that calls
-# ThisForm.IDOClient.LoadCollection(...) directly, instead of the declarative
+# Me.IDOClient.LoadCollection(...) directly, instead of the declarative
 # FILTER()/MOV()/SONON()/SETP() response language that jammed the form. Two real, separate
 # pieces of evidence combined here: EventToGenerate on a Type=27 combo is real (JobOrders' and
 # Items' own ItemEdit/CustNumEdit/WhseEdit etc. use it, just for a built-in event name), and
-# Me.IDOClient.LoadCollection(request) coming back with a matching row is the real pattern from
-# cmr-project's QC_CMRs.vb FormScript. Starting with just Item to confirm this combination
-# actually works live before wiring the other 10 fields the same way.
+# Me.IDOClient.LoadCollection(request) is the real IDO-query pattern from cmr-project's
+# QC_CMRs.vb FormScript - used here as a literal copy (Me, not ThisForm) since GlobalScript and
+# FormScript are sibling classes in the same Mongoose.Scripting framework, so IDOClient may be
+# a member of a shared base both inherit. First attempt substituted ThisForm for Me and the
+# script silently did nothing live - this is the more faithful copy of the confirmed pattern.
+# Starting with just Item to confirm this combination actually works live before wiring the
+# other 10 fields the same way.
 SCRIPT_LOOKUP_EVENTS = [
     ("item", "item_description", "UpdateItemDescriptionScript", "SLItems", "Item", "Description"),
 ]
@@ -460,7 +464,7 @@ Inherits GlobalScript
                 request.PropertyList.SetProperties("{filter_prop},{source_prop}")
                 request.Filter = "{filter_prop} = " & SqlLiteral.Format(triggerVal, SqlLiteralFormatFlags.UseQuotes)
                 request.RecordCap = 1
-                Dim response As LoadCollectionResponseData = ThisForm.IDOClient.LoadCollection(request)
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
                 If response.Items.Count > 0 Then
                     ThisForm.Components("c_{display_col}").Text = response.Items(0).PropertyValues(1).Value.ToString()
                 End If

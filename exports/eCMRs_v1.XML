@@ -3053,7 +3053,7 @@ Inherits GlobalScript
                 request.PropertyList.SetProperties("Item,Description")
                 request.Filter = "Item = " &amp; SqlLiteral.Format(triggerVal, SqlLiteralFormatFlags.UseQuotes)
                 request.RecordCap = 1
-                Dim response As LoadCollectionResponseData = ThisForm.IDOClient.LoadCollection(request)
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
                 If response.Items.Count &gt; 0 Then
                     ThisForm.Components("c_item_description").Text = response.Items(0).PropertyValues(1).Value.ToString()
                 End If
