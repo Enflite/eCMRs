@@ -1,38 +1,133 @@
 # eCMRs — Field Mapping
 
-The full field list for the new standalone table, carried forward from everything confirmed in `cmr-project`'s `docs/field-mapping.md` — but every field here is its **own original column** on the new table. No `RsCrcvr*` names, no `rs_cmrUf_*` names, no joins, no reference back to `rs_cmr`/`rs_crcvr`/any other table. This is a full migration of the CMR concept onto independent storage, not a rebind of existing columns.
+Rebuilt from the **real, complete** `QC_CMRs` Form Sync export (every component the stakeholder pasted directly) — not just the subset `cmr-project` had tracked as its "confirmed editable scope." Every field below gets its own original column on the new standalone table. No `RsCrcvr*`/`rs_cmrUf_*` legacy names, no joins, no dependency on `rs_cmr`/`rs_crcvr`/any other table.
 
 Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Tested**.
 
-| Field | New column (proposed) | Type | List Source (system lookup, not a join) | Notes | Status |
-|---|---|---|---|---|---|
-| CMR Num | `cmr_num` | Autonumber / Integer (key) | — | See `task-list.md` Phase A — numbering mechanism still to be decided (`Autonumber` property type, preferred now that there's no composite-key constraint). | Planned |
-| Priority | `priority` | String (`High`/`Medium`/`Low`) or a small lookup list | Could reuse `RS_QCPriority`'s values as a static/inline list, or define eCMRs' own — decide during build. | Real property class + `EnhancedCombo`, `Required`. | Planned |
-| Item | `item` | String | `STDOLE SLItems( PROPERTIES(Item, Description) )` | Standard system lookup — fine per the "no dependencies" rule (read-only picker, not a join). | Planned |
-| Initial Change | `initial_change` | String (fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver)) | Inline list, not a query — matches the real `Change` property class's own behavior. | Drives the Requirements checkbox cascade — see below. | Planned |
-| Requested Action | `requested_action` | Multiline text | — | | Planned |
-| Dept | `dept` | String | `STDOLE SLDepts( PROPERTIES(Dept, Description) )` | | Planned |
-| Work Center | `wc` | String | `STDOLE SLWcs( PROPERTIES(Wc, Description) )` | | Planned |
-| Reported By | `reported_by` | String (EmpNum) | `STDOLE SLEmployees( PROPERTIES(EmpNum, Name) )` | | Planned |
-| Due Date | `due_date` | Date | — | | Planned |
-| Serial Number | `serial_number` | String | — | Free-text for now, same as `cmr-project`'s decision — a real `SL.SLSerials`-backed validated version is a possible later upgrade, not required for this migration. | Planned |
-| Lot Number | `lot_number` | String | — | Same as Serial Number. | Planned |
-| Assigned | `assigned_empnum` / `assigned_username` | String / String | `STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) )` | Two columns, same proven pattern as `cmr-project`'s Assigned field: a `SelectionEvent` on the EmpNum combo writes the matching `Username` into the companion column. | Planned |
-| Status | `status` | String | Small fixed/inline list (Open/Closed/etc. — confirm real values wanted) | | Planned |
-| Created By | `created_by` | String (EmpNum or Username) | `STDOLE SLEmployees( PROPERTIES(EmpNum, Name) )` | | Planned |
-| Create Date | `create_date` | DateTime | — | Default to now on creation. | Planned |
-| Closed By | `closed_by` | String | `STDOLE SLEmployees( PROPERTIES(EmpNum, Name) )` | | Planned |
-| Close Date | `close_date` | Date | — | | Planned |
-| Closed (flag) | `closed` | Boolean | — | | Planned |
-| Requirement: Costing | `req_costing` | Boolean | — | Cascades off `initial_change` — see below. | Planned |
-| Requirement: Documentation | `req_documentation` | Boolean | — | Cascades off `initial_change`. | Planned |
-| Requirement: Material | `req_material` | Boolean | — | Cascades off `initial_change`. | Planned |
-| Requirement: Process | `req_process` | Boolean | — | Cascades off `initial_change`. | Planned |
-| Requirement: Tool/Machine | `req_tool_machine` | Boolean | — | Cascades off `initial_change`. | Planned |
+## Header / Identity
 
-## Requirements checkbox cascade (carried forward from `cmr-project`)
+| Field (legacy label) | Legacy property | New column | Type | Notes |
+|---|---|---|---|---|
+| CMR Num | `CmrNum` | `cmr_num` | Autonumber (key) | Numbering mechanism still to be decided — see `task-list.md` Phase A. |
+| Status | `Status` (`DefaultFrom: QCStatusListings()`) | `status` | String / small list | Legacy `DefaultFrom` is a system function tied to `RS_QCCmrs`'s own status list — decide whether eCMRs defines its own fixed list or reimplements the lookup. |
+| Workflow Status | `rs_cmrUf_ENF_CMR_WorkFlowStatus` (`DefaultFrom: UserDefinedType(Cmr_CMR_WorkFlowStatus)`) | `workflow_status` | String / small list | `UserDefinedType(...)` is a legacy configured value-list mechanism tied to a UDT defined elsewhere in the system (`Cmr_CMR_WorkFlowStatus`) — **can't be copied as-is**; eCMRs needs its own fixed/inline list or its own new UDT. |
+| Create Date | `CreateDate` | `create_date` | DateTime | Defaults to now on creation. |
+| Created By | `CreatedBy` | `created_by` | String | |
 
-Same business rule, same mapping table — confirmed real, not inferred:
+## Priority / Item / Change
+
+| Field | Legacy property | New column | Type | Notes |
+|---|---|---|---|---|
+| Priority | `RsCrcvrPriority` (read-only, receiver-joined) + `RsPriorityPriority` (description) | `priority` | String / small list | Legacy form carries **two** read-only, joined properties for one concept. eCMRs collapses this to one native, writable field. |
+| Item | `RsCrcvrItem` | `item` | String | `SLItems` list source. |
+| Item Description | `ItmDescription` | `item_description` | String (read-only display) | |
+| Work Center | `RsCrcvrWc` | `wc` | String | `SLWcs` list source. |
+| WC Description | `WcDescription` | `wc_description` | String (read-only display) | |
+| Dept | `RsCrcvrDept` | `dept` | String | `SLDepts` list source. |
+| Dept Description | `DepDescription` | `dept_description` | String (read-only display) | |
+| Initial Change (real reason code) | `RsCrcvrChange` (hidden on the legacy form) | `initial_change` | String, fixed 8-value list | Drives the Requirements cascade — see below. |
+| Additional Changes (running notes) | `RsCrcvrChangeAll` | `additional_changes` | Multiline text | Distinct field from Initial Change — a growing note, not the single reason code. |
+| Requested Action (receiver's original note) | `RsCrcvrNote` | `requested_action` | Multiline text | |
+| General Note | `Note` (`QCLongChar`) | `general_note` | Multiline text | **A second, separate note field from Requested Action** — confirmed distinct property on the legacy form, not a duplicate. Purpose (ongoing QC/review commentary vs. the original request) worth confirming, but both get their own column. |
+| Drawing Revision | `Revision` | `revision` | String | |
+| Latest Revision | `rs_cmrUf_ENF_CMR_LatestRev` | `latest_revision` | String | Hidden on the legacy form — confirm still wanted. |
+| Next Lvl Assy (item) | `rs_cmrUf_ENF_CMR_NextAssyItem` | `next_assy_item` | String | `SLJobmatls` list source, filtered by `Item`. |
+| Next Lvl Assy Description | `rs_cmrUf_ENF_CMR_NextAssyDescription` | `next_assy_description` | String (read-only display) | Auto-populated via `UpdateDescriptionNextAssy` — see Business Logic below. |
+| Vendor | `rs_cmrUf_ENF_CMR_Vendor` (`DefaultFrom: VendNum()`) | `vendor` | String | |
+| Vendor Name | `rs_cmrUf_ENF_CMR_VendorName` | `vendor_name` | String (read-only display) | Auto-populated via `UpdateVendorDescription`. |
+| Qty | `rs_cmrUf_ENF_CMR_Qty` | `qty` | Number | |
+| Job Num | `rs_cmrUf_ENF_CMR_JobNum` | `job_num` | String | Legacy `SLMatltrans` filter has a real leading-zero exact-match bug (documented in `cmr-project`) — fix it correctly here, don't inherit it. |
+| PO Num / PO Line | `rs_cmrUf_ENF_CMR_PoNum` / `PoNumLine` | `po_num` / `po_line` | String | `SLPoItems` list source. |
+| RFQ Num | `rs_cmrUf_ENF_CMR_RFQNum` | `rfq_num` | String | |
+| EO Num | `rs_cmrUf_ENF_CMR_EO_Num` | `eo_num` | String | |
+| MDL | `rs_cmrUf_ENF_CMR_MDL` | `mdl` | String | |
+| POC | `rs_cmrUf_ENF_CMR_POC` | `poc` | String | Plain text field, distinct from Created By/Reported By. |
+
+## Requirements checkboxes + Review-Complete flags (5 categories)
+
+Same business mapping as `cmr-project` (Initial Change drives which of these are required) — see that table below. Each category has **two** legacy properties: a read-only "is this required" flag and a separate "has review been completed" flag.
+
+| Category | Required flag (legacy) | New "required" column | Review-complete flag (legacy) | New "complete" column |
+|---|---|---|---|---|
+| Costing | `RsChangeCosting` | `req_costing` | `CostReviewComplete` | `cost_review_complete` |
+| Documentation | `RsChangeDocumentation` | `req_documentation` | `DocumentationReviewComplete` | `documentation_review_complete` |
+| Tool/Machine | `RsChangeToolmachine` | `req_tool_machine` | `MachineryReviewComplete` | `machinery_review_complete` |
+| Process | `RsChangeProcess` | `req_process` | `ProcessReviewComplete` | `process_review_complete` |
+| Material | `RsChangeMaterial` | `req_material` | `MaterialReviewComplete` | `material_review_complete` |
+| — (general, hidden on legacy form) | — | — | `GeneralComplete` | `general_review_complete` |
+
+Also found, not tied to the 5-category system:
+- **SOX Impacted** (`SOXImpacted`) → `sox_impacted` — a standalone Sarbanes-Oxley impact flag.
+- **Hold On PO** (`rs_cmrUf_ENF_CMR_HoldOnPo`) → `hold_on_po`.
+- **Authorization For Supplier To Ship** (`rs_cmrUf_ENF_CMR_AuthForSuppShip`) → `auth_supplier_ship`.
+
+## Disposition
+
+| Field | Legacy property | New column | Notes |
+|---|---|---|---|
+| QC Disposition | `rs_cmrUf_ENF_CMR_QCDisposition` (`DefaultFrom: UserDefinedType(Cmr_QCDispositionStatus)`) | `qc_disposition` | Same `UserDefinedType` caveat as Workflow Status — needs its own list on eCMRs, not a copy of the legacy UDT reference. |
+| Engineering Disposition | `rs_cmrUf_ENF_CMR_EngDisposition` (`DefaultFrom: UserDefinedType(Cmr_EngDispositionStatus)`) | `eng_disposition` | Same caveat. |
+
+## Assignment / Reviewers
+
+**⚠ Real duplication found on the legacy form, needs a decision, not a blind carry-over**: two separate "Assigned" mechanisms exist simultaneously —
+1. The native `AssignedTo` property (`EmpNum` class) — a plain, simple field.
+2. A custom pair, `rs_cmrUf_ENF_CMR_AssignedUserEmpNum` (the real selectable combo, `SLEmployees` list source) + companion `rs_cmrUf_ENF_CMR_AssignedUser` (auto-populated username, via `UpdateAssignedToNameDisp`).
+
+eCMRs should pick **one** assignment mechanism, not carry both. Recommend the custom EmpNum+Username pair (mechanism #2) since it's the one with a real working name/email display, and drop the plain native duplicate.
+
+| Field | Legacy property | New column | Notes |
+|---|---|---|---|
+| Assigned (EmpNum) | `rs_cmrUf_ENF_CMR_AssignedUserEmpNum` | `assigned_empnum` | `SLEmployees` combo. |
+| Assigned (username display) | `rs_cmrUf_ENF_CMR_AssignedUser` | `assigned_username` | Auto-set via `SelectionEvent`, same proven pattern as `cmr-project`'s Assigned field. |
+| Assigned Buyer | `rs_cmrUf_ENF_CMR_BuyerPlannerUsr` (`DefaultFrom: UserName()`) | `assigned_buyer` | Separate role from "Assigned" above. |
+| QC Reviewer (EmpNum) | `rs_cmrUf_ENF_CMR_QCReviewerEmpNum` | `qc_reviewer_empnum` | |
+| QC Reviewer (username display) | `rs_cmrUf_ENF_CMR_QCReviewer` | `qc_reviewer_username` | Auto-set via `UpdateQLTYReviewerNameDisp`. |
+| Engineering Reviewer (EmpNum) | `rs_cmrUf_ENF_CMR_EngReviewerEmpNum` | `eng_reviewer_empnum` | |
+| Engineering Reviewer (username display) | `rs_cmrUf_ENF_CMR_EngReviewer` | `eng_reviewer_username` | Auto-set via `UpdateENGReviewerNameDisp`. |
+| Planning Reviewer (EmpNum) | `rs_cmrUf_ENF_CMR_IMP_PlanningEmpNum` | `planning_reviewer_empnum` | |
+| Planning Reviewer (name display) | `rs_cmrUf_ENF_CMR_IMP_PlanningEmpName` | `planning_reviewer_name` | Auto-set via `UpdatePlannerNameDisp`. |
+| Planning sign-off checkbox | `rs_cmrUf_ENF_CMR_IMP_PlanningCB` | `planning_complete` | |
+| Purchasing Reviewer (EmpNum) | `rs_cmrUf_ENF_CMR_IMP_PurchasingEmpNum` | `purchasing_reviewer_empnum` | |
+| Purchasing Reviewer (name display) | `rs_cmrUf_ENF_CMR_IMP_PurchasingEmpName` | `purchasing_reviewer_name` | Auto-set via `UpdatePurchasingNameDisp`. |
+| Purchasing sign-off checkbox | `rs_cmrUf_ENF_CMR_IMP_PurchasingCB` | `purchasing_complete` | |
+| CM Reviewer (EmpNum) | `rs_cmrUf_ENF_CMR_IMP_CMEmpNum` | `cm_reviewer_empnum` | |
+| CM Reviewer (name display) | `rs_cmrUf_ENF_CMR_IMP_CMEmpName` | `cm_reviewer_name` | Auto-set via `UpdateCMNameDisp`. |
+| CM sign-off checkbox | `rs_cmrUf_ENF_CMR_IMP_CMCB` | `cm_complete` | |
+
+## Dates
+
+| Field | Legacy property | New column | Notes |
+|---|---|---|---|
+| Due Date | `DueDate` | `due_date` | |
+| Internal Review Date | `InternalReviewDate` | `internal_review_date` | |
+| Close Date | `CloseDate` | `close_date` | Shown in multiple places on the legacy form (top-level + IMPLEMENTATION section) — same underlying property, collapses to one column. Auto-set to today when `Closed` is checked, via `SetCloseInfo`. |
+| Closed By | `ClosedBy` | `closed_by` | Same collapsing note as Close Date. Auto-set to current user via `SetClosedBy`. |
+| General Close Date | `GeneralCloseDate` (hidden) | `general_close_date` | Purpose unclear — hidden on the legacy form, separate from the main Close Date. Confirm whether it's still needed before building. |
+| General Closed By | `GeneralClosedBy` (hidden) | `general_closed_by` | Same caveat as General Close Date. |
+
+## Notes (free text)
+
+| Field | Legacy property | New column |
+|---|---|---|
+| QC RCA Notes | `rs_cmrUf_ENF_CMR_QCRCANotes` | `qc_rca_notes` |
+| Eng RCA Notes | `rs_cmrUf_ENF_CMR_EngRCANotes` | `eng_rca_notes` |
+
+## Closed
+
+| Field | Legacy property | New column |
+|---|---|---|
+| Closed (flag) | `Closed` | `closed` |
+
+## Costing detail lines — ⚠ open design question, one-to-many
+
+The legacy form has a **Costing** grid (`RS_QCCosts`: `Sequence`, `DocType`, `DocNum`, `Activity`, `Costtype`, `Qty`, `UnitCost`, `Description`, `Note`) — multiple cost line-items per CMR, not a single value. This is genuinely **one-to-many**, unlike everything else in this document.
+
+`cmr-project` already hit a real wall trying to build a one-to-many relationship from scratch: the `New Property` wizard's `Bind To` picker only offers scalar columns, with no `Subcollection`/`Derived` option, and no way to build one from the UI alone (see that project's `task-list.md`, "Grid/Subcollection binding is a one-to-many mechanism"). **Decide before building**:
+- Whether eCMRs needs cost line-items at all in its first version, or whether a single rolled-up `estimated_cost` field is enough for now.
+- If real line-items are needed, whether that requires help from whoever manages IDO configuration (same conclusion `cmr-project` reached), since it's not achievable solo through Design mode based on prior findings.
+
+## Requirements checkbox cascade (unchanged from `cmr-project`)
 
 | Initial Change | Costing | Documentation | Material | Process | Tool/Machine |
 |---|:---:|:---:|:---:|:---:|:---:|
@@ -45,10 +140,19 @@ Same business rule, same mapping table — confirmed real, not inferred:
 | Tooling | | | | | ✓ |
 | Variance(waiver) | ✓ | ✓ | | ✓ | ✓ |
 
-On the legacy tables, this is enforced by a native `DefaultFrom: Change(RsChangeCosting, RsChangeProcess, RsChangeDocumentation, RsChangeToolmachine, RsChangeMaterial)` function tied to the real `Change` property class. **Unverified whether this same built-in function works against entirely new property names on a brand-new IDO** (see `task-list.md` Phase A) — if it doesn't, build a scripted equivalent (an event fired on `initial_change` changing, setting the 5 `req_*` properties directly) — still fully self-contained, no dependency on any other table either way.
+Mechanism: on the legacy form, a native `DefaultFrom: Change(RsChangeCosting, RsChangeProcess, RsChangeDocumentation, RsChangeToolmachine, RsChangeMaterial)` function, tied to the real `Change` property class. **Unverified whether this works on brand-new property names on eCMRs's own IDO** — see `task-list.md` Phase A; build a scripted equivalent if it doesn't.
 
-## Explicitly not carried over (out of scope for this standalone build)
+## Business logic to replicate (found in the real form's scripts/event handlers)
 
-- **Job Number** (`rs_cmrUf_ENF_CMR_JobNum`) — tied to `SLMatltrans`/receiving data; not part of this migration unless specifically requested.
-- **CAR cross-referencing** — a dependency on `RS_QCMrrs`, a different table entirely. Out of scope per the "no dependencies" rule.
-- **Any receiver reference (`RcvrNum`)** — no column for this at all. eCMRs does not link back to `RS_QCCRcvrs`/`rs_crcvr` in any way.
+- **`EnableClosed()`** — gates whether the `Closed` checkbox can even be checked: for each of the 5 categories, if its `req_*` flag is true, the matching `*_review_complete` flag must also be true before `Closed` is allowed. Real business rule, must be rebuilt on eCMRs.
+- **`SetCloseInfo`/`SetClosedBy`** — when `closed` is checked, auto-set `closed_by` = current user and `close_date` = today; when unchecked, clear both.
+- **The "auto-populate companion display name" pattern** (`UpdateAssignedToNameDisp`, `UpdateCMNameDisp`, `UpdateENGReviewerNameDisp`, `UpdatePlannerNameDisp`, `UpdatePurchasingNameDisp`, `UpdateQLTYReviewerNameDisp`, `UpdateVendorDescription`, `UpdateDescriptionNextAssy`) — every `*_empnum`/code field has a matching `SelectionEvent` that looks up and writes a human-readable name into its companion column. Same proven, portable pattern for every EmpNum/Item/Vendor field in this document.
+- **Notify** (`ENF_NotifyUser`) — sends an email using `assigned_username` and `priority`. Portable as-is.
+- **`LaunchCosting`/`LaunchDocumentation`/`LaunchMachineTool`/`LaunchMaterial`/`LaunchProcess`** — the 5 sub-form buttons. Still out of scope for now (per `cmr-project`'s own finding that they're unrelated to CMR creation) — revisit only if/when eCMRs builds its own equivalent review sub-forms.
+- **`UnlinkCmrRef` / `RefreshCMRParentProperty`** — explicitly **not carried over**. Both are receiver/parent-form-specific (unlinking a CMR from its `RS_QCCRcvrs` receiver row, refreshing a parent form that launched this one as a child). eCMRs has no receiver dependency and isn't launched as a child form, so neither applies.
+
+## Explicitly not carried over
+
+- **CAR cross-referencing** — dependency on `RS_QCMrrs`, out of scope per the "no dependencies" rule.
+- **Any receiver reference** (`RcvrNum`, `RsCrcvr*` joins) — no column for this. eCMRs does not link back to `RS_QCCRcvrs`/`rs_crcvr`.
+- **The Costing/Documentation/Tool-Machine/Material/Process sub-form Launch buttons** — see Business Logic above.
