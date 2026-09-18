@@ -30,6 +30,15 @@ SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
 SL_WCS = "STDOLE SLWcs( PROPERTIES(Wc, Description) )"
 SL_VENDORS = "STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
 SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+# Real list sources adapted from the legacy form's own combos (CB_NextAssy, comboBox1_SITE,
+# comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
+SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
+SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(PoNum)) RECORDCAP(0))"
+SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
+# Known real limitation, not carried forward blind: the legacy SLMatltrans filter is a plain
+# exact-match against RefNum with no leading-zero padding, so typing "DK84716" won't match a
+# stored "DK00084716" - same bug already documented in cmr-project, not fixed here either.
+SL_MATLTRANS_JOBNUM = "STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(RefNum=FP(JobNum)) RECORDCAP(0))"
 
 # (label, column, ctype, list_source, readonly)
 FIELD = "field"
@@ -58,11 +67,11 @@ LAYOUT = [
     (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Job Num:", "job_num", TYPE_EDIT), None),
-    (PAIR, f("PO Num:", "po_num", TYPE_EDIT), f("PO Line:", "po_line", TYPE_EDIT)),
+    (PAIR, f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOBNUM), None),
+    (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
