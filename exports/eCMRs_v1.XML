@@ -381,7 +381,7 @@
             </Component>
             <Component Name="c_status">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>2</TabOrder>
                <TopPos>4.800</TopPos>
                <LeftPos>55.500</LeftPos>

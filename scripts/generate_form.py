@@ -56,7 +56,7 @@ LAYOUT = [
     # groupings the users aren't used to. QUALITY/ENGINEERING/IMPLEMENTATION below are
     # the only section banners that were ever real on the original form.
     (HEADER, "CMR DETAILS"),
-    (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_EDIT)),
+    (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_COMBO)),
     (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),

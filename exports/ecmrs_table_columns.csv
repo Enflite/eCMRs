@@ -1,15 +1,15 @@
 Column Name,Data Type,Length,Decimal Places,Nullable,Primary Key,Default Value,Description
 cmr_num,String,10,,No,Y,AUTONUMBER(STEP(1)),"CMR number, key, auto-generated via AUTONUMBER on the table. Kept as nvarchar/NumSortedString (not a true int) - both QCSeq and QCInteger came back invalid Data Types in this environment's picker, and changing the SQL column's own type hit a DF_ue_ecmrs_cmr_num default-constraint dependency error. Stored as digits in a string column, AUTONUMBER(STEP(1)) still gives sequential, unique values starting at 1 - the actual requirement - without fighting either problem."
-status,String,40,,Yes,N,,Overall CMR status. Fixed value list not yet confirmed - Inline List can be added once real values are decided.
+status,String,40,,Yes,N,,"Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."
 workflow_status,String,40,,Yes,N,,Workflow status. Fixed value list not yet confirmed.
-priority,String,12,,Yes,N,,Reuses the system's own QCPriorityType - gives real High/Medium/Low validation without a custom Inline List.
+priority,String,12,,Yes,N,,"Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."
 item,String,30,,Yes,N,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
 item_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
 wc,String,6,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
 wc_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
 dept,String,6,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
 dept_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
-initial_change,String,40,,Yes,N,,"Fixed 8-value list: Documentation/Machine/Material/Other/Process/Specification/Tooling/Variance(waiver) - add via the Inline List '...' editor, not this import. Drives the Requirements cascade."
+initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
 additional_changes,String,1000,,Yes,N,,Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,String,1000,,Yes,N,,
 general_note,String,1000,,Yes,N,,
