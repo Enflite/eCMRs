@@ -771,6 +771,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
+               <EventToGenerate>UpdateItemDescriptionScript</EventToGenerate>
                <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -3022,6 +3023,42 @@ Inherits GlobalScript
             Else
                 ThisForm.Components("c_closed_by").Text = ThisForm.UserName
                 ThisForm.Components("c_close_date").Text = CStr(Today)
+            End If
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="UpdateItemDescriptionScript" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_UpdateItemDescriptionScript_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim triggerVal As String = ThisForm.Components("c_item").Text
+            If triggerVal &lt;&gt; "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "SLItems"
+                request.PropertyList.SetProperties("Item,Description")
+                request.Filter = "Item = " &amp; SqlLiteral.Format(triggerVal, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = ThisForm.IDOClient.LoadCollection(request)
+                If response.Items.Count &gt; 0 Then
+                    ThisForm.Components("c_item_description").Text = response.Items(0).PropertyValues(1).Value.ToString()
+                End If
+            Else
+                ThisForm.Components("c_item_description").Text = ""
             End If
             ReturnValue = "0"
         End Sub

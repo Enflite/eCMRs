@@ -129,6 +129,19 @@ PANE_ZERO_SIZE = 40.25
 # these (even the ones matching the legacy form's own working patterns byte-for-byte) jams the
 # form's edit/commit pipeline for every other field afterward, combo or plain, forever. The 11
 # description/name fields below are now plain editable fields instead (see LAYOUT).
+#
+# Experimental replacement, test case: EventToGenerate (the same wiring SetCloseInfo already
+# uses safely on the Closed checkbox) pointing at a ResponseType 33 inline VB script that calls
+# ThisForm.IDOClient.LoadCollection(...) directly, instead of the declarative
+# FILTER()/MOV()/SONON()/SETP() response language that jammed the form. Two real, separate
+# pieces of evidence combined here: EventToGenerate on a Type=27 combo is real (JobOrders' and
+# Items' own ItemEdit/CustNumEdit/WhseEdit etc. use it, just for a built-in event name), and
+# Me.IDOClient.LoadCollection(request) coming back with a matching row is the real pattern from
+# cmr-project's QC_CMRs.vb FormScript. Starting with just Item to confirm this combination
+# actually works live before wiring the other 10 fields the same way.
+SCRIPT_LOOKUP_EVENTS = [
+    ("item", "item_description", "UpdateItemDescriptionScript", "SLItems", "Item", "Description"),
+]
 
 _tab = [0]
 def next_tab():
@@ -188,6 +201,9 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     # confirmed live that using ANY combo wired to one of these jams the whole form's edit/commit
     # pipeline after a single use - every other field can then only be edited once before locking,
     # even fields with no lookup at all. ComboListSource-only combos (no SelectionEvent) are fine.
+    if column in [e[0] for e in SCRIPT_LOOKUP_EVENTS]:
+        ev = [e[2] for e in SCRIPT_LOOKUP_EVENTS if e[0] == column][0]
+        lines.append(f"               <EventToGenerate>{ev}</EventToGenerate>")
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
     if maintain_from_spec:
@@ -415,6 +431,52 @@ End Namespace
 # The 11 companion-lookup EventHandlers (ResponseType 49) that used to live here are removed -
 # confirmed live that triggering any of them jams the form's edit/commit pipeline for every
 # other field afterward, even ones with no lookup at all. See emit_control().
+#
+# Replacement being tested on Item only (SCRIPT_LOOKUP_EVENTS): a ResponseType 33 inline VB
+# script, same mechanism as SetCloseInfo above, using Me.IDOClient.LoadCollection(...) - the
+# real pattern from cmr-project's QC_CMRs.vb FormScript - via ThisForm instead of Me, since
+# ThisForm (not Me) is the confirmed-accessible object inside a GlobalScript (see SetCloseInfo's
+# own ThisForm.Components/.UserName calls above). Imports match that FormScript's exactly,
+# including Mongoose.Core.Common for SqlLiteral.Format.
+for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in SCRIPT_LOOKUP_EVENTS:
+    _vb = f"""Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_{event_name}_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim triggerVal As String = ThisForm.Components("c_{trigger_col}").Text
+            If triggerVal <> "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "{sl_table}"
+                request.PropertyList.SetProperties("{filter_prop},{source_prop}")
+                request.Filter = "{filter_prop} = " & SqlLiteral.Format(triggerVal, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = ThisForm.IDOClient.LoadCollection(request)
+                If response.Items.Count > 0 Then
+                    ThisForm.Components("c_{display_col}").Text = response.Items(0).PropertyValues(1).Value.ToString()
+                End If
+            Else
+                ThisForm.Components("c_{display_col}").Text = ""
+            End If
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+"""
+    EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT({esc(_vb)})</Response>
+            </EventHandler>
+"""
 
 FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <FormsAndObjectsExport Version="010000">
