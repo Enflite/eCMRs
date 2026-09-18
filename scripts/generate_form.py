@@ -41,31 +41,34 @@ def f(label, column, ctype, list_source=None, readonly=False):
     return (FIELD, label, column, ctype, list_source, readonly)
 
 LAYOUT = [
-    (HEADER, "IDENTITY"),
+    # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
+    # legacy form - it never had IDENTITY/CHANGE DETAILS/ITEM DETAILS/SOURCING/DATES
+    # banners. Keeping it as one section here for the same reason: don't invent new
+    # groupings the users aren't used to. QUALITY/ENGINEERING/IMPLEMENTATION below are
+    # the only section banners that were ever real on the original form.
+    (HEADER, "CMR DETAILS"),
     (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_EDIT)),
     (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
-
-    (HEADER, "CHANGE DETAILS"),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Additional Changes:", "additional_changes", TYPE_MULTILINE)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (SPAN, f("General Note:", "general_note", TYPE_MULTILINE)),
-
-    (HEADER, "ITEM DETAILS"),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
-
-    (HEADER, "SOURCING / PURCHASING"),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True)),
     (PAIR, f("Job Num:", "job_num", TYPE_EDIT), None),
     (PAIR, f("PO Num:", "po_num", TYPE_EDIT), f("PO Line:", "po_line", TYPE_EDIT)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
+    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
+    (PAIR, f("General Close Date:", "general_close_date", TYPE_DATE), f("General Closed By:", "general_closed_by", TYPE_EDIT)),
+    (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
     (HEADER, "QUALITY"),
     (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Costing Review Complete", "cost_review_complete", TYPE_CHECKBOX, readonly=True)),
@@ -93,12 +96,6 @@ LAYOUT = [
     (PAIR, f("Purchasing Complete", "purchasing_complete", TYPE_CHECKBOX), None),
     (PAIR, f("CM Reviewer:", "cm_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("CM Reviewer Name:", "cm_reviewer_name", TYPE_EDIT, readonly=True)),
     (PAIR, f("CM Complete", "cm_complete", TYPE_CHECKBOX), None),
-
-    (HEADER, "DATES / CLOSE"),
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
-    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
-    (PAIR, f("General Close Date:", "general_close_date", TYPE_DATE), f("General Closed By:", "general_closed_by", TYPE_EDIT)),
-    (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 ]
 
 # Grid pane (left side) - a master-list overview of multiple records at once, matching the
