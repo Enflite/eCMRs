@@ -1308,7 +1308,7 @@
             </Component>
             <Component Name="c_job_num">
                <DeviceID>-1</DeviceID>
-               <Type>27</Type>
+               <Type>1</Type>
                <TabOrder>24</TabOrder>
                <TopPos>41.450</TopPos>
                <LeftPos>14.500</LeftPos>
@@ -1320,7 +1320,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.JobNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(RefNum=FP(JobNum)) RECORDCAP(0))</ComboListSource>
+               <MaintainFromSpec>JobOrders( PROPERTY(Job) )</MaintainFromSpec>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

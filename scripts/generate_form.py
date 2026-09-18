@@ -35,10 +35,10 @@ SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2
 SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(PoNum)) RECORDCAP(0))"
 SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
-# Known real limitation, not carried forward blind: the legacy SLMatltrans filter is a plain
-# exact-match against RefNum with no leading-zero padding, so typing "DK84716" won't match a
-# stored "DK00084716" - same bug already documented in cmr-project, not fixed here either.
-SL_MATLTRANS_JOBNUM = "STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(RefNum=FP(JobNum)) RECORDCAP(0))"
+# Job Num deliberately does NOT use an SLMatltrans combo (that's what had the leading-zero
+# exact-match bug). The real JobOrders form's own Job field is a plain Edit bound to
+# PropertyClassName JobBase, validated via MaintainFromSpec instead of a filtered combo -
+# see job_num's LAYOUT entry below, which mimics that real mechanism directly.
 
 # (label, column, ctype, list_source, readonly)
 FIELD = "field"
@@ -46,8 +46,8 @@ PAIR = "pair"          # (fieldA, fieldB) sharing one row
 SPAN = "span"          # full-width field (multiline)
 HEADER = "header"
 
-def f(label, column, ctype, list_source=None, readonly=False):
-    return (FIELD, label, column, ctype, list_source, readonly)
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -70,7 +70,7 @@ LAYOUT = [
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT, readonly=True)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOBNUM), None),
+    (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
@@ -176,7 +176,7 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0):
             </Component>
 """
 
-def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4):
+def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None):
     name = "c_" + column
     lines = [f'            <Component Name="{name}">',
              "               <DeviceID>-1</DeviceID>",
@@ -202,6 +202,8 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4):
         lines.append(f"               <SelectionEvent>{ev}</SelectionEvent>")
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
+    if maintain_from_spec:
+        lines.append(f"               <MaintainFromSpec>{esc(maintain_from_spec)}</MaintainFromSpec>")
     lines.append("               <Flags>1</Flags>")
     lines.append(f"               <ReadOnly>{'True' if readonly else 'False'}</ReadOnly>")
     lines.append("               <Hidden>False</Hidden>")
@@ -213,7 +215,7 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4):
     lines.append("            </Component>")
     return "\n".join(lines) + "\n"
 
-def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W):
+def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None):
     out = ""
     if ctype == TYPE_CHECKBOX:
         # checkbox carries its own caption, no separate static label
@@ -248,7 +250,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
         out += "            </Component>\n"
         return out
     out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5))
-    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w)
+    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec)
     return out
 
 def emit_span(label, column, ctype, y):
@@ -374,16 +376,16 @@ def build_components():
             a, b = item[1], item[2]
             row_h = 0
             if a:
-                _, label, column, ctype, list_source, readonly = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
                 row_h = max(row_h, 1.4)
             if b:
-                _, label, column, ctype, list_source, readonly = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec))
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly = item[1]
+            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
     return "".join(out), y

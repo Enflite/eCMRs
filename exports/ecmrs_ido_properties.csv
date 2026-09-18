@@ -20,7 +20,7 @@ next_assy_description,NextAssyDescription,,String,40,,String,sDescription,,1,"Re
 vendor,Vendor,,String,15,,String,,,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
 vendor_name,VendorName,,String,255,,String,,,1,"Read-only, auto-populated by lookup."
 qty,Qty,,Decimal,,4,Decimal,,,,
-job_num,JobNum,,String,15,,String,,,,Real combo (SLMatltrans). The legacy leading-zero exact-match bug is fixed here via an Input Mask (AA00000000) that auto-pads the typed value to match the stored DK00084716-style format before the filter reads it - see generate_ido_import.py.
+job_num,JobNum,,String,15,,JobBase,,,,"Mimics the real JobOrders form's own Job field exactly: plain Edit (not a filtered combo), validated via MaintainFromSpec: JobOrders( PROPERTY(Job) ) in the form XML - avoids the SLMatltrans leading-zero exact-match bug entirely instead of working around it. Column Data Type tries the real confirmed JobBase class; if rejected like QCSeq/QCInteger were, fall back to String."
 po_num,PoNum,,String,15,,String,,,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"
 po_line,PoLine,,String,10,,String,,,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
 rfq_num,RfqNum,,String,15,,String,,,,

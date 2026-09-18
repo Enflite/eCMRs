@@ -10,20 +10,15 @@ RowPointer, NoteExistsFlag, InWorkflow), so an import can't collide with or dupl
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
-from generate_schema_csv import FIELDS
+from generate_schema_csv import FIELDS, COLDTYPE_OVERRIDES
 
 IDO_NAME = "ue_ecmrs"
 TABLE_ALIAS = "ec"
 TABLE_NAME = "ue_ecmrs"  # confirmed from the real ToExcel export, not "ue_ecmr"
 
-# Real confirmed example from a live record (found earlier in cmr-project): job numbers are
-# a 2-letter prefix + 8 zero-padded digits, e.g. "DK00084716". This mask auto-pads whatever's
-# typed (e.g. "DK84716") to the full stored form before FP(JobNum) reads it in the combo's
-# FILTER - fixes the leading-zero exact-match bug without touching the FILTER's own syntax,
-# which is already confirmed to run. Mask syntax itself is a best-effort standard convention
-# (A = required letter, 0 = required digit) - verify it's accepted as typed in that field;
-# adjust here and regenerate if this environment's Input Mask picker expects something else.
-INPUT_MASKS = {"job_num": "AA00000000"}
+# Superseded: job_num no longer needs an Input Mask - it's now a plain Edit validated via
+# MaintainFromSpec in the form XML instead, mimicking the real JobOrders form's own Job
+# field exactly. See generate_form.py.
 
 HEADER = ["DevelopmentFlagGridCol", "Property Name", "IDO Name", "Property Class",
           "Column Table Alias", "Table Name", "Property Type", "Column Name", "Description",
@@ -46,13 +41,14 @@ def q(col_idx, value):
     return value
 
 def build_row(seq, col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc):
-    # Column Data Type = same value as Data Type - see generate_schema_csv.py for why.
+    # Column Data Type defaults to matching Data Type, except explicit overrides - see
+    # generate_schema_csv.py's COLDTYPE_OVERRIDES for why (and job_num's specific case).
     default_value = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""
-    input_mask = INPUT_MASKS.get(col, "")
+    col_data_type = COLDTYPE_OVERRIDES.get(col, dtype)
     fields = [
         "1", pname, IDO_NAME, "", TABLE_ALIAS, TABLE_NAME, "Bound to Column", col, desc,
-        str(seq), "0", dtype, length, "", default_value, dtype, "", "", required, readonly,
-        "", "", "", labelid, input_mask, "", "", "", "", "", "", "", decimal, readonly, "", "", "", "", "",
+        str(seq), "0", dtype, length, "", default_value, col_data_type, "", "", required, readonly,
+        "", "", "", labelid, "", "", "", "", "", "", "", "", decimal, readonly, "", "", "", "", "",
     ]
     return "\t".join(q(i, v) for i, v in enumerate(fields))
 
