@@ -37,10 +37,11 @@ def q(col_idx, value):
     return value
 
 def build_row(seq, col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc):
+    # Column Data Type = same value as Data Type - see generate_schema_csv.py for why.
     default_value = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""
     fields = [
         "1", pname, IDO_NAME, "", TABLE_ALIAS, TABLE_NAME, "Bound to Column", col, desc,
-        str(seq), "0", dtype, length, "", default_value, coldtype, "", "", required, readonly,
+        str(seq), "0", dtype, length, "", default_value, dtype, "", "", required, readonly,
         "", "", "", labelid, "", "", "", "", "", "", "", "", decimal, readonly, "", "", "", "", "",
     ]
     return "\t".join(q(i, v) for i, v in enumerate(fields))
