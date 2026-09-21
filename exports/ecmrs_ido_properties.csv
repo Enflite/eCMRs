@@ -46,7 +46,7 @@ auth_supplier_ship,AuthSupplierShip,,Byte,,,,,0,,
 qc_disposition,QcDisposition,,String,20,,,,,,"Confirmed real list (from the live dropdown): Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap. Needs its own Property Class + Inline List set up directly in Application Studio."
 eng_disposition,EngDisposition,,String,20,,,,,,"Confirmed real list (from the live dropdown): NFF, NRS, Other, Rework, Scrap - a subset of QcDisposition's list, missing Accept/Hold/Reject. Needs its own Property Class + Inline List set up directly in Application Studio."
 assigned_empnum,AssignedEmpNum,,NumSortedString,7,,,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-assigned_username,AssignedUsername,,String,128,,,sUserName,,1,"Read-only, auto-populated when AssignedEmpNum is selected."
+assigned_username,AssignedUsername,,String,128,,,sUserName,,,"Directly writable - the Assigned combo binds here now (commit e2fc29d), not to AssignedEmpNum. Was originally designed as an auto-populated read-only companion field; that's no longer this property's role, so Read Only must not be set - it still was here, likely causing a write-rejection lock when selecting Assigned live."
 assigned_buyer,AssignedBuyer,,NumSortedString,7,,,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 qc_reviewer_empnum,QcReviewerEmpNum,,NumSortedString,7,,,sEmployee,,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 qc_reviewer_username,QcReviewerUsername,,String,128,,,sUserName,,1,"Read-only, auto-populated when QcReviewerEmpNum is selected."
