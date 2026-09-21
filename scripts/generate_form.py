@@ -60,9 +60,7 @@ LAYOUT = [
     (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
-    (SPAN, f("Additional Changes:", "additional_changes", TYPE_MULTILINE)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
-    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT)),
     (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT)),
@@ -73,18 +71,16 @@ LAYOUT = [
     (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
-    (PAIR, f("MDL:", "mdl", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
+    (PAIR, f("POC:", "poc", TYPE_EDIT), None),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("General Close Date:", "general_close_date", TYPE_DATE), f("General Closed By:", "general_closed_by", TYPE_EDIT)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
     (HEADER, "QUALITY"),
-    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Costing Review Complete", "cost_review_complete", TYPE_CHECKBOX, readonly=True)),
-    (PAIR, f("Req: Documentation", "req_documentation", TYPE_CHECKBOX), f("Documentation Review Complete", "documentation_review_complete", TYPE_CHECKBOX, readonly=True)),
-    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Tool/Machine Review Complete", "machinery_review_complete", TYPE_CHECKBOX, readonly=True)),
-    (PAIR, f("Req: Process", "req_process", TYPE_CHECKBOX), f("Process Review Complete", "process_review_complete", TYPE_CHECKBOX, readonly=True)),
-    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), f("Material Review Complete", "material_review_complete", TYPE_CHECKBOX, readonly=True)),
+    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
+    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Req: Process", "req_process", TYPE_CHECKBOX)),
+    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_EDIT), None),
@@ -92,6 +88,7 @@ LAYOUT = [
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
+    (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_EDIT), None),
     (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
@@ -216,10 +213,7 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append(f"               <ReadOnly>{'True' if readonly else 'False'}</ReadOnly>")
     lines.append("               <Hidden>False</Hidden>")
     lines.append("               <HelpContextID>0</HelpContextID>")
-    if column == "closed":
-        lines.append("               <Post301Format>ENABLEDWHEN(V(cew_Closed))</Post301Format>")
-    else:
-        lines.append("               <Post301Format />")
+    lines.append("               <Post301Format />")
     lines.append("            </Component>")
     return "\n".join(lines) + "\n"
 
@@ -251,10 +245,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
 """
-        if column == "closed":
-            out += "               <Post301Format>ENABLEDWHEN(V(cew_Closed))</Post301Format>\n"
-        else:
-            out += "               <Post301Format />\n"
+        out += "               <Post301Format />\n"
         out += "            </Component>\n"
         return out
     out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5))
@@ -512,12 +503,6 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Variables>
             <Variable Name="fds_DataSource">
                <Value>ue_ecmrs( ORDERBY({PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="cew_Closed">
-               <Value>Enabled:#C(c_closed), #P({PROP['req_costing']}) = #P({PROP['cost_review_complete']}) &amp; #P({PROP['req_documentation']}) = #P({PROP['documentation_review_complete']}) &amp; #P({PROP['req_tool_machine']}) = #P({PROP['machinery_review_complete']}) &amp; #P({PROP['req_process']}) = #P({PROP['process_review_complete']}) &amp; #P({PROP['req_material']}) = #P({PROP['material_review_complete']}), "True"</Value>
                <Value2 />
                <Value3 />
                <Description />
