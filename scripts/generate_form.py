@@ -46,6 +46,7 @@ PAIR = "pair"          # (fieldA, fieldB) sharing one row
 SPAN = "span"          # full-width field (multiline)
 HEADER = "header"
 IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
+BUTTON_ROW = "button_row"  # a single Button on its own row
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -58,26 +59,27 @@ LAYOUT = [
     # the only section banners that were ever real on the original form.
     (HEADER, "CMR DETAILS"),
     (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_COMBO)),
-    (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
+    (PAIR, f("Create Date:", "create_date", TYPE_DATE, readonly=True), None),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT)),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
+    (BUTTON_ROW, "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT)),
-    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), f("WC Description:", "wc_description", TYPE_EDIT)),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), f("Dept Description:", "dept_description", TYPE_EDIT)),
+    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), None),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT)),
     (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
+    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), None),
     (PAIR, f("POC:", "poc", TYPE_EDIT), None),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
-    (PAIR, f("General Close Date:", "general_close_date", TYPE_DATE), f("General Closed By:", "general_closed_by", TYPE_EDIT)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
     (HEADER, "QUALITY"),
@@ -87,14 +89,14 @@ LAYOUT = [
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
-    (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT)),
+    (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("", "qc_reviewer_username", TYPE_EDIT)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
-    (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT)),
+    (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
@@ -262,6 +264,30 @@ def emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y):
     out += emit_control(name_col, TYPE_EDIT, 40, y, None, False, w=38)
     return out
 
+def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
+    return f"""            <Component Name="{name}">
+               <DeviceID>-1</DeviceID>
+               <Type>8</Type>
+               <TabOrder>{next_tab()}</TabOrder>
+               <TopPos>{y:.3f}</TopPos>
+               <LeftPos>{x:.3f}</LeftPos>
+               <Height>{h}</Height>
+               <ListHeight>0</ListHeight>
+               <Width>{w}</Width>
+               <Caption>{esc(caption)}</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <EventToGenerate>{event_to_generate}</EventToGenerate>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+"""
+
 def emit_header(text, y):
     return f"""            <Component Name="hdr_{text.replace(' ', '_').replace('/', '_')}">
                <DeviceID>-1</DeviceID>
@@ -396,6 +422,10 @@ def build_components():
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
             y += ROW_H
+        elif kind == BUTTON_ROW:
+            _, name, caption, event_to_generate = item
+            out.append(emit_button(name, caption, event_to_generate, LABEL_X_A, y))
+            y += ROW_H
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()
@@ -424,6 +454,34 @@ Inherits GlobalScript
                 ThisForm.Components("c_closed_by").Text = ThisForm.UserName
                 ThisForm.Components("c_close_date").Text = CStr(Today)
             End If
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="NotifyEngineering" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_NotifyEngineering_0
+Inherits GlobalScript
+
+        Sub Main()
+            ' Placeholder only: confirms the button/event wiring works via a plain VB.NET
+            ' MsgBox call (Microsoft.VisualBasic, already imported and confirmed safe in this
+            ' GlobalScript context). Real notification (email to Engineering) needs a decided
+            ' mechanism first - no confirmed syntax for that exists anywhere in this project's
+            ' real evidence yet, and guessing at one risks the same kind of silent failures the
+            ' SelectionEvent/IDOClient experiments already hit this session.
+            MsgBox("Notification sent to Engineering for CMR " &amp; ThisForm.Components("c_cmr_num").Text)
             ReturnValue = "0"
         End Sub
 End Class
@@ -511,7 +569,14 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 {EVENT_HANDLERS}         </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_ecmrs( ORDERBY({PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
+               <!-- Closed asc puts open CMRs first, closed ones last - the best available proxy
+                    for "Complete sorts to the bottom" since Status is a plain string whose
+                    alphabetical order doesn't put "Complete" last, and there's no confirmed
+                    Mongoose syntax here for a conditional/computed ORDERBY expression. Priority
+                    is deliberately NOT in this sort - High/Medium/Low as plain text alphabetizes
+                    to High, Low, Medium, which is wrong for urgency order; sorting by it would
+                    be actively misleading rather than just incomplete. -->
+               <Value>ue_ecmrs( ORDERBY({PROP['closed']} asc, {PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
