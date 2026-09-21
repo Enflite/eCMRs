@@ -13,10 +13,15 @@
               same LOCKMODE(Row) fds_DataSource, no field-locking issue) that 202 was never the
               problem - the 1048778 guess tried here previously is reverted. -->
          <Flags>202</Flags>
-         <Height>84.1</Height>
+         <Height>66.8</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <Width>140</Width>
+         <!-- Widened from 140 - the note column (NOTE_X=86, NOTE_W=85, ending ~171) needs more
+              detail-pane width than the old two-column layout used (which only went to ~79.5).
+              Detail pane's own usable width is this minus PaneZeroSize (the grid pane's width),
+              so 220 leaves it roughly 180 wide - comfortable room past NOTE_X+NOTE_W with a
+              margin, not a tight fit. -->
+         <Width>220</Width>
          <PaneZeroSize>40.25</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
@@ -28,7 +33,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>0</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>2</ListHeight>
                <Width>40.25</Width>
                <MaxCharacters>0</MaxCharacters>
@@ -49,7 +54,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>0</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
                <Caption>CMR Num</Caption>
@@ -72,7 +77,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>10</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
                <Caption>Status</Caption>
@@ -95,7 +100,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>24</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
                <Caption>Priority</Caption>
@@ -118,7 +123,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>34</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
                <Caption>Item</Caption>
@@ -141,7 +146,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>48</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
                <Caption>Dept</Caption>
@@ -164,7 +169,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>58</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
                <Caption>WC</Caption>
@@ -187,7 +192,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>68</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
                <Caption>Created By</Caption>
@@ -210,7 +215,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>82</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
                <Caption>Create Date</Caption>
@@ -233,7 +238,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>96</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
                <Caption>Due Date</Caption>
@@ -256,7 +261,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
                <LeftPos>110</LeftPos>
-               <Height>82.15</Height>
+               <Height>64.75</Height>
                <ListHeight>0</ListHeight>
                <Width>8</Width>
                <Caption>Closed</Caption>
@@ -674,53 +679,11 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
-            <Component Name="l_requested_action">
-               <DeviceID>-1</DeviceID>
-               <Type>0</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>15.300</TopPos>
-               <LeftPos>14.500</LeftPos>
-               <Height>1</Height>
-               <ListHeight>0</ListHeight>
-               <Width>22</Width>
-               <Caption>Requested Action:</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <Binding>0</Binding>
-               <Flags>3</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Format>JUSTIFY(R)</Format>
-               <Post301Format />
-               <EffectiveCaption>Requested Action:</EffectiveCaption>
-            </Component>
-            <Component Name="c_requested_action">
-               <DeviceID>-1</DeviceID>
-               <Type>18</Type>
-               <TabOrder>10</TabOrder>
-               <TopPos>16.400</TopPos>
-               <LeftPos>14.500</LeftPos>
-               <Height>4.5</Height>
-               <ListHeight>0</ListHeight>
-               <Width>65</Width>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.RequestedAction</DataSource>
-               <Binding>1</Binding>
-               <Flags>1</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Post301Format />
-            </Component>
             <Component Name="l_item">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>21.250</TopPos>
+               <TopPos>15.450</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -741,8 +704,8 @@
             <Component Name="c_item">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>11</TabOrder>
-               <TopPos>21.100</TopPos>
+               <TabOrder>10</TabOrder>
+               <TopPos>15.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -763,7 +726,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>21.250</TopPos>
+               <TopPos>15.450</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -784,8 +747,8 @@
             <Component Name="c_wc">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>12</TabOrder>
-               <TopPos>21.100</TopPos>
+               <TabOrder>11</TabOrder>
+               <TopPos>15.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -806,7 +769,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>23.000</TopPos>
+               <TopPos>17.200</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -827,8 +790,8 @@
             <Component Name="c_dept">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>13</TabOrder>
-               <TopPos>22.850</TopPos>
+               <TabOrder>12</TabOrder>
+               <TopPos>17.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -849,7 +812,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>24.750</TopPos>
+               <TopPos>18.950</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -870,8 +833,8 @@
             <Component Name="c_revision">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>14</TabOrder>
-               <TopPos>24.600</TopPos>
+               <TabOrder>13</TabOrder>
+               <TopPos>18.800</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -891,7 +854,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>24.750</TopPos>
+               <TopPos>18.950</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -912,8 +875,8 @@
             <Component Name="c_latest_revision">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>15</TabOrder>
-               <TopPos>24.600</TopPos>
+               <TabOrder>14</TabOrder>
+               <TopPos>18.800</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -933,7 +896,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>26.500</TopPos>
+               <TopPos>20.700</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -954,8 +917,8 @@
             <Component Name="c_next_assy_item">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>16</TabOrder>
-               <TopPos>26.350</TopPos>
+               <TabOrder>15</TabOrder>
+               <TopPos>20.550</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -976,7 +939,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>26.500</TopPos>
+               <TopPos>20.700</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -997,8 +960,8 @@
             <Component Name="c_qty">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>17</TabOrder>
-               <TopPos>26.350</TopPos>
+               <TabOrder>16</TabOrder>
+               <TopPos>20.550</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1018,7 +981,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>28.250</TopPos>
+               <TopPos>22.450</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1039,8 +1002,8 @@
             <Component Name="c_vendor">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>18</TabOrder>
-               <TopPos>28.100</TopPos>
+               <TabOrder>17</TabOrder>
+               <TopPos>22.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1061,7 +1024,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>28.250</TopPos>
+               <TopPos>22.450</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1082,8 +1045,8 @@
             <Component Name="c_job_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>19</TabOrder>
-               <TopPos>28.100</TopPos>
+               <TabOrder>18</TabOrder>
+               <TopPos>22.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1104,7 +1067,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>30.000</TopPos>
+               <TopPos>24.200</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1125,8 +1088,8 @@
             <Component Name="c_serial_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>20</TabOrder>
-               <TopPos>29.850</TopPos>
+               <TabOrder>19</TabOrder>
+               <TopPos>24.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1146,7 +1109,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>30.000</TopPos>
+               <TopPos>24.200</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1167,8 +1130,8 @@
             <Component Name="c_lot_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>21</TabOrder>
-               <TopPos>29.850</TopPos>
+               <TabOrder>20</TabOrder>
+               <TopPos>24.050</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1188,7 +1151,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>31.750</TopPos>
+               <TopPos>25.950</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1209,8 +1172,8 @@
             <Component Name="c_po_num">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>22</TabOrder>
-               <TopPos>31.600</TopPos>
+               <TabOrder>21</TabOrder>
+               <TopPos>25.800</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1231,7 +1194,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>31.750</TopPos>
+               <TopPos>25.950</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1252,8 +1215,8 @@
             <Component Name="c_po_line">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>23</TabOrder>
-               <TopPos>31.600</TopPos>
+               <TabOrder>22</TabOrder>
+               <TopPos>25.800</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1274,7 +1237,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>33.500</TopPos>
+               <TopPos>27.700</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1295,8 +1258,8 @@
             <Component Name="c_rfq_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>24</TabOrder>
-               <TopPos>33.350</TopPos>
+               <TabOrder>23</TabOrder>
+               <TopPos>27.550</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1316,7 +1279,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>33.500</TopPos>
+               <TopPos>27.700</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1337,8 +1300,8 @@
             <Component Name="c_poc">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>25</TabOrder>
-               <TopPos>33.350</TopPos>
+               <TabOrder>24</TabOrder>
+               <TopPos>27.550</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1358,7 +1321,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>35.250</TopPos>
+               <TopPos>29.450</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1379,8 +1342,8 @@
             <Component Name="c_due_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>26</TabOrder>
-               <TopPos>35.100</TopPos>
+               <TabOrder>25</TabOrder>
+               <TopPos>29.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1400,7 +1363,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>35.250</TopPos>
+               <TopPos>29.450</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1421,8 +1384,8 @@
             <Component Name="c_internal_review_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>27</TabOrder>
-               <TopPos>35.100</TopPos>
+               <TabOrder>26</TabOrder>
+               <TopPos>29.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1442,7 +1405,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>37.000</TopPos>
+               <TopPos>31.200</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1463,8 +1426,8 @@
             <Component Name="c_close_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>28</TabOrder>
-               <TopPos>36.850</TopPos>
+               <TabOrder>27</TabOrder>
+               <TopPos>31.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1484,7 +1447,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>37.000</TopPos>
+               <TopPos>31.200</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1505,8 +1468,8 @@
             <Component Name="c_closed_by">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>29</TabOrder>
-               <TopPos>36.850</TopPos>
+               <TabOrder>28</TabOrder>
+               <TopPos>31.050</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1525,8 +1488,8 @@
             <Component Name="c_closed">
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
-               <TabOrder>30</TabOrder>
-               <TopPos>38.600</TopPos>
+               <TabOrder>29</TabOrder>
+               <TopPos>32.800</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1544,11 +1507,53 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
+            <Component Name="l_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>4.800</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>Requested Action:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Requested Action:</EffectiveCaption>
+            </Component>
+            <Component Name="c_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>30</TabOrder>
+               <TopPos>5.900</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>12</Height>
+               <ListHeight>0</ListHeight>
+               <Width>85</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.RequestedAction</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
             <Component Name="hdr_QUALITY">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>40.350</TopPos>
+               <TopPos>34.550</TopPos>
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
@@ -1569,7 +1574,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>31</TabOrder>
-               <TopPos>42.250</TopPos>
+               <TopPos>36.450</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1590,7 +1595,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>32</TabOrder>
-               <TopPos>42.250</TopPos>
+               <TopPos>36.450</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1611,7 +1616,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>33</TabOrder>
-               <TopPos>44.000</TopPos>
+               <TopPos>38.200</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1632,7 +1637,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>34</TabOrder>
-               <TopPos>44.000</TopPos>
+               <TopPos>38.200</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1653,7 +1658,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>35</TabOrder>
-               <TopPos>45.750</TopPos>
+               <TopPos>39.950</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1674,7 +1679,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>36</TabOrder>
-               <TopPos>47.500</TopPos>
+               <TopPos>41.700</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1695,7 +1700,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>37</TabOrder>
-               <TopPos>47.500</TopPos>
+               <TopPos>41.700</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1716,7 +1721,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>38</TabOrder>
-               <TopPos>49.250</TopPos>
+               <TopPos>43.450</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1737,7 +1742,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>39</TabOrder>
-               <TopPos>49.250</TopPos>
+               <TopPos>43.450</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -1758,7 +1763,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>51.150</TopPos>
+               <TopPos>45.350</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1780,7 +1785,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>40</TabOrder>
-               <TopPos>51.000</TopPos>
+               <TopPos>45.200</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1800,7 +1805,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>52.900</TopPos>
+               <TopPos>47.100</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1822,7 +1827,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>41</TabOrder>
-               <TopPos>52.750</TopPos>
+               <TopPos>46.950</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1843,7 +1848,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>52.900</TopPos>
+               <TopPos>47.100</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1865,7 +1870,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>42</TabOrder>
-               <TopPos>52.750</TopPos>
+               <TopPos>46.950</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1885,8 +1890,8 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>54.500</TopPos>
-               <LeftPos>14.500</LeftPos>
+               <TopPos>36.450</TopPos>
+               <LeftPos>86.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
                <Width>22</Width>
@@ -1907,11 +1912,11 @@
                <DeviceID>-1</DeviceID>
                <Type>18</Type>
                <TabOrder>43</TabOrder>
-               <TopPos>55.600</TopPos>
-               <LeftPos>14.500</LeftPos>
-               <Height>4.5</Height>
+               <TopPos>37.550</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>10.95</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>85</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1927,7 +1932,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>60.300</TopPos>
+               <TopPos>48.700</TopPos>
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
@@ -1948,7 +1953,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>62.350</TopPos>
+               <TopPos>50.750</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1970,7 +1975,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>44</TabOrder>
-               <TopPos>62.200</TopPos>
+               <TopPos>50.600</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -1990,7 +1995,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>64.100</TopPos>
+               <TopPos>52.500</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2012,7 +2017,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>45</TabOrder>
-               <TopPos>63.950</TopPos>
+               <TopPos>52.350</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2032,7 +2037,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>65.850</TopPos>
+               <TopPos>54.250</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2054,7 +2059,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>46</TabOrder>
-               <TopPos>65.700</TopPos>
+               <TopPos>54.100</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2074,7 +2079,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>67.600</TopPos>
+               <TopPos>56.000</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2096,7 +2101,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>47</TabOrder>
-               <TopPos>67.450</TopPos>
+               <TopPos>55.850</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2117,7 +2122,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>67.600</TopPos>
+               <TopPos>56.000</TopPos>
                <LeftPos>43.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2139,7 +2144,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>48</TabOrder>
-               <TopPos>67.450</TopPos>
+               <TopPos>55.850</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2159,8 +2164,8 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>69.200</TopPos>
-               <LeftPos>14.500</LeftPos>
+               <TopPos>50.600</TopPos>
+               <LeftPos>86.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
                <Width>22</Width>
@@ -2181,11 +2186,11 @@
                <DeviceID>-1</DeviceID>
                <Type>18</Type>
                <TabOrder>49</TabOrder>
-               <TopPos>70.300</TopPos>
-               <LeftPos>14.500</LeftPos>
-               <Height>4.5</Height>
+               <TopPos>51.700</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>5.7</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>85</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2201,7 +2206,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>75.000</TopPos>
+               <TopPos>57.600</TopPos>
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
@@ -2222,7 +2227,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>50</TabOrder>
-               <TopPos>76.900</TopPos>
+               <TopPos>59.500</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -2243,7 +2248,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>77.050</TopPos>
+               <TopPos>59.650</TopPos>
                <LeftPos>15.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2265,7 +2270,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>51</TabOrder>
-               <TopPos>76.900</TopPos>
+               <TopPos>59.500</TopPos>
                <LeftPos>23.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2286,7 +2291,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>52</TabOrder>
-               <TopPos>76.900</TopPos>
+               <TopPos>59.500</TopPos>
                <LeftPos>40.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2306,7 +2311,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>53</TabOrder>
-               <TopPos>78.650</TopPos>
+               <TopPos>61.250</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -2327,7 +2332,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>78.800</TopPos>
+               <TopPos>61.400</TopPos>
                <LeftPos>15.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2349,7 +2354,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>54</TabOrder>
-               <TopPos>78.650</TopPos>
+               <TopPos>61.250</TopPos>
                <LeftPos>23.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2370,7 +2375,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>55</TabOrder>
-               <TopPos>78.650</TopPos>
+               <TopPos>61.250</TopPos>
                <LeftPos>40.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2390,7 +2395,7 @@
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>56</TabOrder>
-               <TopPos>80.400</TopPos>
+               <TopPos>63.000</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
@@ -2411,7 +2416,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>80.550</TopPos>
+               <TopPos>63.150</TopPos>
                <LeftPos>15.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2433,7 +2438,7 @@
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>57</TabOrder>
-               <TopPos>80.400</TopPos>
+               <TopPos>63.000</TopPos>
                <LeftPos>23.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
@@ -2454,7 +2459,7 @@
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>58</TabOrder>
-               <TopPos>80.400</TopPos>
+               <TopPos>63.000</TopPos>
                <LeftPos>40.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>

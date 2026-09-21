@@ -24,6 +24,12 @@ LABEL_X_B, CTRL_X_B = 43, 55.5
 ROW_H = 1.75
 SECTION_H = 1.6
 SPAN_X, SPAN_W = 14.5, 65
+# Wider form per direct request - notes (Requested Action, QC/Eng RCA Notes) move off the
+# full-width row below and become a third column on the right, spanning the height of
+# whatever else is in their section, instead of a strip squeezed underneath. NOTE_X sits past
+# the existing two-column area (which ends around 79.5); the Form's own <Width> below is
+# widened accordingly so this new column doesn't get clipped off the visible detail pane.
+NOTE_X, NOTE_W = 86, 85
 
 SL_ITEMS = "STDOLE SLItems( PROPERTIES(Item, Description) )"
 SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
@@ -411,11 +417,27 @@ def build_components():
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
     y = 2.9
+    section_start_y = y
+    pending_notes = []  # notes (Requested Action, QC/Eng RCA Notes) queued for the current section
+
+    def flush_notes(section_end_y):
+        # Capped rather than always spanning the full section - CMR Details runs ~17 rows
+        # long, which would make Requested Action's box ~28 units tall vs. QC/Eng RCA Notes'
+        # ~11 and ~6, wildly disproportionate. 12 keeps every note box in the same visual
+        # range, with the left column simply running past the bottom of a shorter note.
+        note_h = min(12, max(4.5, section_end_y - section_start_y - 1.3))
+        for label, column, ctype in pending_notes:
+            out.append(emit_label("l_" + column, label, NOTE_X, section_start_y))
+            out.append(emit_control(column, ctype, NOTE_X, section_start_y + 1.1, None, False, w=NOTE_W, h=note_h))
+        pending_notes.clear()
+
     for item in LAYOUT:
         kind = item[0]
         if kind == HEADER:
+            flush_notes(y)
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
+            section_start_y = y
         elif kind == PAIR:
             a, b = item[1], item[2]
             row_h = 0
@@ -429,9 +451,11 @@ def build_components():
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
+            # Notes are now a right-hand column spanning their whole section (see NOTE_X
+            # above), not a full-width strip below - queued here, placed once the section's
+            # total height is known (next HEADER or end of LAYOUT).
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
-            out.append(emit_span(label, column, ctype, y))
-            y += 5.8
+            pending_notes.append((label, column, ctype))
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
@@ -446,6 +470,7 @@ def build_components():
             out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
+    flush_notes(y)
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()
@@ -578,7 +603,12 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <Width>140</Width>
+         <!-- Widened from 140 - the note column (NOTE_X=86, NOTE_W=85, ending ~171) needs more
+              detail-pane width than the old two-column layout used (which only went to ~79.5).
+              Detail pane's own usable width is this minus PaneZeroSize (the grid pane's width),
+              so 220 leaves it roughly 180 wide - comfortable room past NOTE_X+NOTE_W with a
+              margin, not a tight fit. -->
+         <Width>220</Width>
          <PaneZeroSize>{PANE_ZERO_SIZE:.2f}</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
