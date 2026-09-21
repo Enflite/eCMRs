@@ -103,11 +103,14 @@ TABLE_HEADER = ["Column Name", "Data Type", "Length", "Decimal Places", "Nullabl
 IDO_HEADER = ["Bind To", "Property Name", "Property Class", "Data Type", "Length", "Decimal",
               "Column Data Type", "Label String ID", "Required", "Read Only", "Description"]
 
-# Column Data Type defaults to matching Data Type (see below) since every QC-module-specific
-# semantic name (QCSeq/QCInteger/QtyUnit) got rejected for a new property. job_num is a
-# deliberate, evidence-based exception: JobBase is the real class the actual JobOrders form
-# uses for its own Job field - try it; if it's rejected the same way, fall back to "String".
-COLDTYPE_OVERRIDES = {"job_num": "JobBase"}
+# Column Data Type defaults to blank - confirmed directly against the live
+# ToExcel_IdoProperties_3 export (docs/reference/): every one of the 69 custom eCMRs
+# properties (Status, Item, Vendor, JobNum, ...) has a blank Column Data Type. It's only
+# ever populated on the 7 system-generated properties (UsernameType, CurrentDateType, ...),
+# which these CSVs deliberately exclude. The earlier JobBase guess for job_num is disproven
+# by the same live export - its real property is blank too. Kept as an empty dict (not
+# removed outright) in case a genuine future exception is confirmed the same way.
+COLDTYPE_OVERRIDES = {}
 
 def main():
     with open("exports/ecmrs_table_columns.csv", "w", newline="") as fh:
@@ -126,9 +129,7 @@ def main():
         w = csv.writer(fh)
         w.writerow(IDO_HEADER)
         for (col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc) in FIELDS:
-            # Column Data Type = same value as Data Type by default (matches what actually
-            # worked on the Sql Columns side), except for the explicit overrides above.
-            col_data_type = COLDTYPE_OVERRIDES.get(col, dtype)
+            col_data_type = COLDTYPE_OVERRIDES.get(col, "")
             w.writerow([col, pname, "", dtype, length, decimal, col_data_type, labelid, required, readonly, desc])
 
     print(f"Wrote {len(FIELDS)} rows to each CSV. CreatedBy/CreateDate deliberately excluded - "

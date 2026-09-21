@@ -67,10 +67,14 @@ def q(col_idx, value):
     return value
 
 def build_row(seq, col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc):
-    # Column Data Type defaults to matching Data Type, except explicit overrides - see
-    # generate_schema_csv.py's COLDTYPE_OVERRIDES for why (and job_num's specific case).
+    # Column Data Type defaults to blank - confirmed directly against the live
+    # ToExcel_IdoProperties_3 export: every one of the 69 custom eCMRs properties (Status,
+    # Item, Vendor, JobNum, ...) has a blank Column Data Type. It's only ever populated on
+    # the 7 system-generated properties (UsernameType, CurrentDateType, ...), which this CSV
+    # deliberately excludes. The earlier "defaults to dtype, JobBase override for job_num"
+    # logic was an untested guess - job_num's own real property is blank too.
     default_value = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""
-    col_data_type = COLDTYPE_OVERRIDES.get(col, dtype)
+    col_data_type = COLDTYPE_OVERRIDES.get(col, "")
     property_class = PROPERTY_CLASS_OVERRIDES.get(col, "")
     inline_list = INLINE_LISTS.get(col, "")
     fields = [
