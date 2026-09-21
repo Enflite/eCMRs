@@ -74,6 +74,7 @@ HEADER = "header"
 IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
+SIDE_FIELD = "side_field"  # a single field stacked in the side (note) column, own row cursor
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -91,23 +92,36 @@ LAYOUT = [
     (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
+    # Relocated into the side column (SIDE_FIELD) rather than the main two-column flow - per
+    # direct feedback, this filled the empty gap that used to sit above Requested Action
+    # (which is queued after them below, so it stacks beneath them in that same column)
+    # instead of leaving it blank or stretching other fields into it.
+    (SIDE_FIELD, f("Serial #:", "serial_num", TYPE_EDIT)),
+    (SIDE_FIELD, f("LOT #:", "lot_num", TYPE_EDIT)),
+    (SIDE_FIELD, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM)),
+    (SIDE_FIELD, f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
+    (SIDE_FIELD, f("RFQ Num:", "rfq_num", TYPE_EDIT)),
+    (SIDE_FIELD, f("POC:", "poc", TYPE_EDIT)),
+    (SIDE_FIELD, f("Due Date:", "due_date", TYPE_DATE)),
+    (SIDE_FIELD, f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
+    (SIDE_FIELD, f("Close Date:", "close_date", TYPE_DATE, readonly=True)),
+    (SIDE_FIELD, f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )")),
-    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
-    (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
-    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
-    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
     (HEADER, "QUALITY"),
-    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
-    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Req: Process", "req_process", TYPE_CHECKBOX)),
-    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
+    # Relocated into the side column, same as CMR Details above - fills the gap that used to
+    # sit above QC RCA Notes (queued right after these, so it stacks directly beneath them).
+    (SIDE_FIELD, f("Req: Costing", "req_costing", TYPE_CHECKBOX)),
+    (SIDE_FIELD, f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
+    (SIDE_FIELD, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX)),
+    (SIDE_FIELD, f("Req: Process", "req_process", TYPE_CHECKBOX)),
+    (SIDE_FIELD, f("Req: Material", "req_material", TYPE_CHECKBOX)),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
@@ -423,15 +437,18 @@ def emit_grid_pane(pane_height):
 # Shrunk from 11 per direct feedback that it was too tall.
 NOTE_HEIGHT = 7
 
+SIDE_LABEL_X, SIDE_CTRL_X, SIDE_CTRL_W = NOTE_X, NOTE_X + 22, NOTE_W - 22 - 2
+
 def build_components():
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
     y = 2.9
-    note_bottom = 0.0  # a note doesn't advance y (so it doesn't eat left-column row space),
-    # but it still occupies real vertical space on the right - whatever comes next (the next
-    # HEADER, or the form's own total height) must not start until past the note's own bottom
-    # edge, or it renders overlapping the note (confirmed live: QC/Eng RCA Notes bled into the
-    # following section's header bar).
+    side_y = y      # independent cursor for the side column (SIDE_FIELD entries + the note)
+    note_bottom = 0.0  # neither SIDE_FIELD nor a note advances the main y (so they don't eat
+    # left-column row space), but they still occupy real vertical space on the right -
+    # whatever comes next (the next HEADER, or the form's own total height) must not start
+    # until past that, or it renders overlapping them (confirmed live: QC/Eng RCA Notes bled
+    # into the following section's header bar before this was tracked).
 
     for item in LAYOUT:
         kind = item[0]
@@ -439,23 +456,28 @@ def build_components():
             y = max(y, note_bottom)
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
+            side_y = y
         elif kind == PAIR:
             a, b = item[1], item[2]
             # Fields stay at normal width regardless of whether a note is nearby - stretching
             # them to fill leftover space (WIDE_CTRL_W) looked awful per direct feedback.
-            b_width = CTRL_W
             if a:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
             if b:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=b_width, maintain_from_spec=maintain_from_spec))
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec))
             y += ROW_H
+        elif kind == SIDE_FIELD:
+            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
+            out.append(emit_field(label, column, ctype, list_source, readonly, SIDE_LABEL_X, SIDE_CTRL_X, side_y, ctrl_w=SIDE_CTRL_W, maintain_from_spec=maintain_from_spec))
+            side_y += ROW_H
+            note_bottom = max(note_bottom, side_y)
         elif kind == SPAN:
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
-            out.append(emit_label("l_" + column, label, NOTE_X, y))
-            out.append(emit_control(column, ctype, NOTE_X, y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
-            note_bottom = y + NOTE_HEIGHT
+            out.append(emit_label("l_" + column, label, NOTE_X, side_y))
+            out.append(emit_control(column, ctype, NOTE_X, side_y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
+            note_bottom = max(note_bottom, side_y + NOTE_HEIGHT)
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
