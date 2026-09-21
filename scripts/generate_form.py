@@ -142,17 +142,20 @@ PANE_ZERO_SIZE = 40.25
 # uses safely on the Closed checkbox) pointing at a ResponseType 33 inline VB script that calls
 # Me.IDOClient.LoadCollection(...) directly, instead of the declarative
 # FILTER()/MOV()/SONON()/SETP() response language that jammed the form. Two real, separate
-# pieces of evidence combined here: EventToGenerate on a Type=27 combo is real (JobOrders' and
-# Items' own ItemEdit/CustNumEdit/WhseEdit etc. use it, just for a built-in event name), and
-# Me.IDOClient.LoadCollection(request) is the real IDO-query pattern from cmr-project's
-# QC_CMRs.vb FormScript - used here as a literal copy (Me, not ThisForm) since GlobalScript and
-# FormScript are sibling classes in the same Mongoose.Scripting framework, so IDOClient may be
-# a member of a shared base both inherit. First attempt substituted ThisForm for Me and the
-# script silently did nothing live - this is the more faithful copy of the confirmed pattern.
-# Starting with just Item to confirm this combination actually works live before wiring the
-# other 10 fields the same way.
-SCRIPT_LOOKUP_EVENTS = [
-    ("item", "item_description", "UpdateItemDescriptionScript", "SLItems", "Item", "Description"),
+# EventToGenerate script approach (tried both Me.IDOClient and ThisForm.IDOClient) confirmed
+# dead: neither fired at all (no error, no effect - not a syntax bug). Searched every real
+# EventToGenerate usage in the legacy codebase to confirm why: custom-named scripts only ever
+# fire from Buttons or Checkboxes there; the one real Type=27 combo example uses a built-in
+# system event, not a custom one. There's no confirmed precedent for a custom script firing on
+# a combo's value change except SelectionEvent itself.
+SCRIPT_LOOKUP_EVENTS = []
+
+# Isolated test, Item only: SelectionEvent/ResponseType 49 jammed the WHOLE form's edit/commit
+# pipeline when all 11 companion lookups were wired simultaneously (see commit 53865fc). That
+# was never tested with just ONE active - trying that narrower case now. If this locks the form
+# again after a single edit anywhere (not just Item), revert this list to empty immediately.
+LOOKUP_EVENTS = [
+    ("item", "item_description", "UpdateItemDescription", "SLItems", "Item", "Description"),
 ]
 
 _tab = [0]
@@ -209,13 +212,13 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("               <Binding>1</Binding>")
     if ctype == TYPE_CHECKBOX and column == "closed":
         lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
-    # SelectionEvent -> ResponseType 49 EventHandler (FILTER()  MOV()  SONON()  SETP()) removed:
-    # confirmed live that using ANY combo wired to one of these jams the whole form's edit/commit
-    # pipeline after a single use - every other field can then only be edited once before locking,
-    # even fields with no lookup at all. ComboListSource-only combos (no SelectionEvent) are fine.
     if column in [e[0] for e in SCRIPT_LOOKUP_EVENTS]:
         ev = [e[2] for e in SCRIPT_LOOKUP_EVENTS if e[0] == column][0]
         lines.append(f"               <EventToGenerate>{ev}</EventToGenerate>")
+    # Isolated SelectionEvent test (Item only) - see LOOKUP_EVENTS above for why.
+    if column in [e[0] for e in LOOKUP_EVENTS]:
+        ev = [e[2] for e in LOOKUP_EVENTS if e[0] == column][0]
+        lines.append(f"               <SelectionEvent>{ev}</SelectionEvent>")
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
     if maintain_from_spec:
@@ -500,16 +503,22 @@ End Namespace
             </EventHandler>
 """
 
-# The 11 companion-lookup EventHandlers (ResponseType 49) that used to live here are removed -
-# confirmed live that triggering any of them jams the form's edit/commit pipeline for every
-# other field afterward, even ones with no lookup at all. See emit_control().
+# The 11 companion-lookup EventHandlers (ResponseType 49) that used to live here were removed -
+# confirmed live that triggering any of them (all 11 active at once) jammed the form's
+# edit/commit pipeline for every other field afterward, even ones with no lookup at all. The
+# ResponseType 33 script replacement tried after that (SCRIPT_LOOKUP_EVENTS) didn't work either
+# - fired silently with no effect, no error, regardless of Me vs ThisForm for IDOClient.
 #
-# Replacement being tested on Item only (SCRIPT_LOOKUP_EVENTS): a ResponseType 33 inline VB
-# script, same mechanism as SetCloseInfo above, using Me.IDOClient.LoadCollection(...) - the
-# real pattern from cmr-project's QC_CMRs.vb FormScript - via ThisForm instead of Me, since
-# ThisForm (not Me) is the confirmed-accessible object inside a GlobalScript (see SetCloseInfo's
-# own ThisForm.Components/.UserName calls above). Imports match that FormScript's exactly,
-# including Mongoose.Core.Common for SqlLiteral.Format.
+# Now testing the ORIGINAL SelectionEvent/ResponseType 49 mechanism again, but isolated to Item
+# only (LOOKUP_EVENTS) - the all-11-at-once jam was never tested with just one active. If this
+# locks the form again after a single edit anywhere, revert LOOKUP_EVENTS to empty immediately.
+for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in LOOKUP_EVENTS:
+    EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
+               <ResponseType>49</ResponseType>
+               <Response>{sl_table}( READMODE(UNCOMMITTED) DISTINCT() FILTER({filter_prop}= FP({PROP[trigger_col]}))  MOV()  SONON() SETP({PROP[display_col]}={source_prop}) )</Response>
+            </EventHandler>
+"""
+
 for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in SCRIPT_LOOKUP_EVENTS:
     _vb = f"""Option Explicit On
 Option Strict On
