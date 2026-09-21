@@ -16,11 +16,10 @@
          <Height>66.8</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <!-- Widened from 140 - the note column (NOTE_X=86, NOTE_W=85, ending ~171) needs more
-              detail-pane width than the old two-column layout used (which only went to ~79.5).
-              Detail pane's own usable width is this minus PaneZeroSize (the grid pane's width),
-              so 220 leaves it roughly 180 wide - comfortable room past NOTE_X+NOTE_W with a
-              margin, not a tight fit. -->
+         <!-- Widened from 140 - the note column (NOTE_X, NOTE_W above) needs more detail-pane
+              width than the old two-column layout used (which only went to ~79.5). Headers and
+              the title stretch to DETAIL_WIDTH, computed from this same FORM_WIDTH, so they
+              always span the full detail pane regardless of what FORM_WIDTH is set to. -->
          <Width>220</Width>
          <PaneZeroSize>40.25</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
@@ -286,7 +285,7 @@
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>177.75</Width>
                <Caption>eCMRs — Change Management Request</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -307,7 +306,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>177.75</Width>
                <Caption>CMR DETAILS</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -392,7 +391,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -667,11 +666,53 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.InitialChange</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>15.300</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>22</Width>
+               <Caption>Requested Action:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Requested Action:</EffectiveCaption>
+            </Component>
+            <Component Name="c_requested_action">
+               <DeviceID>-1</DeviceID>
+               <Type>18</Type>
+               <TabOrder>10</TabOrder>
+               <TopPos>16.400</TopPos>
+               <LeftPos>86.000</LeftPos>
+               <Height>9.7</Height>
+               <ListHeight>0</ListHeight>
+               <Width>65</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.RequestedAction</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -704,7 +745,7 @@
             <Component Name="c_item">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>10</TabOrder>
+               <TabOrder>11</TabOrder>
                <TopPos>15.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -747,7 +788,7 @@
             <Component Name="c_wc">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>11</TabOrder>
+               <TabOrder>12</TabOrder>
                <TopPos>15.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -790,7 +831,7 @@
             <Component Name="c_dept">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>12</TabOrder>
+               <TabOrder>13</TabOrder>
                <TopPos>17.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -833,7 +874,7 @@
             <Component Name="c_revision">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>13</TabOrder>
+               <TabOrder>14</TabOrder>
                <TopPos>18.800</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -875,7 +916,7 @@
             <Component Name="c_latest_revision">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>14</TabOrder>
+               <TabOrder>15</TabOrder>
                <TopPos>18.800</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -917,7 +958,7 @@
             <Component Name="c_next_assy_item">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>15</TabOrder>
+               <TabOrder>16</TabOrder>
                <TopPos>20.550</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -960,7 +1001,7 @@
             <Component Name="c_qty">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>16</TabOrder>
+               <TabOrder>17</TabOrder>
                <TopPos>20.550</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -1002,7 +1043,7 @@
             <Component Name="c_vendor">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>17</TabOrder>
+               <TabOrder>18</TabOrder>
                <TopPos>22.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1045,7 +1086,7 @@
             <Component Name="c_job_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>18</TabOrder>
+               <TabOrder>19</TabOrder>
                <TopPos>22.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -1088,7 +1129,7 @@
             <Component Name="c_serial_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>19</TabOrder>
+               <TabOrder>20</TabOrder>
                <TopPos>24.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1130,7 +1171,7 @@
             <Component Name="c_lot_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>20</TabOrder>
+               <TabOrder>21</TabOrder>
                <TopPos>24.050</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -1172,7 +1213,7 @@
             <Component Name="c_po_num">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>21</TabOrder>
+               <TabOrder>22</TabOrder>
                <TopPos>25.800</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1215,7 +1256,7 @@
             <Component Name="c_po_line">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
-               <TabOrder>22</TabOrder>
+               <TabOrder>23</TabOrder>
                <TopPos>25.800</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
@@ -1258,7 +1299,7 @@
             <Component Name="c_rfq_num">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>23</TabOrder>
+               <TabOrder>24</TabOrder>
                <TopPos>27.550</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1300,12 +1341,12 @@
             <Component Name="c_poc">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>24</TabOrder>
+               <TabOrder>25</TabOrder>
                <TopPos>27.550</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1342,7 +1383,7 @@
             <Component Name="c_due_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>25</TabOrder>
+               <TabOrder>26</TabOrder>
                <TopPos>29.300</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1384,12 +1425,12 @@
             <Component Name="c_internal_review_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>26</TabOrder>
+               <TabOrder>27</TabOrder>
                <TopPos>29.300</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1426,7 +1467,7 @@
             <Component Name="c_close_date">
                <DeviceID>-1</DeviceID>
                <Type>26</Type>
-               <TabOrder>27</TabOrder>
+               <TabOrder>28</TabOrder>
                <TopPos>31.050</TopPos>
                <LeftPos>14.500</LeftPos>
                <Height>1.4</Height>
@@ -1468,12 +1509,12 @@
             <Component Name="c_closed_by">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
-               <TabOrder>28</TabOrder>
+               <TabOrder>29</TabOrder>
                <TopPos>31.050</TopPos>
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1488,7 +1529,7 @@
             <Component Name="c_closed">
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
-               <TabOrder>29</TabOrder>
+               <TabOrder>30</TabOrder>
                <TopPos>32.800</TopPos>
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
@@ -1507,48 +1548,6 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
-            <Component Name="l_requested_action">
-               <DeviceID>-1</DeviceID>
-               <Type>0</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>4.800</TopPos>
-               <LeftPos>86.000</LeftPos>
-               <Height>1</Height>
-               <ListHeight>0</ListHeight>
-               <Width>22</Width>
-               <Caption>Requested Action:</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <Binding>0</Binding>
-               <Flags>3</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Format>JUSTIFY(R)</Format>
-               <Post301Format />
-               <EffectiveCaption>Requested Action:</EffectiveCaption>
-            </Component>
-            <Component Name="c_requested_action">
-               <DeviceID>-1</DeviceID>
-               <Type>18</Type>
-               <TabOrder>30</TabOrder>
-               <TopPos>5.900</TopPos>
-               <LeftPos>86.000</LeftPos>
-               <Height>12</Height>
-               <ListHeight>0</ListHeight>
-               <Width>85</Width>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.RequestedAction</DataSource>
-               <Binding>1</Binding>
-               <Flags>1</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Post301Format />
-            </Component>
             <Component Name="hdr_QUALITY">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
@@ -1557,7 +1556,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>177.75</Width>
                <Caption>QUALITY</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1599,7 +1598,7 @@
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>132.75</Width>
                <Caption>Req: Documentation</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1641,7 +1640,7 @@
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>132.75</Width>
                <Caption>Req: Process</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1704,7 +1703,7 @@
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>132.75</Width>
                <Caption>SOX Impacted</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1746,7 +1745,7 @@
                <LeftPos>43.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>132.75</Width>
                <Caption>Authorization For Supplier To Ship</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1874,7 +1873,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1890,7 +1889,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>36.450</TopPos>
+               <TopPos>48.700</TopPos>
                <LeftPos>86.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -1912,11 +1911,11 @@
                <DeviceID>-1</DeviceID>
                <Type>18</Type>
                <TabOrder>43</TabOrder>
-               <TopPos>37.550</TopPos>
+               <TopPos>49.800</TopPos>
                <LeftPos>86.000</LeftPos>
-               <Height>10.95</Height>
+               <Height>9.7</Height>
                <ListHeight>0</ListHeight>
-               <Width>85</Width>
+               <Width>65</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1936,7 +1935,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>177.75</Width>
                <Caption>ENGINEERING</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2148,7 +2147,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2164,7 +2163,7 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>50.600</TopPos>
+               <TopPos>57.600</TopPos>
                <LeftPos>86.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
@@ -2186,11 +2185,11 @@
                <DeviceID>-1</DeviceID>
                <Type>18</Type>
                <TabOrder>49</TabOrder>
-               <TopPos>51.700</TopPos>
+               <TopPos>58.700</TopPos>
                <LeftPos>86.000</LeftPos>
-               <Height>5.7</Height>
+               <Height>9.7</Height>
                <ListHeight>0</ListHeight>
-               <Width>85</Width>
+               <Width>65</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2210,7 +2209,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>177.75</Width>
                <Caption>IMPLEMENTATION</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />

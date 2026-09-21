@@ -29,7 +29,8 @@ SPAN_X, SPAN_W = 14.5, 65
 # whatever else is in their section, instead of a strip squeezed underneath. NOTE_X sits past
 # the existing two-column area (which ends around 79.5); the Form's own <Width> below is
 # widened accordingly so this new column doesn't get clipped off the visible detail pane.
-NOTE_X, NOTE_W = 86, 85
+NOTE_X, NOTE_W = 86, 65
+FORM_WIDTH = 220
 
 SL_ITEMS = "STDOLE SLItems( PROPERTIES(Item, Description) )"
 SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
@@ -142,6 +143,10 @@ GRID_COLUMNS = [
     ("closed", "Closed", 8),
 ]
 PANE_ZERO_SIZE = 40.25
+# Detail pane's own usable width (its LeftPos values are relative to itself, not the overall
+# form - confirmed by the grid pane's separate ContainerName) is the form's total Width minus
+# the grid pane's PaneZeroSize; -2 leaves a small right margin instead of running edge-to-edge.
+DETAIL_WIDTH = FORM_WIDTH - PANE_ZERO_SIZE - 2
 
 # The SelectionEvent/EventHandler(ResponseType 49) companion-lookup mechanism that used to be
 # driven from a LOOKUP_EVENTS list here was removed - confirmed live that triggering any of
@@ -317,7 +322,7 @@ def emit_header(text, y):
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>{DETAIL_WIDTH:.2f}</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -341,7 +346,7 @@ def emit_title(text, y):
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>{DETAIL_WIDTH:.2f}</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -413,49 +418,64 @@ def emit_grid_pane(pane_height):
         x += width
     return "".join(out)
 
+# Fixed, not derived from section length - a note is just a normal-sized text area sitting
+# in place wherever it's declared in LAYOUT, not something that stretches to fill its section.
+NOTE_HEIGHT = 11
+# How far a right-hand field widens when nothing (no note) occupies the space to its right at
+# that row - reaches to just short of the detail pane's own right edge.
+WIDE_CTRL_W = DETAIL_WIDTH - CTRL_X_B - 2
+
+def _note_ranges_by_section():
+    """Dry run over LAYOUT (same y math as build_components) to find each section's note
+    (start_y, end_y), if it has one - needed before the real pass so rows both before AND
+    after the note within that section know to widen into the space the note isn't using."""
+    y = 2.9
+    ranges = []
+    current = None
+    for item in LAYOUT:
+        kind = item[0]
+        if kind == HEADER:
+            ranges.append(current)
+            y += SECTION_H + 0.3
+            current = None
+        elif kind in (PAIR, IMPL_ROW, BUTTON_ROW, PAIR_BUTTON):
+            y += ROW_H
+        elif kind == SPAN:
+            current = (y, y + NOTE_HEIGHT)
+    ranges.append(current)
+    return ranges
+
 def build_components():
+    note_ranges = _note_ranges_by_section()
+    section_idx = 0
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
     y = 2.9
-    section_start_y = y
-    pending_notes = []  # notes (Requested Action, QC/Eng RCA Notes) queued for the current section
 
-    def flush_notes(section_end_y):
-        # Capped rather than always spanning the full section - CMR Details runs ~17 rows
-        # long, which would make Requested Action's box ~28 units tall vs. QC/Eng RCA Notes'
-        # ~11 and ~6, wildly disproportionate. 12 keeps every note box in the same visual
-        # range, with the left column simply running past the bottom of a shorter note.
-        note_h = min(12, max(4.5, section_end_y - section_start_y - 1.3))
-        for label, column, ctype in pending_notes:
-            out.append(emit_label("l_" + column, label, NOTE_X, section_start_y))
-            out.append(emit_control(column, ctype, NOTE_X, section_start_y + 1.1, None, False, w=NOTE_W, h=note_h))
-        pending_notes.clear()
+    def widen(y_row):
+        note_range = note_ranges[section_idx]
+        return note_range is None or not (note_range[0] <= y_row < note_range[1])
 
     for item in LAYOUT:
         kind = item[0]
         if kind == HEADER:
-            flush_notes(y)
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
-            section_start_y = y
+            section_idx += 1
         elif kind == PAIR:
             a, b = item[1], item[2]
-            row_h = 0
+            b_width = WIDE_CTRL_W if (b and widen(y)) else CTRL_W
             if a:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
-                row_h = max(row_h, 1.4)
             if b:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec))
-                row_h = max(row_h, 1.4)
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=b_width, maintain_from_spec=maintain_from_spec))
             y += ROW_H
         elif kind == SPAN:
-            # Notes are now a right-hand column spanning their whole section (see NOTE_X
-            # above), not a full-width strip below - queued here, placed once the section's
-            # total height is known (next HEADER or end of LAYOUT).
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
-            pending_notes.append((label, column, ctype))
+            out.append(emit_label("l_" + column, label, NOTE_X, y))
+            out.append(emit_control(column, ctype, NOTE_X, y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
@@ -470,7 +490,6 @@ def build_components():
             out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
-    flush_notes(y)
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()
@@ -603,12 +622,11 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <!-- Widened from 140 - the note column (NOTE_X=86, NOTE_W=85, ending ~171) needs more
-              detail-pane width than the old two-column layout used (which only went to ~79.5).
-              Detail pane's own usable width is this minus PaneZeroSize (the grid pane's width),
-              so 220 leaves it roughly 180 wide - comfortable room past NOTE_X+NOTE_W with a
-              margin, not a tight fit. -->
-         <Width>220</Width>
+         <!-- Widened from 140 - the note column (NOTE_X, NOTE_W above) needs more detail-pane
+              width than the old two-column layout used (which only went to ~79.5). Headers and
+              the title stretch to DETAIL_WIDTH, computed from this same FORM_WIDTH, so they
+              always span the full detail pane regardless of what FORM_WIDTH is set to. -->
+         <Width>{FORM_WIDTH}</Width>
          <PaneZeroSize>{PANE_ZERO_SIZE:.2f}</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
