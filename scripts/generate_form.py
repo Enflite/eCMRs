@@ -30,6 +30,15 @@ SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
 SL_WCS = "STDOLE SLWcs( PROPERTIES(Wc, Description) )"
 SL_VENDORS = "STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
 SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+# Dedicated to the Assigned field only (not the shared SL_EMPLOYEES above, which every
+# Buyer/Reviewer combo still uses bound to EmpNum): the combo writes back whichever property
+# is listed FIRST in PROPERTIES() - confirmed from Vendor's own combo (DataSource=Vendor,
+# PROPERTIES(VendNum,...) - first entry doesn't even name-match the DataSource property, so
+# this is positional, not name-matched). Listing Username first here makes Assigned bind and
+# store the employee's Username (a real email address in this tenant, confirmed from a live
+# screenshot earlier - e.g. gcaraway@enflite.com) directly - AssignedUsername is a String(128)
+# property, sized for that, unlike AssignedEmpNum's tiny 7-char column.
+SL_EMPLOYEES_ASSIGNED = "STDOLE SLEmployees( PROPERTIES(Username,EmpNum,Name) DISPLAY(1,2,3) RECORDCAP(0))"
 # Real list sources adapted from the legacy form's own combos (CB_NextAssy, comboBox1_SITE,
 # comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
 SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
@@ -57,6 +66,7 @@ SPAN = "span"          # full-width field (multiline)
 HEADER = "header"
 IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
 BUTTON_ROW = "button_row"  # a single Button on its own row
+PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -71,9 +81,8 @@ LAYOUT = [
     (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_COMBO)),
     (PAIR, f("Create Date:", "create_date", TYPE_DATE, readonly=True), None),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
-    (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT)),
+    (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
-    (BUTTON_ROW, "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
@@ -430,6 +439,12 @@ def build_components():
         elif kind == BUTTON_ROW:
             _, name, caption, event_to_generate = item
             out.append(emit_button(name, caption, event_to_generate, LABEL_X_A, y))
+            y += ROW_H
+        elif kind == PAIR_BUTTON:
+            _, a, btn_name, btn_caption, btn_event = item
+            _, label, column, ctype, list_source, readonly, maintain_from_spec = a
+            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
+            out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
     return "".join(out), y
 
