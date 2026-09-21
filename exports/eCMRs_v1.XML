@@ -2017,7 +2017,7 @@
                <Height>1</Height>
                <ListHeight>0</ListHeight>
                <Width>12.0</Width>
-               <Caption></Caption>
+               <Caption>Username:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2028,7 +2028,7 @@
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
-               <EffectiveCaption></EffectiveCaption>
+               <EffectiveCaption>Username:</EffectiveCaption>
             </Component>
             <Component Name="c_qc_reviewer_username">
                <DeviceID>-1</DeviceID>
@@ -2291,7 +2291,7 @@
                <Height>1</Height>
                <ListHeight>0</ListHeight>
                <Width>12.0</Width>
-               <Caption></Caption>
+               <Caption>Username:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2302,7 +2302,7 @@
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
-               <EffectiveCaption></EffectiveCaption>
+               <EffectiveCaption>Username:</EffectiveCaption>
             </Component>
             <Component Name="c_eng_reviewer_username">
                <DeviceID>-1</DeviceID>

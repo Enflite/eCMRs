@@ -99,14 +99,14 @@ LAYOUT = [
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("", "qc_reviewer_username", TYPE_EDIT)),
+    (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "qc_reviewer_username", TYPE_EDIT)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("", "eng_reviewer_username", TYPE_EDIT)),
+    (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
