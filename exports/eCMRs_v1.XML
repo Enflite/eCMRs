@@ -794,7 +794,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
-               <SelectionEvent>UpdateItemDescription</SelectionEvent>
                <ComboListSource>STDOLE SLItems( PROPERTIES(Item, Description) )</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
@@ -2697,10 +2696,6 @@ Inherits GlobalScript
 End Class
 End Namespace
 )</Response>
-            </EventHandler>
-            <EventHandler Name="UpdateItemDescription" Sequence="0">
-               <ResponseType>49</ResponseType>
-               <Response>SLItems( READMODE(UNCOMMITTED) DISTINCT() FILTER(Item= FP(Item))  MOV()  SONON() SETP(ItemDescription=Description) )</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>

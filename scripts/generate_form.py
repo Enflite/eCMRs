@@ -150,13 +150,14 @@ PANE_ZERO_SIZE = 40.25
 # a combo's value change except SelectionEvent itself.
 SCRIPT_LOOKUP_EVENTS = []
 
-# Isolated test, Item only: SelectionEvent/ResponseType 49 jammed the WHOLE form's edit/commit
-# pipeline when all 11 companion lookups were wired simultaneously (see commit 53865fc). That
-# was never tested with just ONE active - trying that narrower case now. If this locks the form
-# again after a single edit anywhere (not just Item), revert this list to empty immediately.
-LOOKUP_EVENTS = [
-    ("item", "item_description", "UpdateItemDescription", "SLItems", "Item", "Description"),
-]
+# CONFIRMED DEAD, do not retry: tested isolated to Item only (see commit 234a394) and it still
+# jammed the whole form's edit/commit pipeline after a single edit - not a "too many active at
+# once" problem, SelectionEvent/ResponseType 49 breaks this client at any scale, even n=1. Item
+# Description did populate correctly, but at the cost of every other field on the form. Leave
+# this list empty - item_description goes back to being a plain manual field, same as the other
+# 10 companion fields, until a genuinely new lead (not a variation on SelectionEvent or the
+# EventToGenerate script, both now confirmed non-viable) turns up.
+LOOKUP_EVENTS = []
 
 _tab = [0]
 def next_tab():
