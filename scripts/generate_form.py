@@ -422,50 +422,28 @@ def emit_grid_pane(pane_height):
 # in place wherever it's declared in LAYOUT, not something that stretches to fill its section.
 # Shrunk from 11 per direct feedback that it was too tall.
 NOTE_HEIGHT = 7
-# How far a right-hand field widens when nothing (no note) occupies the space to its right at
-# that row - reaches to just short of the detail pane's own right edge.
-WIDE_CTRL_W = DETAIL_WIDTH - CTRL_X_B - 2
-
-def _note_ranges_by_section():
-    """Dry run over LAYOUT (same y math as build_components) to find each section's note
-    (start_y, end_y), if it has one - needed before the real pass so rows both before AND
-    after the note within that section know to widen into the space the note isn't using."""
-    y = 2.9
-    ranges = []
-    current = None
-    for item in LAYOUT:
-        kind = item[0]
-        if kind == HEADER:
-            ranges.append(current)
-            y += SECTION_H + 0.3
-            current = None
-        elif kind in (PAIR, IMPL_ROW, BUTTON_ROW, PAIR_BUTTON):
-            y += ROW_H
-        elif kind == SPAN:
-            current = (y, y + NOTE_HEIGHT)
-    ranges.append(current)
-    return ranges
 
 def build_components():
-    note_ranges = _note_ranges_by_section()
-    section_idx = 0
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
     y = 2.9
-
-    def widen(y_row):
-        note_range = note_ranges[section_idx]
-        return note_range is None or not (note_range[0] <= y_row < note_range[1])
+    note_bottom = 0.0  # a note doesn't advance y (so it doesn't eat left-column row space),
+    # but it still occupies real vertical space on the right - whatever comes next (the next
+    # HEADER, or the form's own total height) must not start until past the note's own bottom
+    # edge, or it renders overlapping the note (confirmed live: QC/Eng RCA Notes bled into the
+    # following section's header bar).
 
     for item in LAYOUT:
         kind = item[0]
         if kind == HEADER:
+            y = max(y, note_bottom)
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
-            section_idx += 1
         elif kind == PAIR:
             a, b = item[1], item[2]
-            b_width = WIDE_CTRL_W if (b and widen(y)) else CTRL_W
+            # Fields stay at normal width regardless of whether a note is nearby - stretching
+            # them to fill leftover space (WIDE_CTRL_W) looked awful per direct feedback.
+            b_width = CTRL_W
             if a:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
@@ -477,6 +455,7 @@ def build_components():
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
             out.append(emit_label("l_" + column, label, NOTE_X, y))
             out.append(emit_control(column, ctype, NOTE_X, y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
+            note_bottom = y + NOTE_HEIGHT
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
@@ -491,6 +470,7 @@ def build_components():
             out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
+    y = max(y, note_bottom)
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()
