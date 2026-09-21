@@ -24,13 +24,6 @@ LABEL_X_B, CTRL_X_B = 43, 55.5
 ROW_H = 1.75
 SECTION_H = 1.6
 SPAN_X, SPAN_W = 14.5, 65
-# Wider form per direct request - notes (Requested Action, QC/Eng RCA Notes) move off the
-# full-width row below and become a third column on the right, spanning the height of
-# whatever else is in their section, instead of a strip squeezed underneath. NOTE_X sits past
-# the existing two-column area (which ends around 79.5); the Form's own <Width> below is
-# widened accordingly so this new column doesn't get clipped off the visible detail pane.
-NOTE_X, NOTE_W = 86, 65
-FORM_WIDTH = 220
 
 SL_ITEMS = "STDOLE SLItems( PROPERTIES(Item, Description) )"
 SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
@@ -74,9 +67,6 @@ HEADER = "header"
 IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
-SIDE_FIELD = "side_field"  # a single field stacked in the side (note) column, own row cursor
-FULL_SPAN = "full_span"  # a note as a plain full-width row below the fields (Quality/Engineering
-# are too short on fields to fill a side column without leaving a gap either way - see SPAN)
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -94,27 +84,16 @@ LAYOUT = [
     (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
-    # Relocated into the side column (SIDE_FIELD) rather than the main two-column flow - per
-    # direct feedback, this filled the empty gap that used to sit above Requested Action
-    # (which is queued after them below, so it stacks beneath them in that same column)
-    # instead of leaving it blank or stretching other fields into it.
-    (SIDE_FIELD, f("Serial #:", "serial_num", TYPE_EDIT)),
-    (SIDE_FIELD, f("LOT #:", "lot_num", TYPE_EDIT)),
-    (SIDE_FIELD, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM)),
-    (SIDE_FIELD, f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
-    (SIDE_FIELD, f("RFQ Num:", "rfq_num", TYPE_EDIT)),
-    (SIDE_FIELD, f("POC:", "poc", TYPE_EDIT)),
-    (SIDE_FIELD, f("Due Date:", "due_date", TYPE_DATE)),
-    (SIDE_FIELD, f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )")),
-    # Back in the main column (not the side column) - keeping these 8 side fields (not 10)
-    # makes the side column (8 rows + the note) match the main column's own 12 rows exactly,
-    # instead of running long and leaving a gap below Closed.
+    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
+    (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
+    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
@@ -126,16 +105,14 @@ LAYOUT = [
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
     (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "qc_reviewer_username", TYPE_EDIT)),
-    # Plain full-width note again, not the side column - Quality doesn't have enough fields to
-    # fill a side column without leaving a gap either way (see FULL_SPAN above).
-    (FULL_SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
+    (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
     (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "eng_reviewer_username", TYPE_EDIT)),
-    (FULL_SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
+    (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
     (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_empnum", "planning_reviewer_name"),
@@ -159,10 +136,6 @@ GRID_COLUMNS = [
     ("closed", "Closed", 8),
 ]
 PANE_ZERO_SIZE = 40.25
-# Detail pane's own usable width (its LeftPos values are relative to itself, not the overall
-# form - confirmed by the grid pane's separate ContainerName) is the form's total Width minus
-# the grid pane's PaneZeroSize; -2 leaves a small right margin instead of running edge-to-edge.
-DETAIL_WIDTH = FORM_WIDTH - PANE_ZERO_SIZE - 2
 
 # The SelectionEvent/EventHandler(ResponseType 49) companion-lookup mechanism that used to be
 # driven from a LOOKUP_EVENTS list here was removed - confirmed live that triggering any of
@@ -338,7 +311,7 @@ def emit_header(text, y):
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>{DETAIL_WIDTH - 1:.2f}</Width>
+               <Width>96</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -362,7 +335,7 @@ def emit_title(text, y):
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>{DETAIL_WIDTH - 1:.2f}</Width>
+               <Width>96</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -434,53 +407,28 @@ def emit_grid_pane(pane_height):
         x += width
     return "".join(out)
 
-# Fixed, not derived from section length - a note is just a normal-sized text area sitting
-# in place wherever it's declared in LAYOUT, not something that stretches to fill its section.
-# Shrunk from 11 per direct feedback that it was too tall.
-NOTE_HEIGHT = 7
-
-SIDE_LABEL_X, SIDE_CTRL_X, SIDE_CTRL_W = NOTE_X, NOTE_X + 22, NOTE_W - 22 - 2
-
 def build_components():
     y = 0.0
     out = [emit_title("eCMRs — Change Management Request", y)]
     y = 2.9
-    side_y = y      # independent cursor for the side column (SIDE_FIELD entries + the note)
-    note_bottom = 0.0  # neither SIDE_FIELD nor a note advances the main y (so they don't eat
-    # left-column row space), but they still occupy real vertical space on the right -
-    # whatever comes next (the next HEADER, or the form's own total height) must not start
-    # until past that, or it renders overlapping them (confirmed live: QC/Eng RCA Notes bled
-    # into the following section's header bar before this was tracked).
-
     for item in LAYOUT:
         kind = item[0]
         if kind == HEADER:
-            y = max(y, note_bottom)
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
-            side_y = y
         elif kind == PAIR:
             a, b = item[1], item[2]
-            # Fields stay at normal width regardless of whether a note is nearby - stretching
-            # them to fill leftover space (WIDE_CTRL_W) looked awful per direct feedback.
+            row_h = 0
             if a:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
+                row_h = max(row_h, 1.4)
             if b:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec = b
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec))
+                row_h = max(row_h, 1.4)
             y += ROW_H
-        elif kind == SIDE_FIELD:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
-            out.append(emit_field(label, column, ctype, list_source, readonly, SIDE_LABEL_X, SIDE_CTRL_X, side_y, ctrl_w=SIDE_CTRL_W, maintain_from_spec=maintain_from_spec))
-            side_y += ROW_H
-            note_bottom = max(note_bottom, side_y)
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
-            out.append(emit_label("l_" + column, label, NOTE_X, side_y))
-            out.append(emit_control(column, ctype, NOTE_X, side_y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
-            note_bottom = max(note_bottom, side_y + NOTE_HEIGHT)
-        elif kind == FULL_SPAN:
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
@@ -498,7 +446,6 @@ def build_components():
             out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
-    y = max(y, note_bottom)
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()
@@ -631,11 +578,7 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <!-- Widened from 140 - the note column (NOTE_X, NOTE_W above) needs more detail-pane
-              width than the old two-column layout used (which only went to ~79.5). Headers and
-              the title stretch to DETAIL_WIDTH, computed from this same FORM_WIDTH, so they
-              always span the full detail pane regardless of what FORM_WIDTH is set to. -->
-         <Width>{FORM_WIDTH}</Width>
+         <Width>140</Width>
          <PaneZeroSize>{PANE_ZERO_SIZE:.2f}</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
