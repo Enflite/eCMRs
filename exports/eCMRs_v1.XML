@@ -1389,7 +1389,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PoNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(PoNum)) RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

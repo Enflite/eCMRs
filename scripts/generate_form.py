@@ -33,7 +33,17 @@ SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2
 # Real list sources adapted from the legacy form's own combos (CB_NextAssy, comboBox1_SITE,
 # comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
 SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
-SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(PoNum)) RECORDCAP(0))"
+# PO Num deliberately has NO self-referencing FILTER (unlike the legacy form's own combo) -
+# confirmed live that FP(x) is a plain exact-equality match against the raw typed text, no
+# wildcard/padding (the same root cause already found for Job Number's leading-zero bug in
+# cmr-project). Real PO Numbers are zero-padded with a prefix (e.g. RD00000021, confirmed
+# live) - nobody types that exact string, so the filter always returned zero matches. Fixed
+# by dropping the FILTER entirely and listing every PoItems row, same pattern already proven
+# working on Item/Wc/Dept/Vendor above - the EnhancedCombo's own client-side type-ahead
+# narrows it down instead of a server-side exact match.
+SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))"
+# PO Line's filter is a legitimate cascade off the already-selected PoNum (a real value from
+# the object, not free-typed guesswork), not a self-referencing exact-match - left as-is.
 SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
 # Job Num deliberately does NOT use an SLMatltrans combo (that's what had the leading-zero
 # exact-match bug). The real JobOrders form's own Job field is a plain Edit bound to
