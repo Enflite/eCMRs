@@ -76,18 +76,14 @@ LAYOUT = [
     (BUTTON_ROW, "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT)),
-    (PAIR, f("Work Center:", "wc", TYPE_COMBO, SL_WCS), None),
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Lvl Assy Desc:", "next_assy_description", TYPE_EDIT)),
-    (PAIR, f("Qty:", "qty", TYPE_EDIT), None),
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT)),
-    (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
+    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )")),
     (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
-    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), None),
-    (PAIR, f("POC:", "poc", TYPE_EDIT), None),
+    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
@@ -148,12 +144,11 @@ PANE_ZERO_SIZE = 40.25
 # QC_CMRs.vb FormScript - used here as a literal copy (Me, not ThisForm) since GlobalScript and
 # FormScript are sibling classes in the same Mongoose.Scripting framework, so IDOClient may be
 # a member of a shared base both inherit. First attempt substituted ThisForm for Me and the
-# script silently did nothing live - this is the more faithful copy of the confirmed pattern.
-# Starting with just Item to confirm this combination actually works live before wiring the
-# other 10 fields the same way.
-SCRIPT_LOOKUP_EVENTS = [
-    ("item", "item_description", "UpdateItemDescriptionScript", "SLItems", "Item", "Description"),
-]
+# script silently did nothing live - confirmed dead either way (also tried Me.IDOClient, same
+# silent no-op). Item Description was removed from the form entirely per direct request, so
+# this mechanism has no remaining target - left empty rather than deleted outright in case a
+# genuinely new lead on the underlying problem turns up later.
+SCRIPT_LOOKUP_EVENTS = []
 
 _tab = [0]
 def next_tab():
