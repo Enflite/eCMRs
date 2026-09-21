@@ -41,8 +41,8 @@ general_review_complete,Bit,,,Yes,N,,
 sox_impacted,Bit,,,Yes,N,,"Standalone, not part of the 5-category cascade."
 hold_on_po,Bit,,,Yes,N,,
 auth_supplier_ship,Bit,,,Yes,N,,
-qc_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
-eng_disposition,String,20,,Yes,N,,Fixed value list not yet confirmed.
+qc_disposition,String,20,,Yes,N,,"Confirmed real list (from the live dropdown): Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap. Needs its own Property Class + Inline List set up directly in Application Studio."
+eng_disposition,String,20,,Yes,N,,"Confirmed real list (from the live dropdown): NFF, NRS, Other, Rework, Scrap - a subset of QcDisposition's list, missing Accept/Hold/Reject. Needs its own Property Class + Inline List set up directly in Application Studio."
 assigned_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 assigned_username,String,128,,Yes,N,,"Read-only, auto-populated when AssignedEmpNum is selected."
 assigned_buyer,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"

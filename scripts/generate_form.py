@@ -45,6 +45,7 @@ FIELD = "field"
 PAIR = "pair"          # (fieldA, fieldB) sharing one row
 SPAN = "span"          # full-width field (multiline)
 HEADER = "header"
+IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -59,6 +60,8 @@ LAYOUT = [
     (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_COMBO)),
     (PAIR, f("Workflow Status:", "workflow_status", TYPE_EDIT), f("Create Date:", "create_date", TYPE_DATE, readonly=True)),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
+    (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT)),
+    (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Item Description:", "item_description", TYPE_EDIT)),
@@ -70,7 +73,7 @@ LAYOUT = [
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Vendor Name:", "vendor_name", TYPE_EDIT)),
     (PAIR, f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )"), None),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
-    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("EO Num:", "eo_num", TYPE_EDIT)),
+    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), None),
     (PAIR, f("POC:", "poc", TYPE_EDIT), None),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
@@ -83,25 +86,21 @@ LAYOUT = [
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
-    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_EDIT), None),
+    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
     (PAIR, f("QC Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("QC Reviewer (Username):", "qc_reviewer_username", TYPE_EDIT)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
+    (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
-    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_EDIT), None),
+    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
     (PAIR, f("Engineering Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Eng Reviewer (Username):", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
-    (PAIR, f("Assigned:", "assigned_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Assigned (Username):", "assigned_username", TYPE_EDIT)),
-    (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
-    (PAIR, f("Planning Reviewer:", "planning_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Planning Reviewer Name:", "planning_reviewer_name", TYPE_EDIT)),
-    (PAIR, f("Planning Complete", "planning_complete", TYPE_CHECKBOX), None),
-    (PAIR, f("Purchasing Reviewer:", "purchasing_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Purchasing Reviewer Name:", "purchasing_reviewer_name", TYPE_EDIT)),
-    (PAIR, f("Purchasing Complete", "purchasing_complete", TYPE_CHECKBOX), None),
-    (PAIR, f("CM Reviewer:", "cm_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("CM Reviewer Name:", "cm_reviewer_name", TYPE_EDIT)),
-    (PAIR, f("CM Complete", "cm_complete", TYPE_CHECKBOX), None),
+    (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_empnum", "planning_reviewer_name"),
+    (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_empnum", "purchasing_reviewer_name"),
+    (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_empnum", "cm_reviewer_name"),
 ]
 
 # Grid pane (left side) - a master-list overview of multiple records at once, matching the
@@ -257,6 +256,12 @@ def emit_span(label, column, ctype, y):
     out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5)
     return out
 
+def emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y):
+    out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, 2, 2, y, ctrl_w=12)
+    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES, False, 15, 23.5, y, ctrl_w=15)
+    out += emit_control(name_col, TYPE_EDIT, 40, y, None, False, w=38)
+    return out
+
 def emit_header(text, y):
     return f"""            <Component Name="hdr_{text.replace(' ', '_').replace('/', '_')}">
                <DeviceID>-1</DeviceID>
@@ -387,6 +392,10 @@ def build_components():
             _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
+        elif kind == IMPL_ROW:
+            _, checkbox_col, checkbox_caption, combo_col, name_col = item
+            out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
+            y += ROW_H
     return "".join(out), y
 
 DETAIL_XML, TOTAL_HEIGHT = build_components()

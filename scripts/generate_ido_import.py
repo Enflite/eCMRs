@@ -26,6 +26,8 @@ PROPERTY_CLASS_OVERRIDES = {
     "status": "ue_CmrStatusType",
     "priority": "ue_CmrPriorityType",
     "initial_change": "ue_CmrInitialChangeType",
+    "qc_disposition": "ue_CmrQcDispositionType",
+    "eng_disposition": "ue_CmrEngDispositionType",
 }
 
 # UNCONFIRMED syntax: no real IDO Properties export seen so far (including the live
@@ -37,6 +39,11 @@ INLINE_LISTS = {
     "status": "CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval",
     "priority": "High,Medium,Low",
     "initial_change": "Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver)",
+    # Confirmed directly from the real live dropdowns (screenshots of the actual Disposition
+    # combo open on both sections) - Engineering's list is a subset of QC's, missing
+    # Accept/Hold/Reject.
+    "qc_disposition": "Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap",
+    "eng_disposition": "NFF,NRS,Other,Rework,Scrap",
 }
 
 HEADER = ["DevelopmentFlagGridCol", "Property Name", "IDO Name", "Property Class",
