@@ -75,6 +75,8 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 SIDE_FIELD = "side_field"  # a single field stacked in the side (note) column, own row cursor
+FULL_SPAN = "full_span"  # a note as a plain full-width row below the fields (Quality/Engineering
+# are too short on fields to fill a side column without leaving a gap either way - see SPAN)
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
@@ -104,36 +106,36 @@ LAYOUT = [
     (SIDE_FIELD, f("POC:", "poc", TYPE_EDIT)),
     (SIDE_FIELD, f("Due Date:", "due_date", TYPE_DATE)),
     (SIDE_FIELD, f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
-    (SIDE_FIELD, f("Close Date:", "close_date", TYPE_DATE, readonly=True)),
-    (SIDE_FIELD, f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )")),
+    # Back in the main column (not the side column) - keeping these 8 side fields (not 10)
+    # makes the side column (8 rows + the note) match the main column's own 12 rows exactly,
+    # instead of running long and leaving a gap below Closed.
+    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 
     (HEADER, "QUALITY"),
-    # Relocated into the side column, same as CMR Details above - fills the gap that used to
-    # sit above QC RCA Notes (queued right after these, so it stacks directly beneath them).
-    (SIDE_FIELD, f("Req: Costing", "req_costing", TYPE_CHECKBOX)),
-    (SIDE_FIELD, f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
-    (SIDE_FIELD, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX)),
-    (SIDE_FIELD, f("Req: Process", "req_process", TYPE_CHECKBOX)),
-    (SIDE_FIELD, f("Req: Material", "req_material", TYPE_CHECKBOX)),
+    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
+    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Req: Process", "req_process", TYPE_CHECKBOX)),
+    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
     (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "qc_reviewer_username", TYPE_EDIT)),
-    (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
+    # Plain full-width note again, not the side column - Quality doesn't have enough fields to
+    # fill a side column without leaving a gap either way (see FULL_SPAN above).
+    (FULL_SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
     (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "eng_reviewer_username", TYPE_EDIT)),
-    (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
+    (FULL_SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
     (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_empnum", "planning_reviewer_name"),
@@ -336,7 +338,7 @@ def emit_header(text, y):
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>{DETAIL_WIDTH:.2f}</Width>
+               <Width>{DETAIL_WIDTH - 1:.2f}</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -360,7 +362,7 @@ def emit_title(text, y):
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>{DETAIL_WIDTH:.2f}</Width>
+               <Width>{DETAIL_WIDTH - 1:.2f}</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -478,6 +480,10 @@ def build_components():
             out.append(emit_label("l_" + column, label, NOTE_X, side_y))
             out.append(emit_control(column, ctype, NOTE_X, side_y + 1.1, None, False, w=NOTE_W, h=NOTE_HEIGHT - 1.3))
             note_bottom = max(note_bottom, side_y + NOTE_HEIGHT)
+        elif kind == FULL_SPAN:
+            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
+            out.append(emit_span(label, column, ctype, y))
+            y += 5.8
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, name_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
