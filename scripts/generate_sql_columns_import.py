@@ -14,6 +14,7 @@ from generate_schema_csv import FIELDS
 SCHEMA = "dbo"
 TABLE_NAME = "ue_ecmrs"
 
+# Fallback base-type -> System Data Type, only used when a field has no coldtype at all.
 SYSTEM_TYPE = {
     "Integer": "int",
     "Long Integer": "int",
@@ -22,6 +23,23 @@ SYSTEM_TYPE = {
     "Date": "datetime",
     "Decimal": "decimal",
     "NumSortedString": "nvarchar",
+}
+
+# Column Data Type ("char", "decimal", or a custom class like ItemType/UsernameType) -> the
+# real underlying SQL Server System Data Type. Confirmed directly against the live
+# ToExcel_SqlColumns export: every existing "char" column (status, vendor, job_num, po_num,
+# qc_disposition, ...) is System Data Type "char" too, not "nvarchar" - "String" never
+# appears anywhere as a real Data Type. Custom *Type classes (ItemType, DescriptionType,
+# WcType, DeptType, RevisionType, UsernameType, EmpNumType, LongDescType, QCLongCharType,
+# QCPriorityType) all resolve to nvarchar, which is the default below for anything unlisted.
+COLDTYPE_SYSTEM_TYPE = {
+    "char": "char",
+    "decimal": "decimal",
+    "DateType": "datetime",
+    "CurrentDateType": "datetime",
+    "RowPointerType": "uniqueidentifier",
+    "FlagNyType": "tinyint",
+    "ListYesNoType": "tinyint",
 }
 
 HEADER = ["Column Name", "Schema", "Table Name", "Data Type", "System Data Type", "Length",
@@ -37,11 +55,15 @@ def q(col_idx, value):
     return value
 
 def build_row(col_id, col, dtype, length, decimal, coldtype):
-    # Data Type here takes the plain base type (Decimal, Byte, Date, String...), confirmed
-    # directly - QC-module-specific semantic names (QCSeq, QCInteger, QtyUnit) are rejected
-    # for a new column on this table, only generic framework types are accepted.
+    # Data Type is the real Column Data Type (coldtype) - "char", "decimal", or a named class
+    # like ItemType/UsernameType - never the generic placeholder "String", which the live
+    # environment rejects outright ("String is not a valid Data Type"). Only falls back to
+    # the generic dtype mapping for the handful of fields with no coldtype set.
+    data_type = coldtype or dtype
+    system_type = COLDTYPE_SYSTEM_TYPE.get(coldtype, SYSTEM_TYPE.get(dtype, "nvarchar")) if coldtype \
+        else SYSTEM_TYPE.get(dtype, dtype)
     fields = [
-        col, SCHEMA, TABLE_NAME, dtype, SYSTEM_TYPE.get(dtype, dtype), length, decimal,
+        col, SCHEMA, TABLE_NAME, data_type, system_type, length, decimal,
         "", "YES", "0", "", "", "0", str(col_id), "",
     ]
     return "\t".join(q(i, v) for i, v in enumerate(fields))
