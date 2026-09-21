@@ -706,7 +706,7 @@
                <TabOrder>10</TabOrder>
                <TopPos>16.400</TopPos>
                <LeftPos>86.000</LeftPos>
-               <Height>9.7</Height>
+               <Height>5.7</Height>
                <ListHeight>0</ListHeight>
                <Width>65</Width>
                <MaxCharacters>0</MaxCharacters>
@@ -1091,7 +1091,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1176,7 +1176,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1261,7 +1261,7 @@
                <LeftPos>55.500</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>120.25</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1913,7 +1913,7 @@
                <TabOrder>43</TabOrder>
                <TopPos>49.800</TopPos>
                <LeftPos>86.000</LeftPos>
-               <Height>9.7</Height>
+               <Height>5.7</Height>
                <ListHeight>0</ListHeight>
                <Width>65</Width>
                <MaxCharacters>0</MaxCharacters>
@@ -2187,7 +2187,7 @@
                <TabOrder>49</TabOrder>
                <TopPos>58.700</TopPos>
                <LeftPos>86.000</LeftPos>
-               <Height>9.7</Height>
+               <Height>5.7</Height>
                <ListHeight>0</ListHeight>
                <Width>65</Width>
                <MaxCharacters>0</MaxCharacters>

@@ -420,7 +420,8 @@ def emit_grid_pane(pane_height):
 
 # Fixed, not derived from section length - a note is just a normal-sized text area sitting
 # in place wherever it's declared in LAYOUT, not something that stretches to fill its section.
-NOTE_HEIGHT = 11
+# Shrunk from 11 per direct feedback that it was too tall.
+NOTE_HEIGHT = 7
 # How far a right-hand field widens when nothing (no note) occupies the space to its right at
 # that row - reaches to just short of the detail pane's own right edge.
 WIDE_CTRL_W = DETAIL_WIDTH - CTRL_X_B - 2
