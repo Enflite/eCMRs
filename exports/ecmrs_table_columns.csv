@@ -1,72 +1,72 @@
 Column Name,Data Type,Length,Decimal Places,Nullable,Primary Key,Default Value,Description
 cmr_num,String,10,,No,Y,AUTONUMBER(STEP(1)),"CMR number, key, auto-generated via AUTONUMBER on the table. Kept as nvarchar/NumSortedString (not a true int) - both QCSeq and QCInteger came back invalid Data Types in this environment's picker, and changing the SQL column's own type hit a DF_ue_ecmrs_cmr_num default-constraint dependency error. Stored as digits in a string column, AUTONUMBER(STEP(1)) still gives sequential, unique values starting at 1 - the actual requirement - without fighting either problem."
 status,String,40,,Yes,N,,"Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."
-workflow_status,String,40,,Yes,N,,Workflow status. Fixed value list not yet confirmed.
+workflow_status,String,40,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; its fixed value list was never confirmed either] Workflow status. Fixed value list not yet confirmed.
 priority,String,12,,Yes,N,,"Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."
 item,String,30,,Yes,N,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
-item_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+item_description,String,40,,Yes,N,,"[ORPHANED - not bound to any form control: the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md] Read-only, auto-populated by lookup."
 wc,String,6,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
-wc_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+wc_description,String,40,,Yes,N,,"[ORPHANED - not bound to any form control: the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md] Read-only, auto-populated by lookup."
 dept,String,6,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
-dept_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+dept_description,String,40,,Yes,N,,"[ORPHANED - not bound to any form control: the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md] Read-only, auto-populated by lookup."
 initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
-additional_changes,String,1000,,Yes,N,,Long/growing note - matches RsCrcvrChangeAll's real Length/type.
+additional_changes,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout] Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,String,1000,,Yes,N,,
-general_note,String,1000,,Yes,N,,
+general_note,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout]
 revision,String,8,,Yes,N,,Drawing Revision.
 latest_revision,String,8,,Yes,N,,
-next_assy_item,String,30,,Yes,N,,STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(item)') RECORDCAP(0)) - Next Level Assembly item.
-next_assy_description,String,40,,Yes,N,,"Read-only, auto-populated by lookup."
+next_assy_item,String,30,,Yes,N,,"STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0)) - Next Level Assembly item. Case matters for the 'P(x)' cross-field reference - it's the property name Item, not the column item."
+next_assy_description,String,40,,Yes,N,,"[ORPHANED - not bound to any form control: the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md] Read-only, auto-populated by lookup."
 vendor,String,15,,Yes,N,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
-vendor_name,String,255,,Yes,N,,"Read-only, auto-populated by lookup."
+vendor_name,String,255,,Yes,N,,"[ORPHANED - not bound to any form control: the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md] Read-only, auto-populated by lookup."
 qty,Decimal,,4,Yes,N,,
 job_num,String,15,,Yes,N,,"Mimics the real JobOrders form's own Job field exactly: plain Edit (not a filtered combo), validated via MaintainFromSpec: JobOrders( PROPERTY(Job) ) in the form XML - avoids the SLMatltrans leading-zero exact-match bug entirely instead of working around it. Column Data Type tries the real confirmed JobBase class; if rejected like QCSeq/QCInteger were, fall back to String."
 serial_num,String,50,,Yes,N,,"New field per direct request - currently these get copied into the Notes area on the legacy 3-form process, but they're common enough to need their own field on eCMRs. Created live as char, not nvarchar."
 lot_num,String,50,,Yes,N,,"New field per direct request - same as SerialNum, currently just copied into Notes on the legacy process. Created live as char, not nvarchar."
-po_num,String,15,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"
+po_num,String,15,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER; a self-referencing FILTER(PoNum=FP(po_num)) was tried and dropped because FP() is a plain exact-match against real zero-padded/prefixed PO Numbers (RD00000021, INT0120033) that nobody types literally - see docs/troubleshooting.md."
 po_line,String,10,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
 rfq_num,String,15,,Yes,N,,
 eo_num,String,15,,Yes,N,,
 mdl,String,40,,Yes,N,,
 poc,String,60,,Yes,N,,"Point of contact, free text."
 req_costing,Bit,,,Yes,N,,Cascades off InitialChange.
-cost_review_complete,Bit,,,Yes,N,,
+cost_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_documentation,Bit,,,Yes,N,,Cascades off InitialChange.
-documentation_review_complete,Bit,,,Yes,N,,
+documentation_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_tool_machine,Bit,,,Yes,N,,Cascades off InitialChange.
-machinery_review_complete,Bit,,,Yes,N,,
+machinery_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_process,Bit,,,Yes,N,,Cascades off InitialChange.
-process_review_complete,Bit,,,Yes,N,,
+process_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_material,Bit,,,Yes,N,,Cascades off InitialChange.
-material_review_complete,Bit,,,Yes,N,,
-general_review_complete,Bit,,,Yes,N,,
+material_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
+general_review_complete,Bit,,,Yes,N,,Read-only checkbox on the form; nothing sets it today - part of the close workflow that no longer exists since the Closed checkbox was removed. See docs/troubleshooting.md.
 sox_impacted,Bit,,,Yes,N,,"Standalone, not part of the 5-category cascade."
 hold_on_po,Bit,,,Yes,N,,
 auth_supplier_ship,Bit,,,Yes,N,,
 qc_disposition,String,20,,Yes,N,,"Confirmed real list (from the live dropdown): Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap. Needs its own Property Class + Inline List set up directly in Application Studio."
 eng_disposition,String,20,,Yes,N,,"Confirmed real list (from the live dropdown): NFF, NRS, Other, Rework, Scrap - a subset of QcDisposition's list, missing Accept/Hold/Reject. Needs its own Property Class + Inline List set up directly in Application Studio."
-assigned_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+assigned_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Assigned combo now writes AssignedUsername directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 assigned_username,String,128,,Yes,N,,"Directly writable - the Assigned combo binds here now (commit e2fc29d), not to AssignedEmpNum. Was originally designed as an auto-populated read-only companion field; that's no longer this property's role, so Read Only must not be set - it still was here, likely causing a write-rejection lock when selecting Assigned live."
 assigned_buyer,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+qc_reviewer_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Reviewer combo now writes QcReviewerUsername directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 qc_reviewer_username,String,128,,Yes,N,,"Directly writable - the Reviewer combo binds here now, same pattern as AssignedUsername. No longer a read-only auto-populated companion field."
-eng_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+eng_reviewer_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Reviewer combo now writes EngReviewerUsername directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 eng_reviewer_username,String,128,,Yes,N,,"Directly writable - the Reviewer combo binds here now, same pattern as AssignedUsername. No longer a read-only auto-populated companion field."
-planning_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+planning_reviewer_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Reviewer combo now writes PlanningReviewerName directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 planning_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, not their full Name, despite the property's own name - the Reviewer combo binds here directly (same pattern as AssignedUsername), no longer a read-only auto-populated companion field. Kept the existing property rather than creating/renaming one in Application Studio."
 planning_complete,Bit,,,Yes,N,,
-purchasing_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+purchasing_reviewer_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Reviewer combo now writes PurchasingReviewerName directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 purchasing_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, same as PlanningReviewerName above - see that entry's note."
 purchasing_complete,Bit,,,Yes,N,,
-cm_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
+cm_reviewer_empnum,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: the Reviewer combo now writes CmReviewerName directly] STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 cm_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, same as PlanningReviewerName above - see that entry's note."
 cm_complete,Bit,,,Yes,N,,
 due_date,Date,,,Yes,N,,
 internal_review_date,Date,,,Yes,N,,
-close_date,Date,,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
-closed_by,String,128,,Yes,N,,"Auto-set by the Closed workflow, not user-typed."
-general_close_date,Date,,,Yes,N,,Purpose unclear vs. CloseDate - confirm before relying on it.
-general_closed_by,String,7,,Yes,N,,Same caveat as GeneralCloseDate.
+close_date,Date,,,Yes,N,,"Read-only; was meant to be auto-set by a Closed workflow, but that workflow (and the Closed checkbox that drove it) was removed - nothing sets this today. Restore a close mechanism or drop this column; see docs/troubleshooting.md."
+closed_by,String,128,,Yes,N,,"Read-only; same gap as CloseDate - was meant to be auto-set by the removed Closed workflow, nothing sets it today. See docs/troubleshooting.md."
+general_close_date,Date,,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; purpose still unclear vs. CloseDate] Purpose unclear vs. CloseDate - confirm before relying on it.
+general_closed_by,String,7,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; same caveat as GeneralCloseDate] Same caveat as GeneralCloseDate.
 qc_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, QC."
 eng_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, Engineering."
-closed,Bit,,,Yes,N,,Enable gated by every ReqX/XReviewComplete pair matching - see cew_Closed in the form.
+closed,Bit,,,Yes,N,,"Was meant to be enabled by every ReqX/XReviewComplete pair matching, driven by the Closed checkbox's workflow - that checkbox and its handler were removed (see docs/troubleshooting.md), so this is permanently 0 today. The form's ORDERBY no longer sorts on it as a result. Restore a close mechanism or drop this column."

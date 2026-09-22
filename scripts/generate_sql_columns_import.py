@@ -46,13 +46,21 @@ HEADER = ["Column Name", "Schema", "Table Name", "Data Type", "System Data Type"
           "Decimal Position", "Default Value", "Is Nullable", "Primary Key", "Key Sequence",
           "Definition", "Is Computed", "Column Id", ""]
 
-QUOTED_COLS = {0, 1, 2, 3, 4, 7, 8, 11, 14}
+# Quoted string fields for DATA rows only, confirmed against a real row in
+# docs/reference/ToExcel_SqlColumns_2.csv - the trailing column (14) is bare/unquoted there,
+# not quoted (a prior version of this generator quoted it, mismatching the live format).
+QUOTED_COLS = {0, 1, 2, 3, 4, 7, 8, 11}
 
 def q(col_idx, value):
     value = "" if value is None else str(value)
     if col_idx in QUOTED_COLS:
         return f'"{value}"'
     return value
+
+def q_header(i, value):
+    # Confirmed from the live export: every header cell is quoted except the trailing blank
+    # column - same convention as generate_ido_import.py's header, different from data rows.
+    return "" if i == len(HEADER) - 1 else f'"{value}"'
 
 def build_row(col_id, col, dtype, length, decimal, coldtype):
     # Data Type is the real Column Data Type (coldtype) - "char", "decimal", or a named class
@@ -69,7 +77,7 @@ def build_row(col_id, col, dtype, length, decimal, coldtype):
     return "\t".join(q(i, v) for i, v in enumerate(fields))
 
 def main():
-    lines = ["\t".join(q(i, v) for i, v in enumerate(HEADER))]
+    lines = ["\t".join(q_header(i, v) for i, v in enumerate(HEADER))]
     col_id = 9
     for (col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc) in FIELDS:
         if col == "cmr_num":

@@ -30,14 +30,16 @@ SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
 SL_WCS = "STDOLE SLWcs( PROPERTIES(Wc, Description) )"
 SL_VENDORS = "STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
 SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-# Dedicated to the Assigned field only (not the shared SL_EMPLOYEES above, which every
-# Buyer/Reviewer combo still uses bound to EmpNum): the combo writes back whichever property
-# is listed FIRST in PROPERTIES() - confirmed from Vendor's own combo (DataSource=Vendor,
-# PROPERTIES(VendNum,...) - first entry doesn't even name-match the DataSource property, so
-# this is positional, not name-matched). Listing Username first here makes Assigned bind and
-# store the employee's Username (a real email address in this tenant, confirmed from a live
-# screenshot earlier - e.g. gcaraway@enflite.com) directly - AssignedUsername is a String(128)
-# property, sized for that, unlike AssignedEmpNum's tiny 7-char column.
+# Used by Assigned and all five Reviewer combos (QC/Eng/Planning/Purchasing/CM) - not the
+# shared SL_EMPLOYEES above, which only Assigned Buyer still uses today, bound to EmpNum: the
+# combo writes back whichever property is listed FIRST in PROPERTIES() - confirmed from
+# Vendor's own combo (DataSource=Vendor, PROPERTIES(VendNum,...) - first entry doesn't even
+# name-match the DataSource property, so this is positional, not name-matched). Listing
+# Username first here makes each of these combos bind and store the employee's Username (a
+# real email address in this tenant, confirmed from a live screenshot earlier - e.g.
+# gcaraway@enflite.com) directly - every target property (AssignedUsername, QcReviewerUsername,
+# EngReviewerUsername, PlanningReviewerName, PurchasingReviewerName, CmReviewerName) is sized
+# for a Username (String(128) or String(255)), not the tiny 7-char EmpNum columns.
 SL_EMPLOYEES_ASSIGNED = "STDOLE SLEmployees( PROPERTIES(Username,EmpNum,Name) DISPLAY(1,2,3) RECORDCAP(0))"
 # Real list sources adapted from the legacy form's own combos (CB_NextAssy, comboBox1_SITE,
 # comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
@@ -471,8 +473,9 @@ Inherits GlobalScript
             ' GlobalScript context). Real notification (email to Engineering) needs a decided
             ' mechanism first - no confirmed syntax for that exists anywhere in this project's
             ' real evidence yet, and guessing at one risks the same kind of silent failures the
-            ' SelectionEvent/IDOClient experiments already hit this session.
-            MsgBox("Notification sent to Engineering for CMR " &amp; ThisForm.Components("c_cmr_num").Text)
+            ' SelectionEvent/IDOClient experiments already hit this session. The message below
+            ' deliberately does NOT claim a notification was sent - nothing is sent yet.
+            MsgBox("Notify clicked for CMR " &amp; ThisForm.Components("c_cmr_num").Text &amp; " - no notification mechanism is wired up yet.")
             ReturnValue = "0"
         End Sub
 End Class
@@ -560,14 +563,17 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 {EVENT_HANDLERS}         </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <!-- Closed asc puts open CMRs first, closed ones last - the best available proxy
-                    for "Complete sorts to the bottom" since Status is a plain string whose
-                    alphabetical order doesn't put "Complete" last, and there's no confirmed
-                    Mongoose syntax here for a conditional/computed ORDERBY expression. Priority
-                    is deliberately NOT in this sort - High/Medium/Low as plain text alphabetizes
-                    to High, Low, Medium, which is wrong for urgency order; sorting by it would
-                    be actively misleading rather than just incomplete. -->
-               <Value>ue_ecmrs( ORDERBY({PROP['closed']} asc, {PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
+               <!-- Sorted by CmrNum desc (newest first) only. Closed used to lead this sort
+                    (open CMRs first, closed ones last) but the Closed checkbox and its
+                    setting mechanism were removed - closed is permanently 0 now, so sorting
+                    on it would be dead weight, not a real proxy. See docs/troubleshooting.md
+                    "Close workflow" for the underlying gap (close_date/closed_by/closed/
+                    general_review_complete are all orphaned the same way, pending a decision
+                    on whether to restore a close path or drop these columns). Priority is
+                    deliberately NOT in this sort either - High/Medium/Low as plain text
+                    alphabetizes to High, Low, Medium, which is wrong for urgency order;
+                    sorting by it would be actively misleading rather than just incomplete. -->
+               <Value>ue_ecmrs( ORDERBY({PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />

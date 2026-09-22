@@ -12,7 +12,7 @@ SL_WCS = "STDOLE SLWcs( PROPERTIES(Wc, Description) )"
 SL_VENDORS = "STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
 SL_EMPLOYEES = "STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 
-# Skip these - Application Studio auto-generates them on every new table (confirmed on ue_ecmr):
+# Skip these - Application Studio auto-generates them on every new table (confirmed on ue_ecmrs):
 AUTO_GENERATED_COLUMNS = {"created_by", "create_date"}
 
 # Real Column Data Type / Label String ID values below are taken directly from the real
@@ -42,7 +42,7 @@ FIELDS = [
     ("general_note", "GeneralNote", "String", "1000", "", "QCLongCharType", "sNote", "", "", ""),
     ("revision", "Revision", "String", "8", "", "RevisionType", "sRevision", "", "", "Drawing Revision."),
     ("latest_revision", "LatestRevision", "String", "8", "", "RevisionType", "sRevision", "", "", ""),
-    ("next_assy_item", "NextAssyItem", "String", "30", "", "ItemType", "sItem", "", "", "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(item)') RECORDCAP(0)) - Next Level Assembly item."),
+    ("next_assy_item", "NextAssyItem", "String", "30", "", "ItemType", "sItem", "", "", "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0)) - Next Level Assembly item. Case matters for the 'P(x)' cross-field reference - it's the property name Item, not the column item."),
     ("next_assy_description", "NextAssyDescription", "String", "40", "", "DescriptionType", "sDescription", "", "1", "Read-only, auto-populated by lookup."),
     ("vendor", "Vendor", "String", "15", "", "char", "", "", "", SL_VENDORS),
     ("vendor_name", "VendorName", "String", "255", "", "LongDescType", "", "", "1", "Read-only, auto-populated by lookup."),
@@ -50,7 +50,7 @@ FIELDS = [
     ("job_num", "JobNum", "String", "15", "", "JobBase", "", "", "", "Mimics the real JobOrders form's own Job field exactly: plain Edit (not a filtered combo), validated via MaintainFromSpec: JobOrders( PROPERTY(Job) ) in the form XML - avoids the SLMatltrans leading-zero exact-match bug entirely instead of working around it. Column Data Type tries the real confirmed JobBase class; if rejected like QCSeq/QCInteger were, fall back to String."),
     ("serial_num", "SerialNum", "String", "50", "", "char", "", "", "", "New field per direct request - currently these get copied into the Notes area on the legacy 3-form process, but they're common enough to need their own field on eCMRs. Created live as char, not nvarchar."),
     ("lot_num", "LotNum", "String", "50", "", "char", "", "", "", "New field per direct request - same as SerialNum, currently just copied into Notes on the legacy process. Created live as char, not nvarchar."),
-    ("po_num", "PoNum", "String", "15", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum=FP(po_num)) RECORDCAP(0))"),
+    ("po_num", "PoNum", "String", "15", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER; a self-referencing FILTER(PoNum=FP(po_num)) was tried and dropped because FP() is a plain exact-match against real zero-padded/prefixed PO Numbers (RD00000021, INT0120033) that nobody types literally - see docs/troubleshooting.md."),
     ("po_line", "PoLine", "String", "10", "", "char", "", "", "", "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"),
     ("rfq_num", "RfqNum", "String", "15", "", "char", "", "", "", ""),
     ("eo_num", "EoNum", "String", "15", "", "char", "", "", "", ""),
@@ -66,7 +66,7 @@ FIELDS = [
     ("process_review_complete", "ProcessReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("req_material", "ReqMaterial", "Byte", "", "", "ListYesNoType", "", "0", "", "Cascades off InitialChange."),
     ("material_review_complete", "MaterialReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
-    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
+    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Read-only checkbox on the form; nothing sets it today - part of the close workflow that no longer exists since the Closed checkbox was removed. See docs/troubleshooting.md."),
     ("sox_impacted", "SoxImpacted", "Byte", "", "", "ListYesNoType", "sRSQCSarbanesImpact", "0", "", "Standalone, not part of the 5-category cascade."),
     ("hold_on_po", "HoldOnPo", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("auth_supplier_ship", "AuthSupplierShip", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
@@ -90,13 +90,55 @@ FIELDS = [
     ("cm_complete", "CmComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("due_date", "DueDate", "Date", "", "", "DateType", "sDate", "", "", ""),
     ("internal_review_date", "InternalReviewDate", "Date", "", "", "DateType", "sDate", "", "", ""),
-    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "1", "Auto-set by the Closed workflow, not user-typed."),
-    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "1", "Auto-set by the Closed workflow, not user-typed."),
+    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "1", "Read-only; was meant to be auto-set by a Closed workflow, but that workflow (and the Closed checkbox that drove it) was removed - nothing sets this today. Restore a close mechanism or drop this column; see docs/troubleshooting.md."),
+    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "1", "Read-only; same gap as CloseDate - was meant to be auto-set by the removed Closed workflow, nothing sets it today. See docs/troubleshooting.md."),
     ("general_close_date", "GeneralCloseDate", "Date", "", "", "DateType", "sDate", "", "", "Purpose unclear vs. CloseDate - confirm before relying on it."),
     ("general_closed_by", "GeneralClosedBy", "NumSortedString", "7", "", "EmpNumType", "sEmployee", "", "", "Same caveat as GeneralCloseDate."),
     ("qc_rca_notes", "QcRcaNotes", "String", "1000", "", "QCLongCharType", "sNote", "", "", "Root cause analysis notes, QC."),
     ("eng_rca_notes", "EngRcaNotes", "String", "1000", "", "QCLongCharType", "sNote", "", "", "Root cause analysis notes, Engineering."),
-    ("closed", "Closed", "Byte", "", "", "ListYesNoType", "sClosed", "0", "", "Enable gated by every ReqX/XReviewComplete pair matching - see cew_Closed in the form."),
+    ("closed", "Closed", "Byte", "", "", "ListYesNoType", "sClosed", "0", "", "Was meant to be enabled by every ReqX/XReviewComplete pair matching, driven by the Closed checkbox's workflow - that checkbox and its handler were removed (see docs/troubleshooting.md), so this is permanently 0 today. The form's ORDERBY no longer sorts on it as a result. Restore a close mechanism or drop this column."),
+]
+
+# Columns still in the schema/IDO but not bound to any component on the current form -
+# tracked here (not silently dropped) so a future contributor doesn't mistake "not on the
+# form" for "not real" and doesn't have to re-derive why each one is dead. None of these are
+# removed from FIELDS itself: the live SQL columns/IDO properties already exist from earlier
+# imports, and dropping a live column/property is a separate, destructive action (needs an
+# explicit decision, not a schema-generator side effect). Each entry's description below gets
+# an "[ORPHANED - ...]" prefix at generation time so every export (table columns, IDO
+# properties, deploy checklist) says so consistently instead of drifting.
+ORPHANED_COLUMNS = {
+    "assigned_empnum": "the Assigned combo now writes AssignedUsername directly",
+    "qc_reviewer_empnum": "the Reviewer combo now writes QcReviewerUsername directly",
+    "eng_reviewer_empnum": "the Reviewer combo now writes EngReviewerUsername directly",
+    "planning_reviewer_empnum": "the Reviewer combo now writes PlanningReviewerName directly",
+    "purchasing_reviewer_empnum": "the Reviewer combo now writes PurchasingReviewerName directly",
+    "cm_reviewer_empnum": "the Reviewer combo now writes CmReviewerName directly",
+    "item_description": "the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md",
+    "wc_description": "the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md",
+    "dept_description": "the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md",
+    "next_assy_description": "the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md",
+    "vendor_name": "the SelectionEvent auto-populate mechanism that filled it was removed project-wide - see docs/troubleshooting.md",
+    "cost_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    "documentation_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    "machinery_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    "process_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    "material_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    "additional_changes": "not placed on the current form layout",
+    "general_note": "not placed on the current form layout",
+    "workflow_status": "not placed on the current form layout; its fixed value list was never confirmed either",
+    "general_close_date": "not placed on the current form layout; purpose still unclear vs. CloseDate",
+    "general_closed_by": "not placed on the current form layout; same caveat as GeneralCloseDate",
+}
+
+_field_cols = {f[0] for f in FIELDS}
+assert ORPHANED_COLUMNS.keys() <= _field_cols, \
+    f"ORPHANED_COLUMNS references unknown column(s): {ORPHANED_COLUMNS.keys() - _field_cols}"
+
+FIELDS = [
+    f if f[0] not in ORPHANED_COLUMNS
+    else (*f[:9], f"[ORPHANED - not bound to any form control: {ORPHANED_COLUMNS[f[0]]}] {f[9]}".rstrip())
+    for f in FIELDS
 ]
 
 TABLE_HEADER = ["Column Name", "Data Type", "Length", "Decimal Places", "Nullable", "Primary Key", "Default Value", "Description"]
@@ -111,6 +153,21 @@ IDO_HEADER = ["Bind To", "Property Name", "Property Class", "Data Type", "Length
 # by the same live export - its real property is blank too. Kept as an empty dict (not
 # removed outright) in case a genuine future exception is confirmed the same way.
 COLDTYPE_OVERRIDES = {}
+
+# Properties that were originally read-only auto-populated companion fields and were later
+# repurposed to be a combo's primary, directly-writable binding (the Username pattern - see
+# docs/troubleshooting.md Rule #1B). Every one of these needs its live Read Only flag manually
+# unchecked in Application Studio's IDO Properties grid - Form Sync re-import never touches an
+# existing property's Read Only setting. Tracked here (not just in commit messages) so
+# generate_deploy_checklist.py can't miss one on the next field that gets this same treatment.
+REPURPOSED_WRITABLE = {
+    "assigned_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
+    "qc_reviewer_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
+    "eng_reviewer_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
+    "planning_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
+    "purchasing_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
+    "cm_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
+}
 
 def main():
     with open("exports/ecmrs_table_columns.csv", "w", newline="") as fh:

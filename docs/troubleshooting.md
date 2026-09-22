@@ -159,6 +159,49 @@ a real type — `char`, `nvarchar`, `decimal`, `datetime`,
 `ToExcel_SqlColumns` export where every existing column uses one of these,
 never the literal word `String`.
 
+## IDO Properties/SQL Columns import CSVs must match the live export's exact header, column count, and quoting
+
+A full review against a fresher live export (`docs/reference/ToExcel_IdoProperties_4.csv`,
+42 columns) found our generated `ecmrs_ido_properties_import.csv` had drifted from it in three
+ways, all silent (no rejected-import error to notice, since these are formatting mismatches,
+not value-validation errors):
+
+- **Missing columns.** The live grid grew two columns since the reference export our generator
+  was originally built against (`ToExcel_IdoProperties_3.csv`, 40 columns): `Validate
+  Immediately` and `Validate Immediately Prompt`, inserted right before the trailing `Property
+  Value`/blank columns. Our generator was still emitting the old 40-column shape. If the import
+  is positional rather than header-matched, this silently shifts every column after that point
+  into the wrong field.
+- **Wrong header names.** The live grid's header uses `*Data Type`, `*Length`, `*Column Data
+  Type`, and `*Read Only` (asterisk-prefixed) - our generator wrote `Data Type`, `Length`,
+  `Column Data Type`, `Read Only` (no asterisk). If the import matches by header name, none of
+  these columns would be recognized.
+- **Header quoting differs from data-row quoting.** Every header cell in a live export is
+  quoted (`"Sequence"`, `"Read Only Record"`, ...) except the trailing blank column - a
+  completely different convention from data rows, which only quote actual string-typed columns
+  and leave numeric/flag columns bare. Our generator was reusing the data-row quoting logic for
+  the header row too, so header cells that are bare in a data row (`Sequence`, `Pseudo Key`,
+  `Required`, ...) came out unquoted in the header as well - wrong.
+- **`*Read Only` and `Read Only Record` are two different flags, not one written twice.**
+  Confirmed from the same live export: `*Read Only=1` appears ONLY on the 5 truly
+  auto-generated system properties (`CreatedBy`, `UpdatedBy`, `CreateDate`, `RecordDate`,
+  `RowPointer`) - never on any custom property, read-only or not. `Read Only Record` is the
+  real read-only flag for a custom property (confirmed on `InWorkflow` and every read-only
+  companion field: `ItemDescription`, `AssignedUsername`, `CloseDate`, ...). Our generator was
+  writing the same `readonly` value into both columns, which would have incorrectly set
+  `*Read Only=1` on every read-only custom property we import (`CloseDate`, `ClosedBy`, the
+  description companion fields).
+
+Same class of bug existed in the SQL Columns import (`ecmrs_sql_columns_import.csv`): the
+trailing blank column was quoted (`""`) when the live export leaves it bare, and the header row
+used the same non-quoting mistake as above.
+
+**Lesson**: don't just check whether Application Studio *rejects* an import - a live export's
+exact header/column-count/quoting also has to be diffed byte-for-byte against what the
+generator produces, since a formatting mismatch (missing column, wrong header name, wrong
+quoting) fails silently rather than throwing a validation error. `docs/reference/` should be
+kept up to date with the freshest real export for exactly this reason.
+
 ## IDO Properties import: `Property Class` also rejects `"String"`
 
 Same error family, different field: **"String is not a valid Property
@@ -204,6 +247,43 @@ Confirmed real value lists:
 - `InitialChange`: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver)
 - `QcDisposition`: Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap
 - `EngDisposition`: NFF, NRS, Other, Rework, Scrap (subset of QcDisposition — missing Accept/Hold/Reject)
+
+## The close workflow is gone, not just unused
+
+The `Closed` checkbox (and its `SetCloseInfo` event handler) was removed from the form because
+the user said it wasn't needed. That left several other things pointing at a mechanism that no
+longer exists:
+
+- `Closed` itself is now permanently `0` - nothing sets it.
+- `CloseDate`/`ClosedBy` are still marked read-only with descriptions saying they're "auto-set
+  by the Closed workflow" - there is no such workflow anymore.
+- `GeneralReviewComplete` is a read-only checkbox with nothing that can check it.
+- The form's own record sort (`ORDERBY`) used to sort on `Closed` to put open CMRs first -
+  sorting on a permanently-zero column is dead weight, so this was changed to sort on `CmrNum
+  desc` only (newest first).
+
+**Not fixed**: whether to restore a real close mechanism or drop `Closed`/`CloseDate`/
+`ClosedBy`/`GeneralReviewComplete` outright is a product decision, not a bug fix - tracked in
+`docs/task-list.md` Phase D. What *is* fixed here is that nothing in the schema/form claims
+this mechanism still works when it doesn't (see also "Dead schema" below).
+
+## Dead schema: columns that exist but aren't on the form
+
+21 of the 71 custom columns in `generate_schema_csv.py`'s `FIELDS` aren't bound to any
+component on the current form - the `*_empnum` companion columns (superseded by the
+Username-binding pattern above), the `*_description`/`VendorName` companion columns
+(superseded when `SelectionEvent` was found dead), the 5 `*_review_complete` cascade flags (no
+cascade UI was ever built), and a handful never placed on the layout at all
+(`AdditionalChanges`, `GeneralNote`, `WorkflowStatus`, `GeneralCloseDate`, `GeneralClosedBy`).
+
+These are **not removed** from the schema - the underlying SQL columns and IDO properties
+already exist live from earlier imports, and dropping a live column/property is a separate,
+destructive decision, not something a schema-generator refactor should do as a side effect.
+Instead they're tracked explicitly in `ORPHANED_COLUMNS` (`generate_schema_csv.py`), which
+prefixes each one's description with `[ORPHANED - ...]` in every export (table columns, IDO
+properties, deploy checklist) so nobody mistakes "not on the form" for "not real," and so a
+future contributor doesn't have to re-derive why each one is dead. If a column here gets
+reused for something later, take it back out of `ORPHANED_COLUMNS`.
 
 ## General debugging order for "it's not working" reports
 

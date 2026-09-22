@@ -1,5 +1,14 @@
 # eCMRs — Build Guide
 
+**HISTORICAL / SUPERSEDED.** This was written as pre-build instructions before the table, IDO,
+and form existed. All of it is now live (see `README.md`'s Status section) and several details
+below are stale or wrong as a result - notably the table name (`ue_ecmr` below vs. the real,
+live `ue_ecmrs`) and the column list (lengths/types/presence have all moved on since this was
+written - `scripts/generate_schema_csv.py`'s `FIELDS` is the current source of truth, not the
+table here). Kept for the historical reasoning (why a standalone table, the naming convention,
+the two-mechanism split below), not as a build reference. For current, accurate info see
+`README.md`, `docs/troubleshooting.md`, and `docs/deploy-checklist.md`.
+
 Two separate mechanisms, don't conflate them:
 
 1. **The table + IDO cannot be imported.** Form Sync only creates/updates **forms** — it has no mechanism for defining a new SQL table or an IDO's property list. This part has to be done by hand in Application Studio, once, following the steps below.

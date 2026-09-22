@@ -23,4 +23,11 @@ That approach hit real, structural ceilings along the way:
 
 ## Status
 
-Just started. No table, IDO, or form exists yet — see `docs/task-list.md` Phase A.
+Table, IDO, and form are live and in active use (71 custom properties, `exports/eCMRs_v1.XML`).
+Combos/comboLists, the Username-binding pattern for Assigned/Reviewer fields, and the fixed-value
+dropdowns are all working - see `docs/troubleshooting.md` for the confirmed gotchas and
+`docs/deploy-checklist.md` for the manual Application Studio steps every re-import still needs.
+Known open gaps: the close workflow (Closed checkbox, `CloseDate`/`ClosedBy`/`Closed`/
+`GeneralReviewComplete`) was removed and never replaced, the Job Number leading-zero lookup bug
+is still deferred, and the Costing one-to-many design question is still open. See
+`docs/task-list.md` for phase-by-phase status.
