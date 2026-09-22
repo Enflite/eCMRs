@@ -1263,7 +1263,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PoLine</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(2,1,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

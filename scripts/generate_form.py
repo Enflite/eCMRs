@@ -55,7 +55,14 @@ SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READM
 SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))"
 # PO Line's filter is a legitimate cascade off the already-selected PoNum (a real value from
 # the object, not free-typed guesswork), not a self-referencing exact-match - left as-is.
-SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
+# DISPLAY(2,1,3) puts Item before PoLine in the visual/label order (was DISPLAY(1,2,3)), since
+# a bare PoLine number ("1", "2", "3") isn't identifiable on its own once the combo is closed -
+# per direct request, keep PoLine as the actual stored/written-back value (still correct,
+# write-back is positional against PROPERTIES()'s own order, which is unchanged: PoLine stays
+# first there) while making Item show first in whatever label the closed box displays.
+# UNCONFIRMED whether DISPLAY() order actually affects the closed/collapsed combo's text (as
+# opposed to only the open dropdown grid's column order) - needs a live check after re-import.
+SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(2,1,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
 # Job Num: real syntax confirmed directly from the legacy QC_CMRs form's own Job Num combo
 # (comboBox4_SITE) - STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED)
 # DISTINCT() FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) RECORDCAP(0)). Two wrong guesses tried
