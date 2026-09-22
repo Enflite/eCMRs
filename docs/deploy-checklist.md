@@ -35,4 +35,6 @@ environment (confirmed live on Status; see docs/troubleshooting.md).
 - [ ] `InitialChange` - Inline List: `ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))`
 - [ ] `QcDisposition` - Inline List: `ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)`
 - [ ] `EngDisposition` - Inline List: `ENTRIES(NFF,NRS,Other,Rework,Scrap)`
+- [ ] `ReasonCode` - Inline List: **not yet defined** - waiting on real values from the team, set `ENTRIES(...)` here once known.
+- [ ] `CauseCode` - Inline List: **not yet defined** - waiting on real values from the team, set `ENTRIES(...)` here once known.
 

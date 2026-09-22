@@ -121,6 +121,10 @@ LAYOUT = [
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
+    # Same fixed-value-dropdown pattern as QC/Eng Disposition below (Property Class blank,
+    # Inline List set directly on the property in Application Studio) - no ComboListSource
+    # here at all, matching Status/Priority/Disposition. Ships with an empty Inline List.
+    (PAIR, f("Reason Code:", "reason_code", TYPE_COMBO), f("Cause Code:", "cause_code", TYPE_COMBO)),
     # Reviewer combo binds directly to the Username property (same pattern as Assigned) and
     # returns the username, not the employee number - the separate Username display field is
     # gone. Paired with QC Disposition on one row instead of each sitting alone, per direct

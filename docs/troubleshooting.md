@@ -299,6 +299,37 @@ Confirmed real value lists:
 - `InitialChange`: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver)
 - `QcDisposition`: Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap
 - `EngDisposition`: NFF, NRS, Other, Rework, Scrap (subset of QcDisposition — missing Accept/Hold/Reject)
+- `ReasonCode`/`CauseCode`: same pattern, added to the Quality section, but shipped with an
+  **empty** Inline List - no real values confirmed yet (see next section for why not, and what
+  the real alternative would have been).
+
+## Reason Code / Cause Code: used our own Inline List, not SyteLine's real master tables
+
+The signed CMR Development SOW (`Enflite - 00004 - CMR Development`) documents that SyteLine
+already has real, existing Reason Codes and Cause Codes master tables, each row categorized by
+a `Ref Type` (`E`=Enterprise, `J`=In Process, `O`=Customer, `P`=Supplier, `R`=Customer RMA), and
+the SOW's own plan was to add a new `Ref Type` value `C` (for CMR) to those real tables, then
+filter the CMR form's dropdowns to `RefType='C'`.
+
+**That real mechanism was not used.** Per direct request, `ReasonCode`/`CauseCode` instead use
+the same fixed-value-dropdown pattern as `Status`/`Priority`/`Disposition` above - Property
+Class blank, Inline List set directly on the property in Application Studio - since eCMRs
+already owns its own IDO/table and this avoids needing to go confirm the real Reason
+Codes/Cause Codes IDO names and `RefType='C'` filter syntax live (the same kind of confirmation
+`Job Number` needed twice before landing on the right answer - see `SLMatltrans`/`RefNum`
+above).
+
+**Trade-off worth knowing**: this means CMR's reason/cause codes live in their own separate list,
+disconnected from whatever reason/cause codes the rest of the SyteLine system uses (RMAs, etc.)
+- there's no shared vocabulary, and someone adding a code for CMR purposes here has to do it
+twice if the same code should also exist in the real system-wide tables. If that turns out to
+matter, switching to the real tables later is possible but requires the same live-confirmation
+step described above.
+
+The Inline List ships **empty** - no real Reason Code/Cause Code values have been provided yet.
+Add them directly on the `ReasonCode`/`CauseCode` properties in Application Studio
+(`ENTRIES(value1,value2,...)`, same syntax as the others) whenever the team has a real list -
+tracked in `docs/deploy-checklist.md`.
 
 ## The close workflow: removed, then restored (in Implementation, not CMR Details)
 

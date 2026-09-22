@@ -43,6 +43,13 @@ INLINE_LISTS = {
     # Accept/Hold/Reject.
     "qc_disposition": "ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)",
     "eng_disposition": "ENTRIES(NFF,NRS,Other,Rework,Scrap)",
+    # Shipped empty per direct request - the team hasn't provided real Reason/Cause Code
+    # values yet. Uses our own IDO's Inline List (Property Class blank, same as the other
+    # entries here) rather than SyteLine's real, existing Reason Codes/Cause Codes master
+    # tables, which the signed CMR Development SOW separately plans to extend with a new
+    # 'C' Ref Type - see docs/troubleshooting.md. Add real values here once known.
+    "reason_code": "",
+    "cause_code": "",
 }
 
 # Header names/order/count confirmed directly against docs/reference/ToExcel_IdoProperties_4.csv

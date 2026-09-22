@@ -41,7 +41,10 @@ def main():
     lines.append("")
     for col, values in INLINE_LISTS.items():
         pname = "".join(w.capitalize() for w in col.split("_"))
-        lines.append(f"- [ ] `{pname}` - Inline List: `{values}`")
+        if values:
+            lines.append(f"- [ ] `{pname}` - Inline List: `{values}`")
+        else:
+            lines.append(f"- [ ] `{pname}` - Inline List: **not yet defined** - waiting on real values from the team, set `ENTRIES(...)` here once known.")
     lines.append("")
 
     with open("docs/deploy-checklist.md", "w") as fh:
