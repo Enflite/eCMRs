@@ -4,6 +4,14 @@ Generated from the schema by `scripts/generate_deploy_checklist.py` - re-run it
 after adding a field to either tracking dict below, don't hand-edit this file.
 See `docs/troubleshooting.md` for why each category exists.
 
+**After every item below**: editing a property in the IDO Properties grid does
+not persist by itself - the IDO itself must be Check In'd (IDOs tab -> find the
+IDO -> Check In) before the change takes effect, even with no source control
+configured (a "Source control integration is currently disabled" popup is
+harmless - click OK, the local check-in still applies). Skipping this produced a
+real "Missing property data type" error on form save. See
+`docs/troubleshooting.md`.
+
 ## Read Only must be manually unchecked
 
 Form Sync re-import never touches an existing property's Read Only flag.
@@ -15,14 +23,16 @@ Form Sync re-import never touches an existing property's Read Only flag.
 - [ ] `PurchasingReviewerName` (purchasing_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
 - [ ] `CmReviewerName` (cm_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
 
-## Property Class + Inline List must be manually configured
+## Inline List must be manually configured
 
-Cannot be pushed via CSV/Form Sync import at all - two steps each: create
-the Inline List, then set the property's own Property Class to point at it.
+Cannot be pushed via CSV/Form Sync import at all - set the property's own
+`*Inline List` field directly to the `ENTRIES(...)` value below. `Property
+Class` stays blank - there is no separate class to create in this
+environment (confirmed live on Status; see docs/troubleshooting.md).
 
-- [ ] `Status` - Property Class `ue_CmrStatusType`, values: CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval
-- [ ] `Priority` - Property Class `ue_CmrPriorityType`, values: High,Medium,Low
-- [ ] `InitialChange` - Property Class `ue_CmrInitialChangeType`, values: Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver)
-- [ ] `QcDisposition` - Property Class `ue_CmrQcDispositionType`, values: Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap
-- [ ] `EngDisposition` - Property Class `ue_CmrEngDispositionType`, values: NFF,NRS,Other,Rework,Scrap
+- [ ] `Status` - Inline List: `ENTRIES(CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval)`
+- [ ] `Priority` - Inline List: `ENTRIES(High,Medium,Low)`
+- [ ] `InitialChange` - Inline List: `ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))`
+- [ ] `QcDisposition` - Inline List: `ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)`
+- [ ] `EngDisposition` - Inline List: `ENTRIES(NFF,NRS,Other,Rework,Scrap)`
 

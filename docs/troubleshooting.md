@@ -230,16 +230,36 @@ Type` itself.)
 ## Fixed-value dropdowns (Priority, Initial Change, QC/Eng Disposition, Status)
 
 These cannot get their value list via CSV/Form-Sync import at all. They
-need a **Property Class + Inline List configured directly on the property
-in Application Studio**, manually, per property. The form's own combo
+need an **Inline List configured directly on the property itself in
+Application Studio**, manually, per property. The form's own combo
 component needs no `ComboListSource`/`PropertyClassName` for these — an
 empty-looking combo with none of those attributes in the form XML is
 *expected*, not a bug, until the property-level setup is done.
 
-Two separate steps are required and both have been missed before:
-1. Create the Inline List (the actual value set).
-2. Set that property's own `Property Class` field to point at a class
-   carrying that list — a list existing on its own, unlinked, does nothing.
+**Correction, confirmed live from the actual Edit Property dialog for
+`Status`**: there is no separate Property Class object to create at all
+in this environment. `Property Class` stays **blank**, and the value list
+goes directly into that same property's own `*Inline List` field, using
+the syntax `ENTRIES(value1,value2,value3,...)` (e.g.
+`ENTRIES(CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC
+Approval)` for Status). One field, one step - not the two-step
+"create a class, then point Property Class at it" process assumed
+earlier in this doc. That earlier assumption was never actually confirmed
+against the real dialog and turned out to be wrong.
+
+**Editing the property alone is not enough - it must be checked in.**
+Setting `*Data Type`/`*Inline List` in the Properties grid and closing the
+dialog does not persist the change by itself. The IDO itself has to be
+**checked in** (IDOs tab → find the IDO → Check In) before the form-save
+validation sees the new value. If source control integration isn't
+configured for the tenant, Check In will show an informational popup —
+*"Source control integration is currently disabled in the current
+configuration. The item will not be checked in to source control."* -
+that's harmless, just click OK; the local check-in still applies. Skipping
+this step is exactly what produced a **"Missing property data type for
+ue_ecmrs.Status"** error on form save even though the property's own
+`*Data Type` field visibly showed `String` in the still-open dialog - the
+form was still validating against the old, not-yet-checked-in state.
 
 Confirmed real value lists:
 - `Status`: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval

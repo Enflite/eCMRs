@@ -21,30 +21,28 @@ TABLE_NAME = "ue_ecmrs"  # confirmed from the real ToExcel export, not "ue_ecmr"
 # MaintainFromSpec in the form XML instead, mimicking the real JobOrders form's own Job
 # field exactly. See generate_form.py.
 
-# Custom Property Class name for each fixed-value-list property - QCPriorityType (reusing a
-# real system class) came back blank in the live IDO Properties export, so these get their own.
-PROPERTY_CLASS_OVERRIDES = {
-    "status": "ue_CmrStatusType",
-    "priority": "ue_CmrPriorityType",
-    "initial_change": "ue_CmrInitialChangeType",
-    "qc_disposition": "ue_CmrQcDispositionType",
-    "eng_disposition": "ue_CmrEngDispositionType",
-}
+# CORRECTED, confirmed live from the real Edit Property dialog for Status: there is no
+# separate Property Class object for a fixed-value-list property in this environment.
+# Property Class stays blank - the value list goes directly on the property's own *Inline
+# List field. A prior version of this generator guessed a two-step "create a class, point
+# Property Class at it" process and gave each of these 5 fields a made-up class name
+# (ue_CmrStatusType, etc.) - that was never confirmed and turned out to be wrong. See
+# docs/troubleshooting.md "Fixed-value dropdowns".
+PROPERTY_CLASS_OVERRIDES = {}
 
-# UNCONFIRMED syntax: no real IDO Properties export seen so far (including the live
-# ToExcel_IdoProperties_3.csv) has a populated Inline List value to copy the exact delimiter
-# from - every real example checked is blank. Comma-separated is the best guess (matches the
-# plain-string convention used elsewhere in this same CSV format). If Application Studio
-# rejects this on import, the error message will show the expected real format directly.
+# Confirmed live from the real Edit Property dialog for Status: *Inline List holds the
+# literal ENTRIES(...) syntax, not a bare comma-separated string - a prior version of this
+# generator guessed the bare form and was never checked against a real populated example.
+# See docs/troubleshooting.md "Fixed-value dropdowns".
 INLINE_LISTS = {
-    "status": "CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval",
-    "priority": "High,Medium,Low",
-    "initial_change": "Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver)",
+    "status": "ENTRIES(CM,Complete,Data Input,Eng Review,Planning,Purchasing,QC Approval)",
+    "priority": "ENTRIES(High,Medium,Low)",
+    "initial_change": "ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))",
     # Confirmed directly from the real live dropdowns (screenshots of the actual Disposition
     # combo open on both sections) - Engineering's list is a subset of QC's, missing
     # Accept/Hold/Reject.
-    "qc_disposition": "Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap",
-    "eng_disposition": "NFF,NRS,Other,Rework,Scrap",
+    "qc_disposition": "ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)",
+    "eng_disposition": "ENTRIES(NFF,NRS,Other,Rework,Scrap)",
 }
 
 # Header names/order/count confirmed directly against docs/reference/ToExcel_IdoProperties_4.csv
