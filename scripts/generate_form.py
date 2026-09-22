@@ -102,21 +102,26 @@ LAYOUT = [
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
-    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "qc_reviewer_username", TYPE_EDIT)),
+    # Reviewer combo binds directly to the Username property (same pattern as Assigned) and
+    # returns the username, not the employee number - the separate Username display field is
+    # gone. Paired with QC Disposition on one row instead of each sitting alone, per direct
+    # request to tidy up the section.
+    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
-    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Username:", "eng_reviewer_username", TYPE_EDIT)),
+    # Same treatment as Quality's Reviewer above.
+    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
-    (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_empnum", "planning_reviewer_name"),
-    (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_empnum", "purchasing_reviewer_name"),
-    (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_empnum", "cm_reviewer_name"),
+    # Reviewer combo binds directly to the *_reviewer_name property (repurposed to hold the
+    # username, same as Quality/Engineering above) - no separate display box needed anymore.
+    (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_name"),
+    (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_name"),
+    (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_name"),
 ]
 
 # Grid pane (left side) - a master-list overview of multiple records at once, matching the
@@ -267,10 +272,9 @@ def emit_span(label, column, ctype, y):
     out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5)
     return out
 
-def emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y):
+def emit_impl_row(checkbox_col, checkbox_caption, combo_col, y):
     out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, 2, 2, y, ctrl_w=12)
-    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES, False, 15, 23.5, y, ctrl_w=15)
-    out += emit_control(name_col, TYPE_EDIT, 40, y, None, False, w=38)
+    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 15, 23.5, y, ctrl_w=15)
     return out
 
 def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
@@ -428,8 +432,8 @@ def build_components():
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
         elif kind == IMPL_ROW:
-            _, checkbox_col, checkbox_caption, combo_col, name_col = item
-            out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, name_col, y))
+            _, checkbox_col, checkbox_caption, combo_col = item
+            out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, y))
             y += ROW_H
         elif kind == BUTTON_ROW:
             _, name, caption, event_to_generate = item

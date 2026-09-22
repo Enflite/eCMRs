@@ -49,17 +49,17 @@ assigned_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Use
 assigned_username,String,128,,Yes,N,,"Directly writable - the Assigned combo binds here now (commit e2fc29d), not to AssignedEmpNum. Was originally designed as an auto-populated read-only companion field; that's no longer this property's role, so Read Only must not be set - it still was here, likely causing a write-rejection lock when selecting Assigned live."
 assigned_buyer,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
 qc_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-qc_reviewer_username,String,128,,Yes,N,,"Read-only, auto-populated when QcReviewerEmpNum is selected."
+qc_reviewer_username,String,128,,Yes,N,,"Directly writable - the Reviewer combo binds here now, same pattern as AssignedUsername. No longer a read-only auto-populated companion field."
 eng_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-eng_reviewer_username,String,128,,Yes,N,,"Read-only, auto-populated when EngReviewerEmpNum is selected."
+eng_reviewer_username,String,128,,Yes,N,,"Directly writable - the Reviewer combo binds here now, same pattern as AssignedUsername. No longer a read-only auto-populated companion field."
 planning_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-planning_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when PlanningReviewerEmpNum is selected."
+planning_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, not their full Name, despite the property's own name - the Reviewer combo binds here directly (same pattern as AssignedUsername), no longer a read-only auto-populated companion field. Kept the existing property rather than creating/renaming one in Application Studio."
 planning_complete,Bit,,,Yes,N,,
 purchasing_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-purchasing_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when PurchasingReviewerEmpNum is selected."
+purchasing_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, same as PlanningReviewerName above - see that entry's note."
 purchasing_complete,Bit,,,Yes,N,,
 cm_reviewer_empnum,String,7,,Yes,N,,"STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))"
-cm_reviewer_name,String,255,,Yes,N,,"Read-only, auto-populated when CmReviewerEmpNum is selected."
+cm_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username, same as PlanningReviewerName above - see that entry's note."
 cm_complete,Bit,,,Yes,N,,
 due_date,Date,,,Yes,N,,
 internal_review_date,Date,,,Yes,N,,
