@@ -128,19 +128,27 @@ wildcard.
 
 **Confirmed root cause of two separate bugs:**
 - **Job Number**: typing `DK84716` never matched the real stored
-  `DK00084716` (zero-padded). Deferred, not fixed — the real fixed
-  length/format was never confirmed enough to build a padding rule.
+  `DK00084716` (zero-padded) via the old `SLMatltrans` combo's
+  self-referencing exact-match `FILTER` - the real fixed length/format
+  was never confirmed enough to build a padding rule, so a plain
+  Edit + `MaintainFromSpec` workaround was used instead for a while to
+  dodge the bug rather than fix it (superseded now - see below).
 - **PO Number**: `FILTER(PoNum=FP(PoNum))` (self-referencing) never
   matched anything, because real PO Numbers are zero-padded with a
   variable-length prefix (confirmed real examples: `RD00000021`,
   `INT0120033` — different prefix lengths, same total length, no single
   padding rule could reconstruct either from partial input).
 
-**Fix used for PO Number**: drop the `FILTER()` entirely and list every
-row via `STDOLE SLPoItems(...)` with no filter — same pattern already
-proven working for `Item`/`Work Center`/`Dept`/`Vendor` on this form. The
-`EnhancedCombo`'s own client-side type-ahead handles narrowing it down
-instead of a server-side exact match.
+**Fix used for PO Number, and now for Job Number too**: drop the
+`FILTER()` entirely and list every row unfiltered - `STDOLE
+SLPoItems(...)` for PO Number, `STDOLE SLJobs(...)` for Job Number - same
+pattern already proven working for `Item`/`Work Center`/`Dept`/`Vendor`
+on this form. The `EnhancedCombo`'s own client-side type-ahead handles
+narrowing it down instead of a server-side exact match. **Job Number's
+`SLJobs` list source and `Job` property name are inferred from the same
+`SL<Name>` naming convention as the other system lists, not yet
+independently confirmed live** - if Application Studio rejects it, the
+error will name the real IDO/property.
 
 **Don't confuse this with `'P(x)'`** (single-quoted, no leading `F`) —
 that's a different, legitimate mechanism: a cross-field reference to the

@@ -56,10 +56,18 @@ SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3)
 # PO Line's filter is a legitimate cascade off the already-selected PoNum (a real value from
 # the object, not free-typed guesswork), not a self-referencing exact-match - left as-is.
 SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
-# Job Num deliberately does NOT use an SLMatltrans combo (that's what had the leading-zero
-# exact-match bug). The real JobOrders form's own Job field is a plain Edit bound to
-# PropertyClassName JobBase, validated via MaintainFromSpec instead of a filtered combo -
-# see job_num's LAYOUT entry below, which mimics that real mechanism directly.
+# Job Num: same fix as PO Number's leading-zero bug above, not the plain-Edit workaround
+# this used to be. The old SLMatltrans combo had a self-referencing exact-match FILTER (the
+# legacy leading-zero bug - typing DK84716 never matched the real zero-padded DK00084716) and
+# was swapped for a plain Edit + MaintainFromSpec to dodge it entirely rather than fix it.
+# Same underlying problem as PO Number, same fix: drop the FILTER entirely and list every Job
+# via SLJobs (matches SLItems/SLDepts/SLWcs/SLVendors/SLPoItems - the "SL<Name>" system-list
+# naming convention already confirmed correct for all 5 of those), letting the EnhancedCombo's
+# own client-side type-ahead narrow it down instead of a server-side exact match.
+# UNCONFIRMED: SLJobs itself and its "Job" property name are inferred from that same naming
+# convention, not yet independently confirmed live the way SLItems/SLPoItems etc. were - if
+# Application Studio rejects this IDO/property name, the error will name the real one.
+SL_JOBS = "STDOLE SLJobs( PROPERTIES(Job) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))"
 
 # (label, column, ctype, list_source, readonly)
 FIELD = "field"
@@ -91,7 +99,7 @@ LAYOUT = [
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_EDIT, maintain_from_spec="JobOrders( PROPERTY(Job) )")),
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_COMBO, SL_JOBS)),
     (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
