@@ -39,7 +39,7 @@ req_process,Bit,,,Yes,N,,Cascades off InitialChange.
 process_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_material,Bit,,,Yes,N,,Cascades off InitialChange.
 material_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-general_review_complete,Bit,,,Yes,N,,Read-only checkbox on the form; nothing sets it today - part of the close workflow that no longer exists since the Closed checkbox was removed. See docs/troubleshooting.md.
+general_review_complete,Bit,,,Yes,N,,"Read-only checkbox on the form; nothing sets it today. Unlike Closed (which got its SetCloseInfo mechanism restored), this one was never wired to anything and still is not. See docs/troubleshooting.md."
 sox_impacted,Bit,,,Yes,N,,"Standalone, not part of the 5-category cascade."
 hold_on_po,Bit,,,Yes,N,,
 auth_supplier_ship,Bit,,,Yes,N,,
@@ -63,10 +63,10 @@ cm_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username,
 cm_complete,Bit,,,Yes,N,,
 due_date,Date,,,Yes,N,,
 internal_review_date,Date,,,Yes,N,,
-close_date,Date,,,Yes,N,,"Read-only; was meant to be auto-set by a Closed workflow, but that workflow (and the Closed checkbox that drove it) was removed - nothing sets this today. Restore a close mechanism or drop this column; see docs/troubleshooting.md."
-closed_by,String,128,,Yes,N,,"Read-only; same gap as CloseDate - was meant to be auto-set by the removed Closed workflow, nothing sets it today. See docs/troubleshooting.md."
+close_date,Date,,,Yes,N,,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> today's date, unchecked -> cleared). Not user-typed."
+closed_by,String,128,,Yes,N,,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> current username, unchecked -> cleared). Not user-typed."
 general_close_date,Date,,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; purpose still unclear vs. CloseDate] Purpose unclear vs. CloseDate - confirm before relying on it.
 general_closed_by,String,7,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; same caveat as GeneralCloseDate] Same caveat as GeneralCloseDate.
 qc_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, QC."
 eng_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, Engineering."
-closed,Bit,,,Yes,N,,"Was meant to be enabled by every ReqX/XReviewComplete pair matching, driven by the Closed checkbox's workflow - that checkbox and its handler were removed (see docs/troubleshooting.md), so this is permanently 0 today. The form's ORDERBY no longer sorts on it as a result. Restore a close mechanism or drop this column."
+closed,Bit,,,Yes,N,,"Plain checkbox in the Implementation section, manually checked by the user - not gated by the ReqX/XReviewComplete flags (no such gating is implemented). Checking it fires SetCloseInfo, which auto-sets CloseDate/ClosedBy; unchecking it clears both. Drives the form's ORDERBY (open CMRs sort first)."

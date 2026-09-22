@@ -300,24 +300,41 @@ Confirmed real value lists:
 - `QcDisposition`: Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap
 - `EngDisposition`: NFF, NRS, Other, Rework, Scrap (subset of QcDisposition — missing Accept/Hold/Reject)
 
-## The close workflow is gone, not just unused
+## The close workflow: removed, then restored (in Implementation, not CMR Details)
 
-The `Closed` checkbox (and its `SetCloseInfo` event handler) was removed from the form because
-the user said it wasn't needed. That left several other things pointing at a mechanism that no
-longer exists:
+The `Closed` checkbox (and its `SetCloseInfo` event handler) was originally removed from the
+form because the user said it wasn't needed at the time. That left `Closed`/`CloseDate`/
+`ClosedBy` all dead: `Closed` permanently `0`, `CloseDate`/`ClosedBy` marked read-only with
+nothing to set them, and the form's `ORDERBY` (which used to sort on `Closed` to put open CMRs
+first) simplified to just `CmrNum desc`.
 
-- `Closed` itself is now permanently `0` - nothing sets it.
-- `CloseDate`/`ClosedBy` are still marked read-only with descriptions saying they're "auto-set
-  by the Closed workflow" - there is no such workflow anymore.
-- `GeneralReviewComplete` is a read-only checkbox with nothing that can check it.
-- The form's own record sort (`ORDERBY`) used to sort on `Closed` to put open CMRs first -
-  sorting on a permanently-zero column is dead weight, so this was changed to sort on `CmrNum
-  desc` only (newest first).
+**Restored later, on request, moved into the Implementation section** (not back into CMR
+Details where it originally lived): the exact original `SetCloseInfo` mechanism - a plain
+`Closed` checkbox with `EventToGenerate="SetCloseInfo"` wired to it, and the event handler
+itself restored unchanged:
 
-**Not fixed**: whether to restore a real close mechanism or drop `Closed`/`CloseDate`/
-`ClosedBy`/`GeneralReviewComplete` outright is a product decision, not a bug fix - tracked in
-`docs/task-list.md` Phase D. What *is* fixed here is that nothing in the schema/form claims
-this mechanism still works when it doesn't (see also "Dead schema" below).
+```vb
+If ThisForm.Components("c_closed").Text <> "1" Then
+    ThisForm.Components("c_closed_by").Text = ""
+    ThisForm.Components("c_close_date").Text = ""
+Else
+    ThisForm.Components("c_closed_by").Text = ThisForm.UserName
+    ThisForm.Components("c_close_date").Text = CStr(Today)
+End If
+```
+
+This is safe to restore exactly as it was: checkbox `EventToGenerate` is a **confirmed-working**
+mechanism in this tenant (unlike `SelectionEvent` on a combo, which is confirmed dead - see
+Rule #1 above). `NotifyEngineering`'s button already proves `EventToGenerate` scripts fire
+correctly here; `SetCloseInfo` on a checkbox toggle is the same category of mechanism. The
+`ORDERBY` was restored to `ORDERBY(Closed asc, CmrNum desc)` accordingly - `Closed` is no
+longer permanently `0`, so sorting on it is meaningful again.
+
+**Still not restored, and not requested**: `GeneralReviewComplete` remains a read-only checkbox
+with nothing that sets it - it was never wired to `SetCloseInfo` or anything else, before or
+after this restore, and `Closed` is not gated by the `ReqX`/`XReviewComplete` checkboxes either
+(despite an earlier, inaccurate schema description claiming that gating existed - it never was
+implemented; `Closed` is a plain, manually-checked box).
 
 ## Dead schema: columns that exist but aren't on the form
 

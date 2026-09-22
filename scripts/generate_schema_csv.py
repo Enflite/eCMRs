@@ -66,7 +66,7 @@ FIELDS = [
     ("process_review_complete", "ProcessReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("req_material", "ReqMaterial", "Byte", "", "", "ListYesNoType", "", "0", "", "Cascades off InitialChange."),
     ("material_review_complete", "MaterialReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
-    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Read-only checkbox on the form; nothing sets it today - part of the close workflow that no longer exists since the Closed checkbox was removed. See docs/troubleshooting.md."),
+    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Read-only checkbox on the form; nothing sets it today. Unlike Closed (which got its SetCloseInfo mechanism restored), this one was never wired to anything and still is not. See docs/troubleshooting.md."),
     ("sox_impacted", "SoxImpacted", "Byte", "", "", "ListYesNoType", "sRSQCSarbanesImpact", "0", "", "Standalone, not part of the 5-category cascade."),
     ("hold_on_po", "HoldOnPo", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("auth_supplier_ship", "AuthSupplierShip", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
@@ -90,13 +90,13 @@ FIELDS = [
     ("cm_complete", "CmComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("due_date", "DueDate", "Date", "", "", "DateType", "sDate", "", "", ""),
     ("internal_review_date", "InternalReviewDate", "Date", "", "", "DateType", "sDate", "", "", ""),
-    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "1", "Read-only; was meant to be auto-set by a Closed workflow, but that workflow (and the Closed checkbox that drove it) was removed - nothing sets this today. Restore a close mechanism or drop this column; see docs/troubleshooting.md."),
-    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "1", "Read-only; same gap as CloseDate - was meant to be auto-set by the removed Closed workflow, nothing sets it today. See docs/troubleshooting.md."),
+    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "1", "Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> today's date, unchecked -> cleared). Not user-typed."),
+    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "1", "Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> current username, unchecked -> cleared). Not user-typed."),
     ("general_close_date", "GeneralCloseDate", "Date", "", "", "DateType", "sDate", "", "", "Purpose unclear vs. CloseDate - confirm before relying on it."),
     ("general_closed_by", "GeneralClosedBy", "NumSortedString", "7", "", "EmpNumType", "sEmployee", "", "", "Same caveat as GeneralCloseDate."),
     ("qc_rca_notes", "QcRcaNotes", "String", "1000", "", "QCLongCharType", "sNote", "", "", "Root cause analysis notes, QC."),
     ("eng_rca_notes", "EngRcaNotes", "String", "1000", "", "QCLongCharType", "sNote", "", "", "Root cause analysis notes, Engineering."),
-    ("closed", "Closed", "Byte", "", "", "ListYesNoType", "sClosed", "0", "", "Was meant to be enabled by every ReqX/XReviewComplete pair matching, driven by the Closed checkbox's workflow - that checkbox and its handler were removed (see docs/troubleshooting.md), so this is permanently 0 today. The form's ORDERBY no longer sorts on it as a result. Restore a close mechanism or drop this column."),
+    ("closed", "Closed", "Byte", "", "", "ListYesNoType", "sClosed", "0", "", "Plain checkbox in the Implementation section, manually checked by the user - not gated by the ReqX/XReviewComplete flags (no such gating is implemented). Checking it fires SetCloseInfo, which auto-sets CloseDate/ClosedBy; unchecking it clears both. Drives the form's ORDERBY (open CMRs sort first)."),
 ]
 
 # Columns still in the schema/IDO but not bound to any component on the current form -

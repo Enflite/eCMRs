@@ -107,7 +107,6 @@ LAYOUT = [
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
-    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
 
     (HEADER, "QUALITY"),
     (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
@@ -135,6 +134,8 @@ LAYOUT = [
     (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_name"),
     (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_name"),
     (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_name"),
+    (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 ]
 
 # Grid pane (left side) - a master-list overview of multiple records at once, matching the
@@ -228,6 +229,8 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("               <ContainerSequence>0</ContainerSequence>")
     lines.append(f"               <DataSource>object.{PROP[column]}</DataSource>")
     lines.append("               <Binding>1</Binding>")
+    if ctype == TYPE_CHECKBOX and column == "closed":
+        lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
     # SelectionEvent -> ResponseType 49 EventHandler (FILTER()  MOV()  SONON()  SETP()) removed:
     # confirmed live that using ANY combo wired to one of these jams the whole form's edit/commit
     # pipeline after a single use - every other field can then only be edited once before locking,
@@ -268,6 +271,8 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
                <DataSource>object.{PROP[column]}</DataSource>
                <Binding>1</Binding>
 """
+        if column == "closed":
+            out += "               <EventToGenerate>SetCloseInfo</EventToGenerate>\n"
         out += f"""               <Flags>1</Flags>
                <ReadOnly>{'True' if readonly else 'False'}</ReadOnly>
                <Hidden>False</Hidden>
@@ -464,6 +469,34 @@ DETAIL_XML, TOTAL_HEIGHT = build_components()
 COMPONENTS_XML = emit_grid_pane(TOTAL_HEIGHT) + DETAIL_XML
 
 EVENT_HANDLERS = """
+            <EventHandler Name="SetCloseInfo" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_SetCloseInfo_0
+Inherits GlobalScript
+
+        Sub Main()
+            If ThisForm.Components("c_closed").Text &lt;&gt; "1" Then
+                ThisForm.Components("c_closed_by").Text = ""
+                ThisForm.Components("c_close_date").Text = ""
+            Else
+                ThisForm.Components("c_closed_by").Text = ThisForm.UserName
+                ThisForm.Components("c_close_date").Text = CStr(Today)
+            End If
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
             <EventHandler Name="NotifyEngineering" Sequence="0">
                <ResponseType>33</ResponseType>
                <Response>SCRIPTTEXT(Option Explicit On
@@ -574,17 +607,15 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 {EVENT_HANDLERS}         </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <!-- Sorted by CmrNum desc (newest first) only. Closed used to lead this sort
-                    (open CMRs first, closed ones last) but the Closed checkbox and its
-                    setting mechanism were removed - closed is permanently 0 now, so sorting
-                    on it would be dead weight, not a real proxy. See docs/troubleshooting.md
-                    "Close workflow" for the underlying gap (close_date/closed_by/closed/
-                    general_review_complete are all orphaned the same way, pending a decision
-                    on whether to restore a close path or drop these columns). Priority is
-                    deliberately NOT in this sort either - High/Medium/Low as plain text
-                    alphabetizes to High, Low, Medium, which is wrong for urgency order;
-                    sorting by it would be actively misleading rather than just incomplete. -->
-               <Value>ue_ecmrs( ORDERBY({PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
+               <!-- Closed asc puts open CMRs first, closed ones last - restored now that the
+                    Closed checkbox and its SetCloseInfo handler are back (see the Implementation
+                    section's Closed checkbox below), so closed is no longer permanently 0.
+                    GeneralReviewComplete is still orphaned (nothing sets it) - not part of this
+                    sort, and not part of what was restored here. Priority is deliberately NOT
+                    in this sort either - High/Medium/Low as plain text alphabetizes to High,
+                    Low, Medium, which is wrong for urgency order; sorting by it would be
+                    actively misleading rather than just incomplete. -->
+               <Value>ue_ecmrs( ORDERBY({PROP['closed']} asc, {PROP['cmr_num']} desc) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
