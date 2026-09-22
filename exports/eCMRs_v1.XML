@@ -1093,7 +1093,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.JobNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLJobs( PROPERTIES(Job) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

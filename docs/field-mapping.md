@@ -36,7 +36,7 @@ Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Teste
 | Vendor | `rs_cmrUf_ENF_CMR_Vendor` (`DefaultFrom: VendNum()`) | `vendor` | String | |
 | Vendor Name | `rs_cmrUf_ENF_CMR_VendorName` | `vendor_name` | String (read-only display) | Auto-populated via `UpdateVendorDescription`. |
 | Qty | `rs_cmrUf_ENF_CMR_Qty` | `qty` | Number | |
-| Job Num | `rs_cmrUf_ENF_CMR_JobNum` | `job_num` | String | `SLJobs` list source, no `FILTER()` — same fix as PO Num's leading-zero bug below; see `docs/troubleshooting.md`. |
+| Job Num | `rs_cmrUf_ENF_CMR_JobNum` | `job_num` | String | `SLMatltrans` (`RefNum` property) list source, confirmed from the legacy form's own combo, no `FILTER()` — same fix as PO Num's leading-zero bug below; see `docs/troubleshooting.md`. |
 | PO Num / PO Line | `rs_cmrUf_ENF_CMR_PoNum` / `PoNumLine` | `po_num` / `po_line` | String | `SLPoItems` list source. |
 | RFQ Num | `rs_cmrUf_ENF_CMR_RFQNum` | `rfq_num` | String | |
 | EO Num | `rs_cmrUf_ENF_CMR_EO_Num` | `eo_num` | String | |

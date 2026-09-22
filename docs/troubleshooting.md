@@ -128,27 +128,51 @@ wildcard.
 
 **Confirmed root cause of two separate bugs:**
 - **Job Number**: typing `DK84716` never matched the real stored
-  `DK00084716` (zero-padded) via the old `SLMatltrans` combo's
-  self-referencing exact-match `FILTER` - the real fixed length/format
-  was never confirmed enough to build a padding rule, so a plain
-  Edit + `MaintainFromSpec` workaround was used instead for a while to
-  dodge the bug rather than fix it (superseded now - see below).
+  `DK00084716` (zero-padded) via the legacy `QC_CMRs` form's own Job Num
+  combo (`comboBox4_SITE`): `STDOLE SLMatltrans( PROPERTIES(RefNum)
+  DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT()
+  FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) RECORDCAP(0))` - confirmed
+  directly from that real combo's own List Source (read live via
+  Application Studio's Form Designer). The property holding the job
+  number in `SLMatltrans` is `RefNum`, not `Job`/`JobNum`.
 - **PO Number**: `FILTER(PoNum=FP(PoNum))` (self-referencing) never
   matched anything, because real PO Numbers are zero-padded with a
   variable-length prefix (confirmed real examples: `RD00000021`,
   `INT0120033` — different prefix lengths, same total length, no single
   padding rule could reconstruct either from partial input).
 
-**Fix used for PO Number, and now for Job Number too**: drop the
-`FILTER()` entirely and list every row unfiltered - `STDOLE
-SLPoItems(...)` for PO Number, `STDOLE SLJobs(...)` for Job Number - same
-pattern already proven working for `Item`/`Work Center`/`Dept`/`Vendor`
-on this form. The `EnhancedCombo`'s own client-side type-ahead handles
-narrowing it down instead of a server-side exact match. **Job Number's
-`SLJobs` list source and `Job` property name are inferred from the same
-`SL<Name>` naming convention as the other system lists, not yet
-independently confirmed live** - if Application Studio rejects it, the
-error will name the real IDO/property.
+**Fix used for both**: drop the `FILTER()` entirely and list every row
+unfiltered - `STDOLE SLPoItems(...)` for PO Number, `STDOLE
+SLMatltrans( PROPERTIES(RefNum) ... )` (no `FILTER`) for Job Number -
+same pattern already proven working for `Item`/`Work Center`/`Dept`/
+`Vendor` on this form. The `EnhancedCombo`'s own client-side type-ahead
+handles narrowing it down instead of a server-side exact match.
+
+**Two wrong turns taken before landing on the real fix for Job Number -
+worth remembering the shape of both**:
+1. **Guessing an IDO name from a naming convention instead of reading a
+   real combo.** `SLJobs` was assumed from the same `SL<Name>` pattern
+   that worked for `SLItems`/`SLDepts`/`SLWcs`/`SLVendors`/`SLPoItems` -
+   but it turned out to be a real, different IDO in this tenant
+   (returns generic sequential values like `C000000001`, `C000000002`,
+   unrelated to Job Orders, regardless of what's typed). It didn't
+   error, so the wrongness was silent - the working `SL<Name>`
+   IDOs above were all confirmed from a real combo first, this one
+   wasn't, and that's the difference that mattered.
+2. **Assuming "the real form's own field has no combo" means "no combo
+   exists to copy."** The real `JobOrders` form's own `Job` field is a
+   plain Edit (`Binding: object.Job`, no List Source at all) - true, but
+   irrelevant, because that field IS the job record itself with nothing
+   to look up. `eCMRs`'s Job Num field is a *reference* to some other
+   job, the same relationship PO Num has to PO Items - so the right
+   place to look was a *different* real form that references a job the
+   same way (the legacy `QC_CMRs` form itself), not the job's own master
+   record form.
+
+The general lesson holds from every other combo on this form: **read a
+real, already-working combo's List Source directly instead of inferring
+one from a pattern**, even when the pattern has worked several times
+before.
 
 **Don't confuse this with `'P(x)'`** (single-quoted, no leading `F`) —
 that's a different, legitimate mechanism: a cross-field reference to the

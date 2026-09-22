@@ -56,18 +56,21 @@ SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3)
 # PO Line's filter is a legitimate cascade off the already-selected PoNum (a real value from
 # the object, not free-typed guesswork), not a self-referencing exact-match - left as-is.
 SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
-# Job Num: same fix as PO Number's leading-zero bug above, not the plain-Edit workaround
-# this used to be. The old SLMatltrans combo had a self-referencing exact-match FILTER (the
-# legacy leading-zero bug - typing DK84716 never matched the real zero-padded DK00084716) and
-# was swapped for a plain Edit + MaintainFromSpec to dodge it entirely rather than fix it.
-# Same underlying problem as PO Number, same fix: drop the FILTER entirely and list every Job
-# via SLJobs (matches SLItems/SLDepts/SLWcs/SLVendors/SLPoItems - the "SL<Name>" system-list
-# naming convention already confirmed correct for all 5 of those), letting the EnhancedCombo's
-# own client-side type-ahead narrow it down instead of a server-side exact match.
-# UNCONFIRMED: SLJobs itself and its "Job" property name are inferred from that same naming
-# convention, not yet independently confirmed live the way SLItems/SLPoItems etc. were - if
-# Application Studio rejects this IDO/property name, the error will name the real one.
-SL_JOBS = "STDOLE SLJobs( PROPERTIES(Job) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))"
+# Job Num: real syntax confirmed directly from the legacy QC_CMRs form's own Job Num combo
+# (comboBox4_SITE) - STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED)
+# DISTINCT() FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) RECORDCAP(0)). Two wrong guesses tried
+# and disproven before landing here: SLJobs (a real but unrelated IDO - returns generic
+# sequential values like C000000001/C000000002 regardless of input), and assuming no combo
+# exists at all because the real JobOrders form's own Job field is a plain Edit with no List
+# Source (true, but irrelevant - that form's Job field IS the job record itself, so it has
+# nothing to look up; CMR's Job Num field is a reference to some other job, same relationship
+# as CMR's own PO Num field referencing PO Items). The legacy combo's self-referencing
+# exact-match FILTER is the same class of bug already fixed for PO Number (FP() has no
+# wildcard/padding, and real Job Numbers are zero-padded - DK84716 never matches the stored
+# DK00084716) - same fix: drop the FILTER entirely, list every row via SLMatltrans unfiltered,
+# let the EnhancedCombo's own client-side type-ahead narrow it down. The property that holds
+# the job number in SLMatltrans is RefNum, not Job/JobNum - confirmed from the same real combo.
+SL_MATLTRANS_JOB = "STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0))"
 
 # (label, column, ctype, list_source, readonly)
 FIELD = "field"
@@ -99,7 +102,7 @@ LAYOUT = [
     (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_COMBO, SL_JOBS)),
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB)),
     (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
