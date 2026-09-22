@@ -88,8 +88,8 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 
-def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None):
-    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec)
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None):
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -121,10 +121,20 @@ LAYOUT = [
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
-    # Same fixed-value-dropdown pattern as QC/Eng Disposition below (Property Class blank,
-    # Inline List set directly on the property in Application Studio) - no ComboListSource
-    # here at all, matching Status/Priority/Disposition. Ships with an empty Inline List.
-    (PAIR, f("Reason Code:", "reason_code", TYPE_COMBO), f("Cause Code:", "cause_code", TYPE_COMBO)),
+    # References the same real, existing system Property Classes the live QC_MRRs form's own
+    # Reason/Cause combos use (ReasonEdit/CauseEdit - confirmed directly from that form's own
+    # XML export), not a custom Inline List of our own - per direct request: "we can use this
+    # list that exists right now" (may get its own separate, CMR-specific list later - this
+    # is a deliberate, known-temporary choice, not a permanent architectural tie to MRR's
+    # list). No ComboListSource - PropertyClassName alone drives the combo's list here, same
+    # as how QC_MRRs' own components have zero ComboListSource, just PropertyClassName. Our
+    # own ReasonCode/CauseCode properties stay Property Class-blank at the IDO level (same as
+    # every other property here) - this is a per-component override, not a property-level
+    # setting. UNCONFIRMED whether a component's PropertyClassName can validly point at a
+    # class distinct from anything set on its own bound property - this is architecturally
+    # sound and directly copied from a real working form, but genuinely untested in this
+    # tenant; verify live after import.
+    (PAIR, f("Reason Code:", "reason_code", TYPE_COMBO, property_class_name="QCReasonCode"), f("Cause Code:", "cause_code", TYPE_COMBO, property_class_name="QCCauseCode")),
     # Reviewer combo binds directly to the Username property (same pattern as Assigned) and
     # returns the username, not the employee number - the separate Username display field is
     # gone. Paired with QC Disposition on one row instead of each sitting alone, per direct
@@ -221,7 +231,7 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0):
             </Component>
 """
 
-def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None):
+def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None):
     name = "c_" + column
     lines = [f'            <Component Name="{name}">',
              "               <DeviceID>-1</DeviceID>",
@@ -253,6 +263,8 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
     if maintain_from_spec:
         lines.append(f"               <MaintainFromSpec>{esc(maintain_from_spec)}</MaintainFromSpec>")
+    if property_class_name:
+        lines.append(f"               <PropertyClassName>{esc(property_class_name)}</PropertyClassName>")
     lines.append("               <Flags>1</Flags>")
     lines.append(f"               <ReadOnly>{'True' if readonly else 'False'}</ReadOnly>")
     lines.append("               <Hidden>False</Hidden>")
@@ -261,7 +273,7 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("            </Component>")
     return "\n".join(lines) + "\n"
 
-def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None):
+def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None, property_class_name=None):
     out = ""
     if ctype == TYPE_CHECKBOX:
         # checkbox carries its own caption, no separate static label
@@ -293,7 +305,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
         out += "            </Component>\n"
         return out
     out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5))
-    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec)
+    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name)
     return out
 
 def emit_span(label, column, ctype, y):
@@ -448,16 +460,16 @@ def build_components():
             a, b = item[1], item[2]
             row_h = 0
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
                 row_h = max(row_h, 1.4)
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec = item[1]
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = item[1]
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
         elif kind == IMPL_ROW:
@@ -470,8 +482,8 @@ def build_components():
             y += ROW_H
         elif kind == PAIR_BUTTON:
             _, a, btn_name, btn_caption, btn_event = item
-            _, label, column, ctype, list_source, readonly, maintain_from_spec = a
-            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec))
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = a
+            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
     return "".join(out), y

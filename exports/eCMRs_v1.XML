@@ -1684,6 +1684,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.ReasonCode</DataSource>
                <Binding>1</Binding>
+               <PropertyClassName>QCReasonCode</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1726,6 +1727,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.CauseCode</DataSource>
                <Binding>1</Binding>
+               <PropertyClassName>QCCauseCode</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

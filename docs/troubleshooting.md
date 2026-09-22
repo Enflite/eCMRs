@@ -299,37 +299,53 @@ Confirmed real value lists:
 - `InitialChange`: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver)
 - `QcDisposition`: Accept, Hold, NFF, NRS, Other, Reject, Rework, Scrap
 - `EngDisposition`: NFF, NRS, Other, Rework, Scrap (subset of QcDisposition — missing Accept/Hold/Reject)
-- `ReasonCode`/`CauseCode`: same pattern, added to the Quality section, but shipped with an
-  **empty** Inline List - no real values confirmed yet (see next section for why not, and what
-  the real alternative would have been).
+- `ReasonCode`/`CauseCode`: different mechanism from the others above - see the next section.
+  Not an Inline List of our own at all; references real, existing system Property Classes
+  directly.
 
-## Reason Code / Cause Code: used our own Inline List, not SyteLine's real master tables
+## Reason Code / Cause Code: reference the real QCReasonCode/QCCauseCode classes directly
 
 The signed CMR Development SOW (`Enflite - 00004 - CMR Development`) documents that SyteLine
-already has real, existing Reason Codes and Cause Codes master tables, each row categorized by
-a `Ref Type` (`E`=Enterprise, `J`=In Process, `O`=Customer, `P`=Supplier, `R`=Customer RMA), and
-the SOW's own plan was to add a new `Ref Type` value `C` (for CMR) to those real tables, then
-filter the CMR form's dropdowns to `RefType='C'`.
+already has real, existing Reason Codes and Cause Codes master data, categorized by a `Ref Type`
+(`E`=Enterprise, `J`=In Process, `O`=Customer, `P`=Supplier, `R`=Customer RMA), with a signed
+plan to add a new `Ref Type` value `C` (for CMR) and filter to it. That `RefType='C'` filtering
+plan was **not** what got built (see below on why), but the underlying real classes turned out
+to be directly usable without it.
 
-**That real mechanism was not used.** Per direct request, `ReasonCode`/`CauseCode` instead use
-the same fixed-value-dropdown pattern as `Status`/`Priority`/`Disposition` above - Property
-Class blank, Inline List set directly on the property in Application Studio - since eCMRs
-already owns its own IDO/table and this avoids needing to go confirm the real Reason
-Codes/Cause Codes IDO names and `RefType='C'` filter syntax live (the same kind of confirmation
-`Job Number` needed twice before landing on the right answer - see `SLMatltrans`/`RefNum`
-above).
+**Confirmed directly from a real, live form's own XML export** (`QC_MRRs.XML`, uploaded and
+inspected directly - not guessed): its `ReasonEdit`/`CauseEdit` components (`Type 27`,
+`EnhancedCombo`, same as our own) carry **no `ComboListSource` at all** - just a
+`PropertyClassName` tag directly on the component (`QCReasonCode` for Reason, `QCCauseCode` for
+Cause). No STDOLE syntax, no IDO/property names to guess - the real system Property Class name
+is the whole mechanism.
 
-**Trade-off worth knowing**: this means CMR's reason/cause codes live in their own separate list,
-disconnected from whatever reason/cause codes the rest of the SyteLine system uses (RMAs, etc.)
-- there's no shared vocabulary, and someone adding a code for CMR purposes here has to do it
-twice if the same code should also exist in the real system-wide tables. If that turns out to
-matter, switching to the real tables later is possible but requires the same live-confirmation
-step described above.
+**Per direct request** ("we can use this list that exists right now... it will not always be
+the same on the CMR as it is on the MRR, we are just using this list"), `eCMRs`'s own
+`ReasonCode`/`CauseCode` combos now carry the same `PropertyClassName` tags directly - see
+`generate_form.py`'s Quality section `LAYOUT` entry. This is a **component-level** override,
+independent of the property's own Property Class (which stays blank at the IDO level, same as
+every other property here) - `f(..., property_class_name="QCReasonCode")` threads a new
+`PropertyClassName` XML tag through `emit_field`/`emit_control`, alongside the existing
+`list_source`/`maintain_from_spec` parameters.
 
-The Inline List ships **empty** - no real Reason Code/Cause Code values have been provided yet.
-Add them directly on the `ReasonCode`/`CauseCode` properties in Application Studio
-(`ENTRIES(value1,value2,...)`, same syntax as the others) whenever the team has a real list -
-tracked in `docs/deploy-checklist.md`.
+**What this means for "adding a new code when needed"**: since `QCReasonCode`/`QCCauseCode` are
+real, shared, system-wide classes (not something eCMRs owns), a new code has to be added
+wherever those classes' own values are actually maintained (whatever real SyteLine
+screen/mechanism backs them - not investigated, since the immediate need was just to reference
+the existing list) - not via `docs/deploy-checklist.md`'s Inline-List step, which no longer
+applies to these two fields at all.
+
+**Known, deliberate trade-off**: eCMRs' Reason/Cause Code currently shares MRR's exact list.
+Per the request above, that's expected to diverge later (the SOW's own `RefType='C'` idea is
+one way that could happen) - not a bug if the two lists don't match forever.
+
+**Unconfirmed**: whether a component's `PropertyClassName` can validly reference a class
+unrelated to its own bound IDO property (`ReasonCode`/`CauseCode`, both plain, Property
+Class-blank String properties) the way `QCReasonCode`/`QCCauseCode` are architecturally
+independent classes on `RS_QCMrrs`'s `Reason`/`Cause` properties. Directly copying real,
+confirmed-working syntax from a live form is exactly the method that resolved every other
+combo on this form (including twice for Job Number) - but this specific cross-IDO reference
+hasn't been tested live yet. Verify after import and update this note.
 
 ## The close workflow: removed, then restored (in Implementation, not CMR Details)
 

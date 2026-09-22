@@ -67,8 +67,8 @@ Also found, not tied to the 5-category system:
 |---|---|---|---|
 | QC Disposition | `rs_cmrUf_ENF_CMR_QCDisposition` (`DefaultFrom: UserDefinedType(Cmr_QCDispositionStatus)`) | `qc_disposition` | Same `UserDefinedType` caveat as Workflow Status — needs its own list on eCMRs, not a copy of the legacy UDT reference. |
 | Engineering Disposition | `rs_cmrUf_ENF_CMR_EngDisposition` (`DefaultFrom: UserDefinedType(Cmr_EngDispositionStatus)`) | `eng_disposition` | Same caveat. |
-| Reason Code | n/a - new per the signed CMR Development SOW | `reason_code` | Same fixed-value-dropdown pattern, own Inline List (not SyteLine's real Reason Codes table - see `docs/troubleshooting.md`). Ships empty. |
-| Cause Code | n/a - new per the signed CMR Development SOW | `cause_code` | Same as Reason Code. Ships empty. |
+| Reason Code | n/a - new per the signed CMR Development SOW | `reason_code` | Combo references the real `QCReasonCode` system Property Class directly (same as the live `QC_MRRs` form's own Reason field) - confirmed from that form's own XML export, not guessed. See `docs/troubleshooting.md`. |
+| Cause Code | n/a - new per the signed CMR Development SOW | `cause_code` | Same as Reason Code, references the real `QCCauseCode` class. |
 
 ## Assignment / Reviewers
 
