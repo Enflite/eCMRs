@@ -83,12 +83,50 @@ ever fire from **Buttons** (Type 8, click) or **Checkboxes**/grid columns
 is no confirmed real mechanism for firing custom logic off a combo's value
 change in this environment, other than the broken `SelectionEvent`.
 
-**Net result**: there is currently no reliable way to auto-populate a
-companion field from a combo selection in this tenant. Fields that used to
-attempt this are now either plain manual-entry fields, or (better, where
-the target property is big enough) the combo binds directly to the
+**Net result at the time**: no reliable way to auto-populate a companion
+field from a combo selection via an *event* (`SelectionEvent` or
+`EventToGenerate`) in this tenant. **Superseded** - see "Auto-populating a
+description field via `DefaultFrom`" below for the real mechanism, which
+doesn't use an event at all. Fields that don't fit that mechanism are
+still plain manual-entry fields, or the combo binds directly to the
 property that holds the value you actually want — see the `Username`
 pattern below.
+
+## Auto-populating a description field via `DefaultFrom` (the real mechanism)
+
+**Confirmed real, directly from a live form's own XML export**
+(`PurchaseOrders.XML`, `TermsCodeEdit`/`ShipCodeEdit` components) - a
+plain declarative attribute on the *code* field's own component, no event
+handler, no script, and critically **no `SelectionEvent`**:
+
+```
+<DefaultFrom>TermsCode(TermsCodeDesc)</DefaultFrom>
+<PropertyClassName>TermsCode</PropertyClassName>
+```
+
+Syntax: `DefaultFrom: <PropertyClassName>(<OtherPropertyOnThisIDO>)`, set
+on the code property's own component (`DataSource=object.TermsCode` in
+this example). `<OtherProperty>` (`TermsCodeDesc`) doesn't need any
+`DefaultFrom` of its own - it's a plain read-only display field
+(`TermsCodeDescEdit`, `PropertyClassName=Description`, `ReadOnly=True`).
+Confirmed as a repeated pattern in the same file, not a one-off:
+`ShipCode(ShipCodeDesc)`, `TaxCodeOfTaxSystem(Tx1Description,'1',...)`, etc.
+
+**Why this is safe to use, unlike `SelectionEvent`**: it's a plain
+attribute evaluated by the property/class system, not a `ResponseType 49`
+`EventHandler` with the `FILTER()/MOV()/SONON()/SETP()` pipeline that
+jams the whole form (Rule #1A above). Nothing here touches that pipeline.
+
+**What this does NOT confirm**: whether an arbitrary custom Property
+Class (e.g. `QCReasonCode`, or a class we invent ourselves) supports this
+same `DefaultFrom` behavior - `TermsCode`/`ShipCode` are real, compiled
+system classes with native lookup logic tied to the class name itself.
+Applied here to `Item`/`Wc`/`Dept`/`VendNum` (real system classes,
+extrapolated from the same pattern - `VendNum` is independently confirmed
+from the same PurchaseOrders form's own `VendNumEdit` component, `Item`/
+`Wc`/`Dept` are not) for `ItemDescription`/`WcDescription`/
+`DeptDescription`/`NextAssyDescription`/`VendorName` - **verify live
+after import**.
 
 ## Binding a combo directly to return `Username` instead of `EmpNum`
 
@@ -385,12 +423,15 @@ implemented; `Closed` is a plain, manually-checked box).
 
 ## Dead schema: columns that exist but aren't on the form
 
-21 of the 71 custom columns in `generate_schema_csv.py`'s `FIELDS` aren't bound to any
-component on the current form - the `*_empnum` companion columns (superseded by the
-Username-binding pattern above), the `*_description`/`VendorName` companion columns
-(superseded when `SelectionEvent` was found dead), the 5 `*_review_complete` cascade flags (no
-cascade UI was ever built), and a handful never placed on the layout at all
-(`AdditionalChanges`, `GeneralNote`, `WorkflowStatus`, `GeneralCloseDate`, `GeneralClosedBy`).
+10 of the 73 custom columns in `generate_schema_csv.py`'s `FIELDS` aren't bound to any
+component on the current form - the 5 `*_review_complete` cascade flags (no cascade UI was
+ever built), and a handful never placed on the layout at all (`AdditionalChanges`,
+`GeneralNote`, `WorkflowStatus`, `GeneralCloseDate`, `GeneralClosedBy`).
+
+The `*_empnum` companion columns and the `*_description`/`VendorName` companion columns used
+to be in this list too - both restored to the form per direct request (see "Auto-populating a
+description field via `DefaultFrom`" above for the description/name group, and their own
+`LAYOUT` entries in `generate_form.py` for the ID group).
 
 These are **not removed** from the schema - the underlying SQL columns and IDO properties
 already exist live from earlier imports, and dropping a live column/property is a separate,

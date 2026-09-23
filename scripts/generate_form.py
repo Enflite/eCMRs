@@ -88,8 +88,8 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 
-def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None):
-    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name)
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None):
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -101,15 +101,33 @@ LAYOUT = [
     (PAIR, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Status:", "status", TYPE_COMBO)),
     (PAIR, f("Create Date:", "create_date", TYPE_DATE, readonly=True), None),
     (PAIR, f("Created By:", "created_by", TYPE_EDIT, readonly=True), None),
+    # Restored per direct request - a plain writable ID box next to the Username-bound combo.
+    # No confirmed live mechanism keeps this in sync with the selected employee automatically
+    # (the combo's own DataSource only writes back AssignedUsername, the first-listed property
+    # in SL_EMPLOYEES_ASSIGNED) - verify after import whether it needs to be typed manually.
+    (PAIR, f("Assigned ID:", "assigned_empnum", TYPE_EDIT), None),
     (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Work Center:", "wc", TYPE_COMBO, SL_WCS)),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS), None),
+    # DefaultFrom + PropertyClassName on the code field auto-fill the read-only description
+    # field next to it - confirmed real mechanism (not SelectionEvent, not EventToGenerate),
+    # copied directly from the live PurchaseOrders form's TermsCode/ShipCode fields, which use
+    # this exact <ClassName>(<TargetProperty>) pattern with zero SelectionEvent involved. The
+    # class names below (Item/Wc/Dept) are an extrapolation from that same real pattern, not
+    # independently confirmed - verify live after import; VendNum below IS directly confirmed
+    # (see the Vendor row).
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, property_class_name="Item", default_from="Item(ItemDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)")),
+    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)"), None),
+    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Qty:", "qty", TYPE_EDIT)),
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB)),
+    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY, property_class_name="Item", default_from="Item(NextAssyDescription)"), f("Qty:", "qty", TYPE_EDIT)),
+    (PAIR, f("Next Assy Description:", "next_assy_description", TYPE_EDIT, readonly=True), None),
+    # VendNum is directly confirmed as the real Property Class name for a vendor number field -
+    # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess.
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum", default_from="VendNum(VendorName)"), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB)),
+    (PAIR, f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
@@ -136,25 +154,27 @@ LAYOUT = [
     # tenant; verify live after import.
     (PAIR, f("Reason Code:", "reason_code", TYPE_COMBO, property_class_name="QCReasonCode"), f("Cause Code:", "cause_code", TYPE_COMBO, property_class_name="QCCauseCode")),
     # Reviewer combo binds directly to the Username property (same pattern as Assigned) and
-    # returns the username, not the employee number - the separate Username display field is
-    # gone. Paired with QC Disposition on one row instead of each sitting alone, per direct
-    # request to tidy up the section.
-    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    # returns the username, not the employee number. Reviewer ID restored on its own row
+    # (per direct request) - plain writable box, same no-confirmed-sync caveat as Assigned ID.
+    (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
+    (PAIR, f("Reviewer ID:", "qc_reviewer_empnum", TYPE_EDIT), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
     (PAIR, f("EO Num:", "eo_num", TYPE_EDIT), None),
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     # Same treatment as Quality's Reviewer above.
-    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
+    (PAIR, f("Reviewer ID:", "eng_reviewer_empnum", TYPE_EDIT), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
     # Reviewer combo binds directly to the *_reviewer_name property (repurposed to hold the
-    # username, same as Quality/Engineering above) - no separate display box needed anymore.
-    (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_name"),
-    (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_name"),
-    (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_name"),
+    # username, same as Quality/Engineering above). Reviewer ID box restored between the
+    # checkbox and the combo, per direct request - see emit_impl_row.
+    (IMPL_ROW, "planning_complete", "Planning", "planning_reviewer_name", "planning_reviewer_empnum"),
+    (IMPL_ROW, "purchasing_complete", "Purchasing", "purchasing_reviewer_name", "purchasing_reviewer_empnum"),
+    (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_name", "cm_reviewer_empnum"),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
 ]
@@ -231,7 +251,7 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0):
             </Component>
 """
 
-def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None):
+def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None, default_from=None):
     name = "c_" + column
     lines = [f'            <Component Name="{name}">',
              "               <DeviceID>-1</DeviceID>",
@@ -263,6 +283,8 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
     if maintain_from_spec:
         lines.append(f"               <MaintainFromSpec>{esc(maintain_from_spec)}</MaintainFromSpec>")
+    if default_from:
+        lines.append(f"               <DefaultFrom>{esc(default_from)}</DefaultFrom>")
     if property_class_name:
         lines.append(f"               <PropertyClassName>{esc(property_class_name)}</PropertyClassName>")
     lines.append("               <Flags>1</Flags>")
@@ -273,7 +295,7 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("            </Component>")
     return "\n".join(lines) + "\n"
 
-def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None, property_class_name=None):
+def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None, property_class_name=None, default_from=None):
     out = ""
     if ctype == TYPE_CHECKBOX:
         # checkbox carries its own caption, no separate static label
@@ -305,7 +327,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
         out += "            </Component>\n"
         return out
     out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5))
-    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name)
+    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from)
     return out
 
 def emit_span(label, column, ctype, y):
@@ -313,9 +335,10 @@ def emit_span(label, column, ctype, y):
     out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5)
     return out
 
-def emit_impl_row(checkbox_col, checkbox_caption, combo_col, y):
+def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
     out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, 2, 2, y, ctrl_w=12)
-    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 15, 23.5, y, ctrl_w=15)
+    out += emit_field("ID:", id_col, TYPE_EDIT, None, False, 15, 19.5, y, ctrl_w=8)
+    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 29, 37.5, y, ctrl_w=15)
     return out
 
 def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
@@ -460,21 +483,21 @@ def build_components():
             a, b = item[1], item[2]
             row_h = 0
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
                 row_h = max(row_h, 1.4)
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = item[1]
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = item[1]
             out.append(emit_span(label, column, ctype, y))
             y += 5.8
         elif kind == IMPL_ROW:
-            _, checkbox_col, checkbox_caption, combo_col = item
-            out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, y))
+            _, checkbox_col, checkbox_caption, combo_col, id_col = item
+            out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y))
             y += ROW_H
         elif kind == BUTTON_ROW:
             _, name, caption, event_to_generate = item
@@ -482,8 +505,8 @@ def build_components():
             y += ROW_H
         elif kind == PAIR_BUTTON:
             _, a, btn_name, btn_caption, btn_event = item
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name = a
-            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name))
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = a
+            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
     return "".join(out), y
