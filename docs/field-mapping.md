@@ -43,6 +43,29 @@ Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Teste
 | MDL | `rs_cmrUf_ENF_CMR_MDL` | `mdl` | String | |
 | POC | `rs_cmrUf_ENF_CMR_POC` | `poc` | String | Plain text field, distinct from Created By/Reported By. |
 
+## New fields — not on the legacy form at all
+
+Per direct request / the BRD's "additional fields" list — no legacy property to carry over,
+so no combo/lookup source confirmed for any of them yet, just plain editable text. Placed on
+the form directly above the Quality section. Highlighted purple (`Post301Format`'s
+`BACKCOLOR(...)`, same mechanism the section header banners use) so they stand out as
+additions.
+
+| Field | New column | Type | Notes |
+|---|---|---|---|
+| Serial # | `serial_num` | String (50) | Previously just copied into the Notes area on the legacy 3-form process. |
+| LOT # | `lot_num` | String (50) | Same as Serial # — previously copied into Notes. |
+| Top Level PN | `top_level_pn` | String (30) | Plain typed part number — no combo/lookup source confirmed. |
+| Sub Assembly | `sub_assembly` | String (30) | Deliberately distinct from Next Lvl Assy (`next_assy_item`) rather than reusing it — still an open question whether the two are actually the same concept; see `docs/task-list.md`. |
+| Reported By | `reported_by` | String (60) | Who requested/reported the change on the legacy Create Change Request form — distinct from `created_by` (system field, who created this CMR record). |
+
+Also moved up above Quality and highlighted purple, though not new columns: `wc`/`wc_description`,
+`dept`/`dept_description`, `due_date`, and the 5 Requirement checkboxes (`req_costing`,
+`req_documentation`, `req_tool_machine`, `req_process`, `req_material` — moved out of the
+Quality section itself, since per the Design slide these are Create Change Request carryover,
+not Quality-specific). `general_note` was previously an orphaned column (not on the form at
+all) — now placed above Quality as well, also highlighted.
+
 ## Requirements checkboxes + Review-Complete flags (5 categories)
 
 Same business mapping as `cmr-project` (Initial Change drives which of these are required) — see that table below. Each category has **two** legacy properties: a read-only "is this required" flag and a separate "has review been completed" flag.

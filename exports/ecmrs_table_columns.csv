@@ -12,7 +12,7 @@ dept_description,String,40,,Yes,N,,"Read-only, restored to the form next to Dept
 initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
 additional_changes,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout] Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,String,1000,,Yes,N,,
-general_note,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout]
+general_note,String,1000,,Yes,N,,
 revision,String,8,,Yes,N,,Drawing Revision.
 latest_revision,String,8,,Yes,N,,
 next_assy_item,String,30,,Yes,N,,"STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0)) - Next Level Assembly item. Case matters for the 'P(x)' cross-field reference - it's the property name Item, not the column item."
@@ -23,12 +23,15 @@ qty,Decimal,,4,Yes,N,,
 job_num,String,15,,Yes,N,,"STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER. Confirmed real syntax straight from the legacy QC_CMRs form's own Job Num combo, which had FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) - same self-referencing exact-match bug already fixed for po_num (FP() has no padding, real Job Numbers are zero-padded like DK00084716), same fix: drop the FILTER. See docs/troubleshooting.md. Coldtype uses char, matching po_num/vendor's pattern."
 serial_num,String,50,,Yes,N,,"New field per direct request - currently these get copied into the Notes area on the legacy 3-form process, but they're common enough to need their own field on eCMRs. Created live as char, not nvarchar."
 lot_num,String,50,,Yes,N,,"New field per direct request - same as SerialNum, currently just copied into Notes on the legacy process. Created live as char, not nvarchar."
+top_level_pn,String,30,,Yes,N,,"New field per direct request - the BRD's 'Top Level PN', not on the legacy form at all. Plain editable field, same treatment as SerialNum/LotNum - no confirmed combo/lookup source for this concept, just a typed part number."
+sub_assembly,String,30,,Yes,N,,"New field per direct request - the BRD's 'Sub Assembly'. Deliberately distinct from NextAssyItem (Next Level Assembly, already on the form) rather than reusing it - see docs/task-list.md's still-open note on whether the two are the same concept. Plain editable field, same treatment as SerialNum/LotNum."
 po_num,String,15,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER; a self-referencing FILTER(PoNum=FP(po_num)) was tried and dropped because FP() is a plain exact-match against real zero-padded/prefixed PO Numbers (RD00000021, INT0120033) that nobody types literally - see docs/troubleshooting.md."
 po_line,String,10,,Yes,N,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
 rfq_num,String,15,,Yes,N,,
 eo_num,String,15,,Yes,N,,
 mdl,String,40,,Yes,N,,
 poc,String,60,,Yes,N,,"Point of contact, free text."
+reported_by,String,60,,Yes,N,,"New field per direct request - who requested/reported the change on the legacy Create Change Request form (distinct from CreatedBy, the system field for who created this CMR record). Plain free-text field, same treatment as SerialNum/LotNum."
 req_costing,Bit,,,Yes,N,,Cascades off InitialChange.
 cost_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_documentation,Bit,,,Yes,N,,Cascades off InitialChange.

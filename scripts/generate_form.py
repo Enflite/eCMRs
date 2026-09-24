@@ -88,8 +88,13 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 
-def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None):
-    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from)
+# Same BACKCOLOR(...) syntax already used by the section header/title bands below, just a
+# light purple instead of solid black - marks the two brand-new BRD fields (Top Level PN,
+# Sub Assembly) so they visually stand out as additions on the live form.
+HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )"
+
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -117,10 +122,10 @@ LAYOUT = [
     # class names below (Item/Wc/Dept) are an extrapolation from that same real pattern, not
     # independently confirmed - verify live after import; VendNum below IS directly confirmed
     # (see the Vendor row).
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, property_class_name="Item", default_from="Item(ItemDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)")),
-    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True)),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)"), None),
-    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True), None),
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, property_class_name="Item", default_from="Item(ItemDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True)),
+    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), None),
+    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY, property_class_name="Item", default_from="Item(NextAssyDescription)"), f("Qty:", "qty", TYPE_EDIT)),
     (PAIR, f("Next Assy Description:", "next_assy_description", TYPE_EDIT, readonly=True), None),
@@ -128,15 +133,21 @@ LAYOUT = [
     # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess.
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum", default_from="VendNum(VendorName)"), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB)),
     (PAIR, f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True), None),
-    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT), f("LOT #:", "lot_num", TYPE_EDIT)),
+    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT, highlight=True), f("LOT #:", "lot_num", TYPE_EDIT, highlight=True)),
+    (PAIR, f("Top Level PN:", "top_level_pn", TYPE_EDIT, highlight=True), f("Sub Assembly:", "sub_assembly", TYPE_EDIT, highlight=True)),
     (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
     (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
+    (PAIR, f("Reported By:", "reported_by", TYPE_EDIT, highlight=True), None),
+    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True)),
+    # Moved up from inside QUALITY (per the plan deck's Design slide - these are part of the
+    # Create Change Request carryover, not Quality-specific) - still cascade off Initial Change
+    # above, just visually grouped with the rest of the Change Request fields now.
+    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX, highlight=True), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX, highlight=True)),
+    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX, highlight=True), f("Req: Process", "req_process", TYPE_CHECKBOX, highlight=True)),
+    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX, highlight=True), None),
 
     (HEADER, "QUALITY"),
-    (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX)),
-    (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX), f("Req: Process", "req_process", TYPE_CHECKBOX)),
-    (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX), None),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     # References the same real, existing system Property Classes the live QC_MRRs form's own
@@ -226,7 +237,8 @@ def next_tab():
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0):
+def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0, highlight=False):
+    post301 = f"<Post301Format>{HIGHLIGHT_FORMAT}</Post301Format>" if highlight else "<Post301Format />"
     return f"""            <Component Name="{name}">
                <DeviceID>-1</DeviceID>
                <Type>{TYPE_STATIC}</Type>
@@ -246,12 +258,12 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0):
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               {post301}
                <EffectiveCaption>{esc(caption)}</EffectiveCaption>
             </Component>
 """
 
-def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None, default_from=None):
+def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
     name = "c_" + column
     lines = [f'            <Component Name="{name}">',
              "               <DeviceID>-1</DeviceID>",
@@ -291,11 +303,11 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append(f"               <ReadOnly>{'True' if readonly else 'False'}</ReadOnly>")
     lines.append("               <Hidden>False</Hidden>")
     lines.append("               <HelpContextID>0</HelpContextID>")
-    lines.append("               <Post301Format />")
+    lines.append(f"               <Post301Format>{HIGHLIGHT_FORMAT}</Post301Format>" if highlight else "               <Post301Format />")
     lines.append("            </Component>")
     return "\n".join(lines) + "\n"
 
-def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None, property_class_name=None, default_from=None):
+def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, ctrl_w=CTRL_W, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
     out = ""
     if ctype == TYPE_CHECKBOX:
         # checkbox carries its own caption, no separate static label
@@ -323,16 +335,16 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
 """
-        out += "               <Post301Format />\n"
+        out += f"               <Post301Format>{HIGHLIGHT_FORMAT}</Post301Format>\n" if highlight else "               <Post301Format />\n"
         out += "            </Component>\n"
         return out
-    out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5))
-    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from)
+    out += emit_label("l_" + column, label, x_label, y + 0.15, w=(x_ctrl - x_label - 0.5), highlight=highlight)
+    out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight)
     return out
 
-def emit_span(label, column, ctype, y):
-    out = emit_label("l_" + column, label, SPAN_X, y)
-    out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5)
+def emit_span(label, column, ctype, y, highlight=False):
+    out = emit_label("l_" + column, label, SPAN_X, y, highlight=highlight)
+    out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5, highlight=highlight)
     return out
 
 def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
@@ -483,17 +495,17 @@ def build_components():
             a, b = item[1], item[2]
             row_h = 0
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 row_h = max(row_h, 1.4)
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = item[1]
-            out.append(emit_span(label, column, ctype, y))
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = item[1]
+            out.append(emit_span(label, column, ctype, y, highlight=highlight))
             y += 5.8
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, id_col = item
@@ -505,8 +517,8 @@ def build_components():
             y += ROW_H
         elif kind == PAIR_BUTTON:
             _, a, btn_name, btn_caption, btn_event = item
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from = a
-            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from))
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = a
+            out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
             out.append(emit_button(btn_name, btn_caption, btn_event, CTRL_X_B, y))
             y += ROW_H
     return "".join(out), y

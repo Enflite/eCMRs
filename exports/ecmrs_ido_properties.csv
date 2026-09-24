@@ -12,7 +12,7 @@ dept_description,DeptDescription,,String,40,,,sDescription,,1,"Read-only, restor
 initial_change,InitialChange,,String,40,,,,,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
 additional_changes,AdditionalChanges,,String,1000,,,sChanges,,,[ORPHANED - not bound to any form control: not placed on the current form layout] Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,RequestedAction,,String,1000,,,sNote,,,
-general_note,GeneralNote,,String,1000,,,sNote,,,[ORPHANED - not bound to any form control: not placed on the current form layout]
+general_note,GeneralNote,,String,1000,,,sNote,,,
 revision,Revision,,String,8,,,sRevision,,,Drawing Revision.
 latest_revision,LatestRevision,,String,8,,,sRevision,,,
 next_assy_item,NextAssyItem,,String,30,,,sItem,,,"STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0)) - Next Level Assembly item. Case matters for the 'P(x)' cross-field reference - it's the property name Item, not the column item."
@@ -23,12 +23,15 @@ qty,Qty,,Decimal,,4,,,,,
 job_num,JobNum,,String,15,,,,,,"STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER. Confirmed real syntax straight from the legacy QC_CMRs form's own Job Num combo, which had FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) - same self-referencing exact-match bug already fixed for po_num (FP() has no padding, real Job Numbers are zero-padded like DK00084716), same fix: drop the FILTER. See docs/troubleshooting.md. Coldtype uses char, matching po_num/vendor's pattern."
 serial_num,SerialNum,,String,50,,,,,,"New field per direct request - currently these get copied into the Notes area on the legacy 3-form process, but they're common enough to need their own field on eCMRs. Created live as char, not nvarchar."
 lot_num,LotNum,,String,50,,,,,,"New field per direct request - same as SerialNum, currently just copied into Notes on the legacy process. Created live as char, not nvarchar."
+top_level_pn,TopLevelPn,,String,30,,,,,,"New field per direct request - the BRD's 'Top Level PN', not on the legacy form at all. Plain editable field, same treatment as SerialNum/LotNum - no confirmed combo/lookup source for this concept, just a typed part number."
+sub_assembly,SubAssembly,,String,30,,,,,,"New field per direct request - the BRD's 'Sub Assembly'. Deliberately distinct from NextAssyItem (Next Level Assembly, already on the form) rather than reusing it - see docs/task-list.md's still-open note on whether the two are the same concept. Plain editable field, same treatment as SerialNum/LotNum."
 po_num,PoNum,,String,15,,,,,,"STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER; a self-referencing FILTER(PoNum=FP(po_num)) was tried and dropped because FP() is a plain exact-match against real zero-padded/prefixed PO Numbers (RD00000021, INT0120033) that nobody types literally - see docs/troubleshooting.md."
 po_line,PoLine,,String,10,,,,,,"STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(po_num)') RECORDCAP(0))"
 rfq_num,RfqNum,,String,15,,,,,,
 eo_num,EoNum,,String,15,,,,,,
 mdl,Mdl,,String,40,,,,,,
 poc,Poc,,String,60,,,,,,"Point of contact, free text."
+reported_by,ReportedBy,,String,60,,,,,,"New field per direct request - who requested/reported the change on the legacy Create Change Request form (distinct from CreatedBy, the system field for who created this CMR record). Plain free-text field, same treatment as SerialNum/LotNum."
 req_costing,ReqCosting,,Byte,,,,,0,,Cascades off InitialChange.
 cost_review_complete,CostReviewComplete,,Byte,,,,,0,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_documentation,ReqDocumentation,,Byte,,,,,0,,Cascades off InitialChange.
