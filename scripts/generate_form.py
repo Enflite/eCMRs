@@ -245,7 +245,13 @@ LAYOUT = [
     (PAIR, f("Top Level PN:", "top_level_pn", TYPE_EDIT, highlight=True), f("Sub Assembly:", "sub_assembly", TYPE_EDIT, highlight=True)),
 
     (HEADER, "QUALITY"),
-    (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
+    # General Review Complete dropped per direct request - a read-only checkbox nothing ever
+    # sets (same dead category as the 5 cascade *ReviewComplete flags below it in the schema;
+    # was Hidden=True even on the real original form). Moved to ORPHANED_COLUMNS in
+    # generate_schema_csv.py instead of deleted outright - see that file's comment on why.
+    # SOX Impacted stays in its existing (B/right) slot rather than moving to fill the gap -
+    # matches the hand-tuned checked-in XML's actual position, not a fresh regeneration.
+    (PAIR, None, f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     # References the same real, existing system Property Classes the live QC_MRRs form's own
     # Reason/Cause combos use (ReasonEdit/CauseEdit - confirmed directly from that form's own

@@ -42,7 +42,7 @@ req_process,Bit,,,Yes,N,,Cascades off InitialChange.
 process_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_material,Bit,,,Yes,N,,Cascades off InitialChange.
 material_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-general_review_complete,Bit,,,Yes,N,,"Read-only checkbox on the form; nothing sets it today. Unlike Closed (which got its SetCloseInfo mechanism restored), this one was never wired to anything and still is not. See docs/troubleshooting.md."
+general_review_complete,Bit,,,Yes,N,,"[ORPHANED - not bound to any form control: read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule] Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."
 sox_impacted,Bit,,,Yes,N,,"Standalone, not part of the 5-category cascade."
 hold_on_po,Bit,,,Yes,N,,
 auth_supplier_ship,Bit,,,Yes,N,,

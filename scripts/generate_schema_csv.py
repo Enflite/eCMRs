@@ -69,7 +69,7 @@ FIELDS = [
     ("process_review_complete", "ProcessReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("req_material", "ReqMaterial", "Byte", "", "", "ListYesNoType", "", "0", "", "Cascades off InitialChange."),
     ("material_review_complete", "MaterialReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
-    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Read-only checkbox on the form; nothing sets it today. Unlike Closed (which got its SetCloseInfo mechanism restored), this one was never wired to anything and still is not. See docs/troubleshooting.md."),
+    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."),
     ("sox_impacted", "SoxImpacted", "Byte", "", "", "ListYesNoType", "sRSQCSarbanesImpact", "0", "", "Standalone, not part of the 5-category cascade."),
     ("hold_on_po", "HoldOnPo", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("auth_supplier_ship", "AuthSupplierShip", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
@@ -123,6 +123,10 @@ ORPHANED_COLUMNS = {
     "machinery_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
     "process_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
     "material_review_complete": "no cascade UI was ever built for it - no control on the form sets this flag",
+    # Removed from the form per direct request, along with the 5 cascade flags above - the
+    # Closed-gating business rule the original used all 6 for was deliberately skipped (would
+    # need review-complete UI this standalone rebuild doesn't have - see docs/troubleshooting.md).
+    "general_review_complete": "read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule",
     "additional_changes": "not placed on the current form layout",
     "workflow_status": "not placed on the current form layout; its fixed value list was never confirmed either",
     "general_close_date": "not placed on the current form layout; purpose still unclear vs. CloseDate",

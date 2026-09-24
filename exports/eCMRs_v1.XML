@@ -526,28 +526,6 @@
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
-            <Component Name="c_general_review_complete">
-               <DeviceID>-1</DeviceID>
-               <Type>5</Type>
-               <TabOrder>39</TabOrder>
-               <TopPos>51.95</TopPos>
-               <LeftPos>2</LeftPos>
-               <Height>1.3</Height>
-               <ListHeight>0</ListHeight>
-               <Width>26.5</Width>
-               <Caption>General Review Complete</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.GeneralReviewComplete</DataSource>
-               <Binding>1</Binding>
-               <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Post301Format />
-               <EffectiveCaption>General Review Complete</EffectiveCaption>
-            </Component>
             <Component Name="c_hold_on_po">
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
