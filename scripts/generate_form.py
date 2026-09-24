@@ -267,11 +267,20 @@ LAYOUT = [
     # sound and directly copied from a real working form, but genuinely untested in this
     # tenant; verify live after import.
     (PAIR, f("Reason Code:", "reason_code", TYPE_COMBO, property_class_name="QCReasonCode", highlight=True), f("Cause Code:", "cause_code", TYPE_COMBO, property_class_name="QCCauseCode", highlight=True)),
-    # Reviewer combo binds directly to the Username property (same pattern as Assigned) and
-    # returns the username, not the employee number. Reviewer ID restored on its own row
-    # (per direct request) - plain writable box, same no-confirmed-sync caveat as Assigned ID.
+    # Reviewer ID is a combo (EmpNum-first list); Reviewer (Username) is a plain editable text
+    # box, not an independently-selectable combo - matches the real original form's own UI
+    # shape for these companion fields (e.g. edit20_SITE1_USER: Type=1, PropertyClassName
+    # EmpName). DefaultFrom="EmpNum(QcReviewerUsername)" on the ID field is an EXPERIMENT, not
+    # a confirmed-safe mechanism - per direct request, applied despite the precedent that this
+    # exact ClassName(TargetProperty) DefaultFrom syntax already broke live once (Dept ->
+    # OfcAddr4 validator crash, see docs/troubleshooting.md). EmpNum is a narrower, simpler
+    # class than Dept (no address sub-structure), so there's a real chance it behaves more
+    # like the confirmed-safe TermsCode/ShipCode case - but this is untested, not proven. Kept
+    # editable (not ReadOnly) specifically so a silent no-op (stays blank, like Priority's
+    # borrowed class did) still leaves a manual-entry fallback, not a permanently blank locked
+    # field.
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer ID:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    (PAIR, f("Reviewer ID:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES, property_class_name="EmpNum", default_from="EmpNum(QcReviewerUsername)"), f("Reviewer:", "qc_reviewer_username", TYPE_EDIT)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
@@ -279,7 +288,7 @@ LAYOUT = [
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     # Same treatment as Quality's Reviewer above.
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer ID:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    (PAIR, f("Reviewer ID:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES, property_class_name="EmpNum", default_from="EmpNum(EngReviewerUsername)"), f("Reviewer:", "eng_reviewer_username", TYPE_EDIT)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
@@ -477,8 +486,12 @@ def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
     # Combo per direct request - all Reviewer ID fields should be dropdowns, not plain typed
     # boxes. SL_EMPLOYEES lists EmpNum first, matching these fields' own DataSource
     # (*_reviewer_empnum) - same positional-write-back pattern as Assigned Buyer's combo.
-    out += emit_field("ID:", id_col, TYPE_COMBO, SL_EMPLOYEES, False, 31, 35, y, ctrl_w=9)
-    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 48, 56, y, ctrl_w=30)
+    # DefaultFrom="EmpNum(<name column>)" is the same untested experiment as QC/Eng Reviewer
+    # above (see that comment) - Reviewer itself is a plain editable text box, not a combo,
+    # matching the real original's own UI shape for these fields, with the same
+    # not-locked-ReadOnly fallback reasoning.
+    out += emit_field("ID:", id_col, TYPE_COMBO, SL_EMPLOYEES, False, 31, 35, y, ctrl_w=9, property_class_name="EmpNum", default_from=f"EmpNum({PROP[combo_col]})")
+    out += emit_field("Reviewer:", combo_col, TYPE_EDIT, None, False, 48, 56, y, ctrl_w=30)
     return out
 
 def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
