@@ -59,7 +59,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_assigned_empnum">
+            <Component Name="c_assigned_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>2</TabOrder>
@@ -83,7 +83,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_assigned_username">
+            <Component Name="c_assigned_username_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>3</TabOrder>
@@ -234,7 +234,7 @@
                <Post301Format />
                <EffectiveCaption>CM</EffectiveCaption>
             </Component>
-            <Component Name="c_cm_reviewer_empnum">
+            <Component Name="c_cm_reviewer_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>62</TabOrder>
@@ -258,7 +258,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_cm_reviewer_name">
+            <Component Name="c_cm_reviewer_name_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>63</TabOrder>
@@ -444,7 +444,7 @@
                <Post301Format />
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
-            <Component Name="c_eng_reviewer_empnum">
+            <Component Name="c_eng_reviewer_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>52</TabOrder>
@@ -468,7 +468,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_eng_reviewer_username">
+            <Component Name="c_eng_reviewer_username_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>53</TabOrder>
@@ -637,7 +637,7 @@
                <Post301Format />
                <EffectiveCaption>sRevision</EffectiveCaption>
             </Component>
-            <Component Name="c_lot_num">
+            <Component Name="c_lot_num_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>36</TabOrder>
@@ -722,7 +722,7 @@
                <Post301Format />
                <EffectiveCaption>Planning</EffectiveCaption>
             </Component>
-            <Component Name="c_planning_reviewer_empnum">
+            <Component Name="c_planning_reviewer_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>56</TabOrder>
@@ -746,7 +746,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_planning_reviewer_name">
+            <Component Name="c_planning_reviewer_name_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>57</TabOrder>
@@ -870,7 +870,7 @@
                <Post301Format />
                <EffectiveCaption>Purchasing</EffectiveCaption>
             </Component>
-            <Component Name="c_purchasing_reviewer_empnum">
+            <Component Name="c_purchasing_reviewer_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>59</TabOrder>
@@ -894,7 +894,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_purchasing_reviewer_name">
+            <Component Name="c_purchasing_reviewer_name_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>60</TabOrder>
@@ -954,7 +954,7 @@
                <Post301Format />
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
-            <Component Name="c_qc_reviewer_empnum">
+            <Component Name="c_qc_reviewer_empnum_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>46</TabOrder>
@@ -978,7 +978,7 @@
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
-            <Component Name="c_qc_reviewer_username">
+            <Component Name="c_qc_reviewer_username_v2">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
                <TabOrder>47</TabOrder>
@@ -1232,7 +1232,7 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
-            <Component Name="c_serial_num">
+            <Component Name="c_serial_num_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>35</TabOrder>

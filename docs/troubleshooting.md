@@ -91,6 +91,19 @@ fresh, not "updates" it), or change its Type by hand directly in the
 Form Designer. A fresh XML re-import alone is not enough, no matter how
 many times it's repeated.
 
+**XML-only alternative, untested as of this writing**: renaming a
+component (giving it a new `Name` and leaving everything else the same)
+forces Form Sync to treat it as a brand-new component rather than an
+update to an existing one, since the pre-existing "General Review
+Complete" checkbox correctly vanished live the moment it was removed from
+the XML entirely - the same "not present under this name yet" condition a
+rename produces. Applied this to all ten fields above plus
+`c_assigned_empnum`/`c_assigned_username` and `c_serial_num`/`c_lot_num`
+(fresh `_v2` suffix on each). This avoids any manual Application Studio
+step, but hasn't yet been confirmed live - if the old-named component
+still lingers on the form underneath the new one (rather than being
+cleanly replaced), that's the next failure mode to check for.
+
 ## `EventToGenerate` custom scripts on a combo's value-change: not real here
 
 Tried an inline VB `ResponseType 33` script (`Me.IDOClient.LoadCollection`
