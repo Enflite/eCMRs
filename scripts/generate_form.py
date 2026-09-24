@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""Generates the eCMRs Form Sync XML export from the field-mapping.md field list."""
+"""Generates the eCMRs Form Sync XML export from the field-mapping.md field list.
+
+NOTE: exports/eCMRs_v1.XML currently reflects manual, hand-tuned adjustments made directly in
+Application Studio on top of what this script last generated - specifically, the multiline
+notes fields (Requested Action/General Note/QC RCA Notes/Eng RCA Notes) were repositioned into
+a sidebar layout (a tall box to the right of a whole cluster of rows, matching the design
+mockup's real pattern) rather than this script's simpler "label beside its own row's box"
+layout, and an "Item Desc:" field was manually re-added next to Item. Running this script
+again will NOT reproduce those manual adjustments - it'll regenerate the simpler layout this
+file had before they were made. Treat the checked-in XML as authoritative until this generator
+is updated to match; don't blindly re-run and recommit over it.
+"""
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
@@ -185,7 +196,21 @@ LAYOUT = [
     # Work Center is a short code, same as Dept - not a long field like Assigned Buyer/POC,
     # which is what the B slot's default width (49) is tuned for - overridden to a compact
     # width matching Dept's own (per direct request: "WC should be compact").
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True, ctrl_w=17.25)),
+    # PropertyClassName/DefaultFrom removed from both - confirmed live-breaking: importing
+    # with PropertyClassName="Dept" + DefaultFrom="Dept(DeptDescription)" throws "internal
+    # validation error on c_dept validator Dept... Bad SETPROPERTIES specification in
+    # validator Dept: this cache property OfcAddr4 not in cache" the moment a value is
+    # selected. The "Dept" class name isn't a safe, form-scoped label - it's SyteLine's real,
+    # system-wide Department property class (departments carry an office address in the
+    # standard data model, hence OfcAddr4), and naming it in DefaultFrom's
+    # ClassName(TargetProperty) syntax pulls in that whole class's validators, which expect
+    # properties our ue_ecmrs IDO's cache doesn't have. "Wc" is the exact same extrapolated,
+    # never-independently-confirmed pattern (both were guessed from Item's real DefaultFrom
+    # example, not confirmed individually - see the comment above Item's own row) - removed
+    # pre-emptively rather than waiting to hit the same crash on it live. Dept/WC Description
+    # are still on the form, just no longer auto-filled - they'd need to be typed manually
+    # (or the real, safe mechanism for this - if one exists - found and confirmed live first).
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25)),
     # Dept Description widened - a description field, same as WC Description, not a short
     # code like Dept itself (per direct request: "probably too narrow, give more room").
     (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
