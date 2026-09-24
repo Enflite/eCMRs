@@ -127,6 +127,25 @@ Affected components (as currently named, `_v2` suffix): `c_assigned_empnum_v2`,
 `c_lot_num_v2` (the last two also still render as plain edit boxes, no
 dropdown arrow, in the same live screenshot).
 
+**Re-verified directly against the checked-in XML** (not just recycled from
+memory): every one of these components' `Type`/`DataSource` pairing in
+`exports/eCMRs_v1.XML` is already exactly correct - e.g.
+`c_qc_reviewer_empnum_v2` is `Type=27`/`DataSource=object.QcReviewerEmpNum`,
+`c_qc_reviewer_username_v2` is `Type=1`/`DataSource=object.QcReviewerUsername`.
+There is no further XML edit that changes this - the file already says the
+right thing; only the live render disagrees. This confirms the bug is
+entirely on the Application Studio/Form Sync side and genuinely needs a
+human at that console; there is no tool available in this session (or any
+prior one) that can drive Application Studio's desktop UI, run its Form
+Designer, or exercise the live running form. One lead worth checking before
+doing all 14 by hand: does Form Sync's import wizard have a "remove
+components not in the file" option that isn't currently enabled? If it
+matches existing components by their bound `DataSource` rather than by
+`Name`, that would explain why the `_v2` rename didn't force a fresh
+component - it would silently re-merge onto the old one by binding instead.
+Untested, but cheap to check before assuming delete-and-recreate on all 14
+is the only path.
+
 ## `EventToGenerate` custom scripts on a combo's value-change: not real here
 
 Tried an inline VB `ResponseType 33` script (`Me.IDOClient.LoadCollection`
@@ -507,15 +526,23 @@ implemented; `Closed` is a plain, manually-checked box).
 
 ## Dead schema: columns that exist but aren't on the form
 
-10 of the 73 custom columns in `generate_schema_csv.py`'s `FIELDS` aren't bound to any
-component on the current form - the 5 `*_review_complete` cascade flags (no cascade UI was
-ever built), and a handful never placed on the layout at all (`AdditionalChanges`,
-`GeneralNote`, `WorkflowStatus`, `GeneralCloseDate`, `GeneralClosedBy`).
+A handful of custom columns in `generate_schema_csv.py`'s `FIELDS`/`ORPHANED_COLUMNS` still
+aren't bound to any component on the current form: the 6 `*_review_complete`/
+`general_review_complete` cascade flags (no cascade UI was ever built - matches the real
+original form too, where these live inside a `Hidden=True` notebook container, not just
+off-screen), `AdditionalChanges`, `WorkflowStatus`, and `GeneralCloseDate`/`GeneralClosedBy`.
 
-The `*_empnum` companion columns and the `*_description`/`VendorName` companion columns used
-to be in this list too - both restored to the form per direct request (see "Auto-populating a
-description field via `DefaultFrom`" above for the description/name group, and their own
-`LAYOUT` entries in `generate_form.py` for the ID group).
+**`GeneralCloseDate`/`GeneralClosedBy` are a confirmed intentional exclusion, not an oversight**:
+both are `Hidden=True` on the real original form too (`dateCombo5`/`enhancedCombo2` in
+`cmr-project`'s `QC_CMRs_Original.XML`) - never user-visible there either, so there's nothing
+to "restore" here; surfacing them on our form would be adding something the original itself
+deliberately hid, not fixing a gap.
+
+`NextAssyDescription`/`VendorName`/`InternalReviewDate` used to be in this "not on the form"
+list too - all three restored to the form as plain manual-entry fields (see "Auto-populating a
+description field via `DefaultFrom`" above for why no auto-fill exists for the first two). The
+`*_empnum` companion columns and the `*_description`/`VendorName` companion columns' ID-slot
+half were restored earlier for the same reason.
 
 These are **not removed** from the schema - the underlying SQL columns and IDO properties
 already exist live from earlier imports, and dropping a live column/property is a separate,

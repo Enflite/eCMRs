@@ -129,8 +129,8 @@ ORPHANED_COLUMNS = {
     "general_review_complete": "read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule",
     "additional_changes": "not placed on the current form layout",
     "workflow_status": "not placed on the current form layout; its fixed value list was never confirmed either",
-    "general_close_date": "not placed on the current form layout; purpose still unclear vs. CloseDate",
-    "general_closed_by": "not placed on the current form layout; same caveat as GeneralCloseDate",
+    "general_close_date": "confirmed Hidden=True on the real original form too (dateCombo5) - never user-visible there either, not just an unfinished port. Left out deliberately, not an oversight.",
+    "general_closed_by": "confirmed Hidden=True on the real original form too (enhancedCombo2) - same as GeneralCloseDate, never user-visible there either.",
 }
 
 _field_cols = {f[0] for f in FIELDS}

@@ -255,7 +255,26 @@ LAYOUT = [
     # Type 18 would replace a working dropdown with an empty text box and break that
     # cascade's whole reason for existing. Narrowed from 60 to 30 - still a combo, not a
     # narrative field, so it doesn't need to be nearly as wide as a multiline box.
-    (PAIR, f("Initial Change:", "initial_change", TYPE_COMBO, highlight=True, ctrl_w=30), None),
+    #
+    # DefaultFrom="Change(...)" cascade: EXPERIMENTAL, not confirmed. This is the real,
+    # existing mechanism - found byte-for-byte identical on TWO real legacy forms
+    # (Change Request Management's ChangeEdit, and QC_CreateChangeRequest's ChangeEdit, both in
+    # cmr-project's exports) - a built-in Mongoose function literally named "Change" that takes
+    # 5 target property names and recomputes them whenever the source property updates. This is
+    # NOT the same risk category as the Dept/Wc crash: Dept's DefaultFrom named "Dept", a real
+    # compiled SYSTEM property class (Department) with its own hidden cache dependencies
+    # (OfcAddr4) - "Change" here is a generic function, not tied to any specific system class
+    # (PropertyClassName on the real ChangeEdit component is "QCMedChar", not "Change" - the two
+    # names don't match, unlike the Dept/TermsCode self-referential pattern). But it is still
+    # genuinely untested on a brand-new IDO/property: cmr-project's own attempt to replicate
+    # this same string onto their own consolidated form was never confirmed live either
+    # ("Genuinely unverified... same open-question category", per their own task-list.md) -
+    # this is a real, existing mechanism, not an invented one, but "real" isn't the same as
+    # "confirmed safe here." Argument order preserved exactly from the real XML
+    # (Costing, Process, Documentation, ToolMachine, Material), mapped to our own property
+    # names. Verify live after import: does it silently no-op (like Priority's borrowed class
+    # once did), crash (like Dept), or actually cascade the 5 Req checkboxes correctly?
+    (PAIR, f("Initial Change:", "initial_change", TYPE_COMBO, highlight=True, ctrl_w=30, default_from="Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)"), None),
     # Moved up from inside QUALITY (per the plan deck's Design slide - these are part of the
     # Create Change Request carryover, not Quality-specific) - still cascade off Initial Change
     # above, just visually grouped with the rest of the Change Request fields now.

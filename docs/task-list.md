@@ -111,34 +111,38 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   Needs live verification after import, with the expectation it may fail the same way Dept did.
 - [ ] **ItemDescription** (`item_description`) — On the form (hand-added in Application Studio
   as `edit1_SITE`, not through the generator's naming convention — confirmed present, not a
-  gap). **New concern from the latest screenshot**: with Item = `00000-42560` selected, Item
-  Desc also shows `00000-42560` — identical to Item's own value, not an actual text
-  description. Needs a live check: either `DefaultFrom="Item(ItemDescription)"` is pulling the
-  wrong property, or this specific test item's real description genuinely equals its item
-  number (less likely, but confirm against the real item master before assuming a bug).
+  gap). **Still can't verify**: with Item = `00000-42560` selected, Item Desc also shows
+  `00000-42560` — identical to Item's own value, not an actual text description. Checked both
+  repos for any live Item Master export to verify this test item's real description against —
+  none exists (`docs/reference/` only has IDO Properties/SQL Columns exports, nothing
+  Item-related). Genuinely blocked on live access: needs someone to check the real item
+  master, or re-test with a different item and see if its description also mirrors its number.
 - [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
 - [ ] **InitialChange** (`initial_change`) — **Inline List confirmed live**: latest screenshot
-  shows `Other` selected, a valid value from the intended 8-value list. Still open, and bigger:
-  the Requirements checkbox cascade. **Investigated properly this session, not implemented**:
-  every mechanism confirmed available in this tenant for firing logic off a value change is
-  confirmed dead - `SelectionEvent` (Rule #1A) and a custom `EventToGenerate` script on a
-  combo's value change ("fires silently, does nothing" - see docs/troubleshooting.md) both
-  already ruled out. The real legacy mechanism (`DefaultFrom: Change(RsChangeCosting,
-  RsChangeProcess, RsChangeDocumentation, RsChangeToolmachine, RsChangeMaterial)`) is tied to
-  the real, compiled system `Change` property class - naming a real system class in
-  `DefaultFrom` is exactly what just crashed Dept/Wc (Rule #1, OfcAddr4). Copying it onto our
-  own IDO sight-unseen risks the identical crash, and there's no way to test that risk without
-  live access. Not implementing a fake/guaranteed-broken cascade rather than shipping something
-  that looks done but isn't. The real Initial-Change-to-checkbox mapping already exists in
-  `docs/field-mapping.md`'s "Requirements checkbox cascade" table, ready for whenever this gets
-  tried live or a different mechanism is found. **Confirmed still not firing**: the same
-  screenshot shows Initial Change = `Other` with all 5 Req checkboxes unchecked.
+  shows `Other` selected, a valid value from the intended 8-value list. Bigger item: the
+  Requirements checkbox cascade. **Implemented as an experiment** (this session): traced the
+  real mechanism to its source in two separate real legacy forms (`cmr-project`'s
+  `Change Request Management` and `QC_CreateChangeRequest` exports, both carrying the identical
+  `DefaultFrom: Change(RsChangeCosting, RsChangeProcess, RsChangeDocumentation,
+  RsChangeToolmachine, RsChangeMaterial)` string) — this turned out to be a **different risk
+  category than Dept's crash**: `Change` here is a generic, built-in Mongoose function, not a
+  reference to the source property's own Property Class (the real `ChangeEdit` component's
+  `PropertyClassName` is `QCMedChar`, not `Change` — they don't match, unlike the self-
+  referential Dept/TermsCode pattern that caused the OfcAddr4 crash). Added the equivalent
+  `DefaultFrom="Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)"`
+  to `initial_change`'s own component. **Still genuinely untested**: even `cmr-project`'s own
+  attempt to replicate this exact string was never confirmed live either (their own
+  task-list.md: "Genuinely unverified... same open-question category") — this is a real,
+  existing mechanism, not an invented one, but "real" isn't "confirmed safe here." Verify live
+  after import: does it cascade the 5 checkboxes correctly, silently no-op, or crash? The real
+  mapping table is in `docs/field-mapping.md`'s "Requirements checkbox cascade" section.
 - [ ] **ReqCosting**, **ReqDocumentation**, **ReqToolMachine**, **ReqProcess**, **ReqMaterial**
   — Plain, independently-clickable checkboxes on the form (the original's equivalents —
   `RsChangeCosting` etc. — are likewise plain `ListYesNo` checkboxes, so the control type
-  itself is right). Same open item as InitialChange above: the cascade that's supposed to
-  auto-check these off Initial Change doesn't exist yet. **Confirmed live**: with Initial
-  Change set, all 5 remain unchecked. Currently fully manual.
+  itself is right). These are the `DefaultFrom="Change(...)"` cascade's actual targets — see
+  InitialChange above. Last screenshot (before this experiment was added) showed all 5 staying
+  unchecked with Initial Change set; needs a fresh re-import and re-test now that the
+  `DefaultFrom` is in place.
 - [x] **GeneralNote** — On the form (un-orphaned per direct request), nothing flagged.
 
 ## Additional Fields
@@ -244,20 +248,26 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   deliberately orphaned until/unless the Requirements cascade (see InitialChange above) is ever
   built and needs them. Matches the original's own plain checkboxes for these — the gap is the
   missing cascade, not the fields themselves.
-- [ ] **GeneralReviewComplete** — Was dropped from the form/schema per direct request, but
-  **the latest screenshot shows a "General Review Complete" checkbox still visible live**
-  (grayed out) in the Quality section. Needs a live check: is this a genuinely still-bound,
-  still-functioning component (meaning removing it from the XML did not actually remove it —
-  which would also explain why the `_v2` rename workaround above didn't force a fresh
-  component, since "absent from the XML" apparently doesn't reliably mean "absent live"), or
-  just a disabled leftover visual artifact that isn't really bound to anything anymore? This
-  needs resolving either way, since it affects how much to trust the rename-forces-fresh theory
-  for anything else.
-- [ ] **GeneralCloseDate**, **GeneralClosedBy** — Not placed. **⚠ per the original form**: these
-  are real legacy fields (`dateCombo5`/`enhancedCombo2`, `PropertyClassName="Date"`/`"EmpNum"`),
-  not invented schema cruft — so the "purpose vs. CloseDate" question is a genuine legacy
-  distinction worth resolving (not confirmed what it was for) before deciding whether to ever
-  surface them here.
+- [ ] **GeneralReviewComplete** — Dropped from the form/schema per direct request — and now
+  **triple-confirmed correct to drop** on the original's own terms too: `checkBox7` on the real
+  original is `Hidden=True`, `ReadOnly=True`, AND lives inside `notebookTab1`/`notebook1`, itself
+  `Hidden=True` — a whole hidden container, the same category `cmr-project`'s own build
+  independently flagged as "a different and riskier category than every other off-screen fix,"
+  which is why even they built 5 brand-new checkboxes elsewhere rather than un-hiding that
+  structure. This isn't a gap to fill; the exclusion is correct on every count now confirmed.
+  **Still unresolved, and still genuinely blocked on live access**: the latest screenshot shows
+  a "General Review Complete" checkbox still visible live (grayed out) in Quality on *our* form,
+  despite being dropped from *our* schema/XML. Whether that's a still-bound leftover component
+  (which would mean "absent from the XML" doesn't reliably mean "absent live" here — and would
+  also explain why the `_v2` rename workaround didn't force a fresh component) or just an inert
+  visual artifact can only be checked by someone looking at the live Application Studio
+  component list directly — there's no tool in this session that can do that.
+- [x] **GeneralCloseDate**, **GeneralClosedBy** — **Resolved, confirmed intentional**: checked
+  their actual visibility on the original form (not just their existence) — both are
+  `Hidden=True` there too (`dateCombo5`/`enhancedCombo2`), never shown to users on the legacy
+  form either. This isn't a "purpose unclear, maybe restore it" gap — it's confirmed the
+  original itself deliberately kept these invisible, so leaving them off our form matches the
+  original's own design rather than working around an unknown. No action needed.
 
 ## Standing project-level decisions (not field-specific, kept for context)
 
