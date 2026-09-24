@@ -23,11 +23,19 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   screenshot after the Rule #1C rename fix (commit `55c0f7c`) shows Assigned still rendering as
   `[textbox][dropdown]` — the reverse of intended (`[EmpNum combo][Username textbox]`). The
   rename-to-force-fresh-creation workaround did not fix this after all; see
-  `docs/troubleshooting.md` Rule #1C for the full write-up. **Only remaining fix is manual**:
-  delete `c_assigned_empnum_v2` in Application Studio's Form Designer and let the next
-  re-import create it fresh as a Combo, or hand-retype it there directly. The
-  `DefaultFrom="EmpNum(AssignedUsername)"` auto-fill still can't be evaluated until the Type
-  itself is fixed.
+  `docs/troubleshooting.md` Rule #1C for the full write-up. **Only remaining fix is manual, in
+  Application Studio itself** — delete `c_assigned_empnum_v2` in the Form Designer and let the
+  next re-import create it fresh as a Combo, or hand-retype it there directly. This (and the
+  same fix on the other five reviewer pairs and Serial#/Lot# below) is explicitly **not
+  something this session can do** — there's no tool here that can drive Application Studio's
+  desktop UI, only git/filesystem access to this repo. One more lead worth checking before
+  doing this by hand on all 14 components: does the Form Sync import wizard have a "remove
+  components not in the file" option that isn't currently enabled? If Form Sync matches
+  existing components by their `DataSource`/bound property rather than by `Name`, that would
+  explain why renaming to `_v2` didn't force a fresh component (it would silently merge back
+  onto the old one by binding) — untested, but cheap to check before assuming delete-and-
+  recreate is the only path. The `DefaultFrom="EmpNum(AssignedUsername)"` auto-fill still can't
+  be evaluated until the Type itself is fixed.
 - [ ] **AssignedUsername** (`assigned_username`) — Same confirmed-broken pairing as above
   (`c_assigned_username_v2` shows as the dropdown instead of the plain textbox it should be).
   Needs the same manual Application Studio fix. Its `Read Only` flag status is still unverified
@@ -61,23 +69,20 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [x] **NextAssyItem** (`next_assy_item`) — Combo, `SLJobmatls`/`JobItem`, cascades off Item via
   the confirmed-safe `'P(Item)'` pattern (the original's own filter used the same idea, just
   against its own field name). No open issues flagged for this field itself.
-- [ ] **NextAssyDescription** (`next_assy_description`) — Not on the form at all — absent from
-  both `generate_form.py` and the checked-in XML, and not in `ORPHANED_COLUMNS` either (a real
-  tracking gap, not a deliberate exclusion). **⚠ per the original form**: its real equivalent
+- [ ] **NextAssyDescription** (`next_assy_description`) — **Implemented** (commit `991677c`):
+  added as a plain manually-typed field next to Next Lvl Assy (A2 slot, `LeftPos=37`, same one
+  Latest Revision already uses). Not an auto-fill — the real equivalent
   (`rs_cmrUf_ENF_CMR_NextAssyDescription`) was populated via `SelectionEvent`
-  (`UpdateDescriptionNextAssy`) — confirmed dead in this tenant — **not** a `DefaultFrom`. So
-  there is no known-working mechanism to auto-fill this even if added. Decide: add it as a
-  plain manual-entry field (matching what a dead auto-fill would fall back to anyway), or
-  correct `ORPHANED_COLUMNS` to admit it's out of scope.
+  (`UpdateDescriptionNextAssy`), confirmed dead in this tenant, so there was never a
+  working mechanism to replicate. Only remaining step: re-import and confirm it renders and
+  saves correctly (well-formedness, schema-binding, and geometry collision already verified
+  locally, but not yet confirmed live).
 - [x] **Vendor** (`vendor`) — Combo, `PropertyClassName="VendNum"` confirmed real (from the live
   `PurchaseOrders` form). No `DefaultFrom` set on it, deliberately — see VendorName below.
-- [ ] **VendorName** (`vendor_name`) — Not on the form — same tracking gap as
-  NextAssyDescription (implied "restored" by the schema description, but absent from
-  `generate_form.py`, the XML, and `ORPHANED_COLUMNS`). **⚠ per the original form**: same
-  correction as NextAssyDescription — the real `rs_cmrUf_ENF_CMR_VendorName` was populated via
-  `SelectionEvent` (`UpdateVendorDescription`), confirmed dead here, not a `TermsCode`-style
-  `DefaultFrom`. No known-working auto-fill mechanism exists for this pairing in this tenant.
-  Same decision needed as NextAssyDescription.
+- [ ] **VendorName** (`vendor_name`) — **Implemented** (commit `991677c`): added as a plain
+  manually-typed field next to Vendor, same A2-slot treatment as NextAssyDescription, same
+  reasoning (its real auto-fill was `SelectionEvent`, confirmed dead here). Only remaining step:
+  confirm live on next re-import.
 - [x] **Priority** (`priority`) — **Confirmed live**: latest screenshot shows the combo with
   `Low` selected, a valid value from the intended list — the `Inline List`
   `ENTRIES(High,Medium,Low)` is wired and working. (The original had no combo for Priority at
@@ -86,25 +91,19 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — `DefaultFrom="Dept(DeptDescription)"` was **re-added per direct
-  request despite already being confirmed to crash live once** ("internal validation error on
-  c_dept validator Dept... this cache property OfcAddr4 not in cache"). **⚠ per the original
-  form**: Dept in the real original was a **plain typed field with no combo and no auto-fill
-  mechanism at all** (`edit2`, `PropertyClassName="Dept"`, `Type=1`, no `DefaultFrom`) — there
-  was never a working precedent for this cascade anywhere, not on the original, not elsewhere.
-  **Confirmed again live**: latest screenshot shows Dept = `150` selected with Dept Description
-  left blank — no crash popup visible this time, just a silent no-op, but the net result is the
-  same failure. Recommend treating this as settled rather than re-testing again: fall back to
-  plain manual entry for Dept Description, matching what the original form itself actually did.
-- [ ] **Wc** (`wc`) — Same situation as Dept, and the same correction: the original's `Wc`
-  field (`edit12`) was also a plain typed field, no combo, no auto-fill. **Confirmed live**:
-  screenshot shows Work Center = `EMI` selected with WC Description blank, same silent no-op as
-  Dept. Same recommendation — accept manual entry rather than keep retrying a mechanism with
-  zero real precedent.
-- [ ] **DeptDescription**, **WcDescription** — Correctly placed, read-only-styled display
-  fields, confirmed still blank live even with Dept/Wc values selected (see above). The
-  realistic remaining task for both is simply: make them plain editable (or accept manual
-  entry) rather than waiting on a `DefaultFrom` that has no working precedent to lean on.
+- [x] **Dept** (`dept`) — **Fixed** (commit `991677c`): `DefaultFrom="Dept(DeptDescription)"`
+  and its `PropertyClassName="Dept"` permanently removed from the combo — this mechanism was
+  confirmed to crash live once, then confirmed to silently no-op on retry, and the real
+  original form never had any combo or auto-fill for Dept at all (`edit2`, plain `Type=1`, no
+  `DefaultFrom`) — no working precedent existed anywhere for this cascade. Dept is now just a
+  plain combo with no side effects.
+- [x] **Wc** (`wc`) — Same fix, same commit, same reasoning as Dept.
+- [x] **DeptDescription**, **WcDescription** — **Fixed** (commit `991677c`): both changed from
+  `ReadOnly=True` to plain editable fields, since the `DefaultFrom` they were waiting on is
+  permanently abandoned. Added to `REPURPOSED_WRITABLE` in `generate_schema_csv.py` so
+  `docs/deploy-checklist.md` now tracks clearing their live Read Only flag too (Rule #1B) —
+  that manual Application Studio step is still outstanding, same as the other 6 entries in that
+  list.
 - [ ] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` retried per direct request.
   **⚠ per the original form**: Item in the real original was also a **plain typed field, no
   combo, no auto-fill** (`edit10`, `Type=1`) — unlike Dept, this exact mechanism hasn't crashed
@@ -120,12 +119,20 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
 - [ ] **InitialChange** (`initial_change`) — **Inline List confirmed live**: latest screenshot
   shows `Other` selected, a valid value from the intended 8-value list. Still open, and bigger:
-  the Requirements checkbox cascade this field drives in the original (via
-  `RsChangeCosting`/`RsChangeDocumentation`/etc., a native mechanism tied to the legacy
-  `Change` property class) **has never been built or confirmed on this new IDO** — decide
-  whether an equivalent `DefaultFrom`-based cascade works on brand-new property names here, or
-  build a scripted equivalent. **Confirmed still not firing**: the same screenshot shows
-  Initial Change = `Other` with all 5 Req checkboxes unchecked.
+  the Requirements checkbox cascade. **Investigated properly this session, not implemented**:
+  every mechanism confirmed available in this tenant for firing logic off a value change is
+  confirmed dead - `SelectionEvent` (Rule #1A) and a custom `EventToGenerate` script on a
+  combo's value change ("fires silently, does nothing" - see docs/troubleshooting.md) both
+  already ruled out. The real legacy mechanism (`DefaultFrom: Change(RsChangeCosting,
+  RsChangeProcess, RsChangeDocumentation, RsChangeToolmachine, RsChangeMaterial)`) is tied to
+  the real, compiled system `Change` property class - naming a real system class in
+  `DefaultFrom` is exactly what just crashed Dept/Wc (Rule #1, OfcAddr4). Copying it onto our
+  own IDO sight-unseen risks the identical crash, and there's no way to test that risk without
+  live access. Not implementing a fake/guaranteed-broken cascade rather than shipping something
+  that looks done but isn't. The real Initial-Change-to-checkbox mapping already exists in
+  `docs/field-mapping.md`'s "Requirements checkbox cascade" table, ready for whenever this gets
+  tried live or a different mechanism is found. **Confirmed still not firing**: the same
+  screenshot shows Initial Change = `Other` with all 5 Req checkboxes unchecked.
 - [ ] **ReqCosting**, **ReqDocumentation**, **ReqToolMachine**, **ReqProcess**, **ReqMaterial**
   — Plain, independently-clickable checkboxes on the form (the original's equivalents —
   `RsChangeCosting` etc. — are likewise plain `ListYesNo` checkboxes, so the control type
@@ -214,8 +221,17 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly.
   Latest screenshot shows all three in the expected pre-check state (Close Date/Closed By
   grayed-out and empty, Closed unchecked) — consistent, but doesn't exercise the toggle itself.
-  Still open: actually check the Closed box live and confirm CloseDate/ClosedBy populate, then
-  uncheck and confirm they clear.
+  Re-checked the VB script and XML wiring directly (unchanged, matches the confirmed-working
+  legacy pattern byte-for-byte) — nothing to fix in code. **Needs a human to actually check the
+  Closed box live and confirm CloseDate/ClosedBy populate, then uncheck and confirm they
+  clear** — this session has no way to drive the running form itself.
+- [ ] **InternalReviewDate** (`internal_review_date`) — **Implemented** (commit `991677c`):
+  added as a real Date field after Closed, since Quality's own layout had no free space for it
+  (the QC RCA Notes sidebar occupies the right side of every row that could otherwise hold it —
+  confirmed by a geometry collision check). This is a real field the original form had
+  (`dateCombo2`) that was missing here entirely, and unlike the other orphaned fields below,
+  wasn't even tracked in `ORPHANED_COLUMNS` — a plain oversight, now fixed. Only remaining step:
+  confirm live on next re-import.
 
 ## Not on the form (deliberately orphaned — tracked, not forgotten)
 
@@ -242,12 +258,6 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   not invented schema cruft — so the "purpose vs. CloseDate" question is a genuine legacy
   distinction worth resolving (not confirmed what it was for) before deciding whether to ever
   surface them here.
-- [ ] **InternalReviewDate** (`internal_review_date`) — Not placed on the form, and unlike the
-  fields above, also **not in `ORPHANED_COLUMNS`** — a genuine tracking gap. **⚠ per the
-  original form**: this is a real field there too (`dateCombo2`, plain `Date` type, with its
-  own grid column), not a speculative addition — which strengthens the case for actually adding
-  it here rather than leaving it as an oversight. Decide: place it (Quality or Implementation
-  seem like the likeliest homes) and confirm it, or add it to `ORPHANED_COLUMNS` with a reason.
 
 ## Standing project-level decisions (not field-specific, kept for context)
 
