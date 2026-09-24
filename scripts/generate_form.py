@@ -123,11 +123,19 @@ TOP_ROW = "top_row"    # Status / Assigned ID / Assigned / Notify - the real for
 # Marks every brand-new/carried-over field (Change Request Fields, Additional Fields, Reason
 # Code/Cause Code) so they visually stand out as additions on the live form. SyteLine's
 # Post301Format has no border property, so the mockup's #9b6fd1 border can't be replicated -
-# background match is the closest available approximation.
-HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )"
+# background match is the closest available approximation. FORECOLOR(107,63,160) added per
+# direct request - the same purple already used for the section GROUPLABEL text
+# ("Change Request Fields"/"Additional Fields") - so the new fields' labels, values, and
+# checkboxes carry purple TEXT as well as the purple background, not background alone.
+HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)"
 
-def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
-    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight)
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False, ctrl_w=None):
+    # ctrl_w: optional per-field override of the control width the row's slot (A/A2/B) would
+    # otherwise default to - added because a slot's default width is tuned for that COLUMN's
+    # typical field (e.g. B defaults to 49, sized for long fields like Assigned Buyer/POC),
+    # not every field that happens to land in it (e.g. Work Center is a short code, not a
+    # long field, even though it shares Dept's row on the B side).
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -135,22 +143,25 @@ LAYOUT = [
     # banners (dropped "CMR DETAILS" - it wasn't real). QUALITY/ENGINEERING/IMPLEMENTATION
     # below are the only section banners that were ever real on the original form.
     #
-    # This whole identity block's ORDER now matches the original exactly, row for row,
-    # extracted directly from cmr-project's QC_CMRs_Original.XML: Status+Assigned+Notify,
-    # CMR Num+Create Date+Created By, PO Num+PO Line+Assigned Buyer, Qty+POC,
-    # RFQ Num+Job Num+Initial Change, Item, Drawing Revision+Latest Revision,
-    # Requested Action, Next Lvl Assy, Vendor, Priority. It was previously scrambled (Item
-    # Description/Next Assy Description/Vendor Name/Internal Review Date were also inserted
-    # here as extra fields that don't exist on the real form at all - dropped entirely rather
-    # than force them into a layout they never belonged in; their DefaultFrom/PropertyClassName
-    # auto-fill on Item/Next Lvl Assy/Vendor below is dropped along with them since it had no
-    # other purpose).
+    # This whole identity block's ORDER matches the original, row for row, extracted directly
+    # from cmr-project's QC_CMRs_Original.XML: Status+Assigned+Notify, CMR Num+Create
+    # Date+Created By, PO Num+PO Line+Assigned Buyer, Qty+POC, RFQ Num+Job Num,
+    # Drawing Revision+Latest Revision, Requested Action, Next Lvl Assy, Vendor, Priority.
+    # Item and Initial Change are the two exceptions - per direct request they're consolidated
+    # into the Change Request Fields section below instead of staying in their original
+    # position, since that section is meant to gather everything Create Change Request touches
+    # in one place. They keep their ORIGINAL (non-purple) styling there, per "unrelated
+    # existing fields should retain their original styling" - they're relocated for
+    # consolidation, not restyled as new. (Item Description/Next Assy Description/Vendor
+    # Name/Internal Review Date were also previously inserted here as extra fields that don't
+    # exist on the real form at all - dropped entirely; their DefaultFrom/PropertyClassName
+    # auto-fill on Item/Next Lvl Assy/Vendor is dropped along with them since it had no other
+    # purpose.)
     (TOP_ROW,),
     (TRIPLE, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Create Date:", "create_date", TYPE_DATE, readonly=True), f("Created By:", "created_by", TYPE_EDIT, readonly=True)),
     (TRIPLE, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE), f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES)),
     (PAIR, f("Qty:", "qty", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
-    (TRIPLE, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB), f("Initial Change:", "initial_change", TYPE_COMBO)),
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), None),
+    (TRIPLE, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB), None),
     (TRIPLE, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT), None),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), None),
@@ -164,11 +175,36 @@ LAYOUT = [
     # Everything from here down, up to QUALITY, is new-since-the-legacy-form - grouped and
     # labeled to match the design mockup (Change Request carryover, then the BRD's brand-new
     # Additional Fields), instead of being scattered piecemeal among the base identity fields
-    # above wherever there happened to be room.
+    # above wherever there happened to be room. Row order per direct request: Dept/WC,
+    # Dept Description/WC Description, Item/Reported By, Initial Change, Requirements,
+    # General Note - consolidating Item and Initial Change here rather than leaving a second,
+    # separated "Change Request" concept split across the form.
     (GROUPLABEL, "Change Request Fields"),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True)),
-    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True)),
+    # Work Center is a short code, same as Dept - not a long field like Assigned Buyer/POC,
+    # which is what the B slot's default width (49) is tuned for - overridden to a compact
+    # width matching Dept's own (per direct request: "WC should be compact").
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True, ctrl_w=17.25)),
+    # Dept Description widened - a description field, same as WC Description, not a short
+    # code like Dept itself (per direct request: "probably too narrow, give more room").
+    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
+    # Item and Reported By consolidated here per direct request. Item keeps its ORIGINAL
+    # (non-purple) styling - it's relocated for consolidation, not one of the new fields.
+    # Reported By is a person's name, not a long descriptive field - the B slot's 49-wide
+    # default is sized for Assigned Buyer/POC, not this, so narrowed to a medium width.
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
+    # PENDING CONFIRMATION: kept here, unhighlighted, per direct request ("Due Date is an
+    # existing/general eCMR field... revert to <Post301Format />") - flagged back to the user
+    # because this contradicts two other sources of truth checked earlier this session: the
+    # design mockup's own new-box styling on Due Date, and the real legacy form
+    # (QC_CMRs_Original.XML), which has no Due Date field at all (it's Create Change
+    # Request-only, same as Dept/WC/Reported By/the Req: checkboxes). Un-highlighting it now
+    # since that's what was explicitly asked; still needs a real answer on where it belongs.
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE), None),
+    # Initial Change consolidated here per direct request, same non-purple treatment as Item -
+    # relocated, not restyled. Its own row (not paired) since it's the section's main
+    # "what changed" field, not the same wide-B-slot 49 default (sized for combos like Job
+    # Num/Assigned Buyer): widened further to reflect its importance in this section.
+    (PAIR, f("Initial Change:", "initial_change", TYPE_COMBO, ctrl_w=60), None),
     # Moved up from inside QUALITY (per the plan deck's Design slide - these are part of the
     # Create Change Request carryover, not Quality-specific) - still cascade off Initial Change
     # above, just visually grouped with the rest of the Change Request fields now.
@@ -271,7 +307,7 @@ def next_tab():
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0, highlight=False, h=1):
+def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0, highlight=False, h=1, justify="R"):
     post301 = f"<Post301Format>{HIGHLIGHT_FORMAT}</Post301Format>" if highlight else "<Post301Format />"
     return f"""            <Component Name="{name}">
                <DeviceID>-1</DeviceID>
@@ -291,7 +327,7 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0, highlight=False, h=1):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Format>JUSTIFY(R)</Format>
+               <Format>JUSTIFY({justify})</Format>
                {post301}
                <EffectiveCaption>{esc(caption)}</EffectiveCaption>
             </Component>
@@ -379,11 +415,17 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
     return out
 
 def emit_span(label, column, ctype, y, highlight=False):
-    # Span labels sit alone on their own line above a full-width box, nothing beside them -
-    # give them a generous fixed width instead of inheriting CTRL_W-2 (which shrank along
-    # with the identity block's own columns and is unrelated to how much room a span label
-    # actually has).
-    out = emit_label("l_" + column, label, SPAN_X, y, w=40, highlight=highlight)
+    # Span labels sit alone on their own line ABOVE a full-width box, not beside it like a
+    # normal paired field's label - so right-justifying it (emit_label's default, correct for
+    # a label hugging its control to the right) instead floats the caption away from the
+    # box's left edge, inside an arbitrary-width box. Left-justified and flush with the box's
+    # own LeftPos (SPAN_X) instead, matching a plain "Label:" tag sitting directly above it.
+    # Applies uniformly to all four multiline fields (Requested Action, General Note, QC RCA
+    # Notes, Eng RCA Notes) - they already share identical box geometry (98 wide, 4.5 tall,
+    # 1.1 label-to-box gap) since they all go through this same function; only General Note
+    # additionally carries the purple highlight, which stays scoped to it via the `highlight`
+    # arg its own LAYOUT entry passes - not touched here.
+    out = emit_label("l_" + column, label, SPAN_X, y, w=40, highlight=highlight, justify="L")
     out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5, highlight=highlight)
     return out
 
@@ -585,35 +627,35 @@ def build_components():
             a, b = item[1], item[2]
             tall = False
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A, CTRL_X_A))
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_B, CTRL_X_B))
             y += ROW_H + 0.3 if tall else ROW_H
         elif kind == TRIPLE:
             a, a2, b = item[1], item[2], item[3]
             tall = False
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = a
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A, CTRL_X_A))
             if a2:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = a2
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A2, CTRL_X_A2, y, ctrl_w=CTRL_W_A2, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a2
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A2, CTRL_X_A2, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_A2, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A2, CTRL_X_A2))
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = b
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_B, CTRL_X_B))
             y += ROW_H + 0.3 if tall else ROW_H
         elif kind == TOP_ROW:
             out.append(emit_top_row(y))
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = item[1]
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = item[1]
             out.append(emit_span(label, column, ctype, y, highlight=highlight))
             y += 5.8
         elif kind == IMPL_ROW:
