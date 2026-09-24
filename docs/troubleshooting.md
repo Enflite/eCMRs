@@ -128,6 +128,30 @@ from the same PurchaseOrders form's own `VendNumEdit` component, `Item`/
 `DeptDescription`/`NextAssyDescription`/`VendorName` - **verify live
 after import**.
 
+**Update, live-tested on `Dept`: it broke.** Importing
+`DefaultFrom="Dept(DeptDescription)"` (paired with `PropertyClassName="Dept"`)
+threw, live, the moment a Dept value was selected: *"internal validation
+error on c_dept validator Dept... Bad SETPROPERTIES specification in
+validator Dept: this cache property OfcAddr4 not in cache."* Root cause:
+`Dept` isn't a safe, form-scoped label here - it's SyteLine's real,
+system-wide Department property class, and departments carry an office
+address in the standard data model (hence `OfcAddr4`). Naming it in
+`DefaultFrom`'s `ClassName(TargetProperty)` syntax pulls in *that whole
+class's validators*, which expect properties our `ue_ecmrs` IDO's cache
+doesn't have - a different, incompatible mechanism from `TermsCode`/
+`ShipCode` above despite the identical syntax. `Wc` was removed
+pre-emptively from this form for the same reason (same extrapolation,
+never independently confirmed, same real system-class name) - not
+independently tested, but not worth risking. **Do not reuse a real
+system Property Class name in `DefaultFrom` (or bare `PropertyClassName`)
+on this IDO without testing that exact class live first** - a class
+being real and compiled somewhere does not mean it's compatible with a
+cache that doesn't carry its expected properties. `VendNum` (still on
+this form's Vendor field, `PropertyClassName` only, no `DefaultFrom`) and
+`QCReasonCode`/`QCCauseCode` (Reason Code/Cause Code, same) are
+UNTESTED against this same risk - they simply haven't been tried yet,
+not confirmed safe.
+
 ## Binding a combo directly to return `Username` instead of `EmpNum`
 
 To make a combo return an employee's `Username` (a real email address in
