@@ -187,21 +187,24 @@ LAYOUT = [
     # Dept Description widened - a description field, same as WC Description, not a short
     # code like Dept itself (per direct request: "probably too narrow, give more room").
     (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
-    # Item and Reported By consolidated here per direct request. Item keeps its ORIGINAL
-    # (non-purple) styling - it's relocated for consolidation, not one of the new fields.
-    # Reported By is a person's name, not a long descriptive field - the B slot's 49-wide
-    # default is sized for Assigned Buyer/POC, not this, so narrowed to a medium width.
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
-    # Confirmed purple/new, matching the design mockup's own new-box styling - Due Date isn't
-    # on the real legacy form at all (it's Create Change Request-only, same category as
-    # Dept/WC/Reported By/the Req: checkboxes below), so it belongs with the rest of this
-    # section's genuinely new fields, not treated as pre-existing.
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), None),
-    # Initial Change consolidated here per direct request, same non-purple treatment as Item -
-    # relocated, not restyled. Its own row (not paired) since it's the section's main
-    # "what changed" field, not the same wide-B-slot 49 default (sized for combos like Job
-    # Num/Assigned Buyer): widened further to reflect its importance in this section.
-    (PAIR, f("Initial Change:", "initial_change", TYPE_COMBO, ctrl_w=60), None),
+    # Item and Reported By consolidated here per direct request. Item is now purple per
+    # direct request ("all Change Request fields should be purple") - superseding the earlier
+    # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
+    # B slot's 49-wide default is sized for Assigned Buyer/POC, not this, so narrowed to a
+    # medium width.
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
+    # Reverted to plain per direct request - Due Date isn't one of the new Change Request
+    # fields after all (superseding the earlier confirmation to keep it purple).
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE), None),
+    # Initial Change: now purple per direct request, but kept as a Type 27 combo rather than
+    # converted to a multiline text area - generate_schema_csv.py's own field comment
+    # confirms InitialChange is a String(40) bound to a fixed 8-value list (Documentation,
+    # Machine, Material, Other, Process, Specification, Tooling, Variance(waiver)) that drives
+    # the Requirements checkbox cascade, not a free-text change narrative. Converting it to
+    # Type 18 would replace a working dropdown with an empty text box and break that
+    # cascade's whole reason for existing. Narrowed from 60 to 30 - still a combo, not a
+    # narrative field, so it doesn't need to be nearly as wide as a multiline box.
+    (PAIR, f("Initial Change:", "initial_change", TYPE_COMBO, highlight=True, ctrl_w=30), None),
     # Moved up from inside QUALITY (per the plan deck's Design slide - these are part of the
     # Create Change Request carryover, not Quality-specific) - still cascade off Initial Change
     # above, just visually grouped with the rest of the Change Request fields now.

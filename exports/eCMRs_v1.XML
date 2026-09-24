@@ -1313,7 +1313,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Item:</EffectiveCaption>
             </Component>
             <Component Name="c_item">
@@ -1335,7 +1335,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
             </Component>
             <Component Name="l_reported_by">
                <DeviceID>-1</DeviceID>
@@ -1398,7 +1398,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format />
                <EffectiveCaption>Due Date:</EffectiveCaption>
             </Component>
             <Component Name="c_due_date">
@@ -1419,7 +1419,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format />
             </Component>
             <Component Name="l_initial_change">
                <DeviceID>-1</DeviceID>
@@ -1440,7 +1440,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Initial Change:</EffectiveCaption>
             </Component>
             <Component Name="c_initial_change">
@@ -1451,7 +1451,7 @@
                <LeftPos>11.250</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>60</Width>
+               <Width>30</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1461,7 +1461,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
             </Component>
             <Component Name="c_req_costing">
                <DeviceID>-1</DeviceID>
