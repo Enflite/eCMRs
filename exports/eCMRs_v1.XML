@@ -932,9 +932,9 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>14.150</TopPos>
+               <TopPos>14.050</TopPos>
                <LeftPos>2.000</LeftPos>
-               <Height>1</Height>
+               <Height>1.8</Height>
                <ListHeight>0</ListHeight>
                <Width>12.0</Width>
                <Caption>Requested Action:</Caption>

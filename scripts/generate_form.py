@@ -50,7 +50,7 @@ def label_width(x_label, x_ctrl):
 # a caption that actually wraps produces a visible overlap bug (this was directly reported),
 # while over-provisioning for one that doesn't just leaves a little extra whitespace.
 def is_tall(caption, width):
-    return len(caption) > width * 1.45
+    return len(caption) > width * 1.4
 
 SL_ITEMS = "STDOLE SLItems( PROPERTIES(Item, Description) )"
 SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
