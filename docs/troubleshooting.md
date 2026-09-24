@@ -67,6 +67,30 @@ flag was manually cleared in Application Studio.
 Read Only flag first**, before opening a fresh diagnostic (typing vs.
 selecting, checking for errors, etc.) — don't re-derive this from scratch.
 
+### C. A component's `Type` (Edit vs. Combo) doesn't change on an existing component either
+
+**Confirmed real, twice in a row on the same fields**: changing a
+component's `<Type>` in the form XML (e.g. `1` Edit → `27` Combo, or back)
+and re-importing does not change what actually renders live, when that
+component already exists on the form from an earlier import. The XML
+export can say `Type=27` and the live form still shows a plain text box -
+no error, no warning, it just silently keeps the old control type. Same
+underlying class of bug as B above (Form Sync re-import happily updates
+*some* attributes of an existing component but not this one), confirmed
+independently on `qc_reviewer_empnum`/`eng_reviewer_empnum`/
+`planning_reviewer_empnum`/`purchasing_reviewer_empnum`/
+`cm_reviewer_empnum` (meant to become combos) and their paired
+`*Username`/`*ReviewerName` fields (meant to go back to plain edits) -
+after two separate re-imports, the live form still showed the pre-fix
+Type on all ten.
+
+**Fix**: don't try to change an existing component's `Type` via Form Sync
+XML re-import - it silently won't take. Either delete the component in
+Application Studio's Form Designer first (so the next import creates it
+fresh, not "updates" it), or change its Type by hand directly in the
+Form Designer. A fresh XML re-import alone is not enough, no matter how
+many times it's repeated.
+
 ## `EventToGenerate` custom scripts on a combo's value-change: not real here
 
 Tried an inline VB `ResponseType 33` script (`Me.IDOClient.LoadCollection`

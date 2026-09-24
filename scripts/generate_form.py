@@ -210,7 +210,12 @@ LAYOUT = [
     # pre-emptively rather than waiting to hit the same crash on it live. Dept/WC Description
     # are still on the form, just no longer auto-filled - they'd need to be typed manually
     # (or the real, safe mechanism for this - if one exists - found and confirmed live first).
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25)),
+    # Dept(DeptDescription)/Wc(WcDescription) DefaultFrom RE-ADDED per direct request - this is
+    # the EXACT mechanism that already crashed live once ("internal validation error on c_dept
+    # validator Dept... this cache property OfcAddr4 not in cache", see
+    # docs/troubleshooting.md). Retrying it unchanged is very likely to reproduce the identical
+    # crash, not a new experiment - flagged so it's obvious what happened if it does.
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True, property_class_name="Dept", default_from="Dept(DeptDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25, property_class_name="Wc", default_from="Wc(WcDescription)")),
     # Dept Description widened - a description field, same as WC Description, not a short
     # code like Dept itself (per direct request: "probably too narrow, give more room").
     (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
@@ -219,7 +224,9 @@ LAYOUT = [
     # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
     # B slot's 49-wide default is sized for Assigned Buyer/POC, not this, so narrowed to a
     # medium width.
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
+    # Item(ItemDescription) DefaultFrom retried per direct request - untested (Item wasn't the
+    # one that crashed; Dept was - see docs/troubleshooting.md Rule #1's Dept/OfcAddr4 entry).
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True, property_class_name="Item", default_from="Item(ItemDescription)"), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
     # Reverted to plain per direct request - Due Date isn't one of the new Change Request
     # fields after all (superseding the earlier confirmation to keep it purple).
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), None),
@@ -528,8 +535,12 @@ def emit_top_row(y):
     # it to AssignedUserEmpNum right here), not a plain extra row further down like before.
     out = emit_field("Status:", "status", TYPE_COMBO, None, False, LABEL_X_A, CTRL_X_A, y, ctrl_w=19)
     out += emit_label("l_assigned_username", "Assigned:", 34, y + 0.15, w=11.5)
-    out += emit_control("assigned_empnum", TYPE_EDIT, 46, y, None, False, w=10)
-    out += emit_control("assigned_username", TYPE_COMBO, 57, y, SL_EMPLOYEES_ASSIGNED, False, w=28)
+    # Assigned ID is the combo (EmpNum-first list) with the same untested DefaultFrom
+    # auto-fill experiment as the 5 Reviewer ID fields; Assigned (Username) is the plain
+    # editable text box - per direct request, matching the same ID=combo/Name=text pattern
+    # everywhere else, not the reverse arrangement this had before.
+    out += emit_control("assigned_empnum", TYPE_COMBO, 46, y, SL_EMPLOYEES, False, w=10, property_class_name="EmpNum", default_from="EmpNum(AssignedUsername)")
+    out += emit_control("assigned_username", TYPE_EDIT, 57, y, None, False, w=28)
     out += emit_button("btn_notify", "Notify", "NotifyEngineering", 86, y, w=13)
     return out
 

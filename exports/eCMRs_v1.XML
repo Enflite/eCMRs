@@ -61,7 +61,7 @@
             </Component>
             <Component Name="c_assigned_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>2</TabOrder>
                <TopPos>2.9</TopPos>
                <LeftPos>46</LeftPos>
@@ -73,6 +73,9 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.AssignedEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
+               <DefaultFrom>EmpNum(AssignedUsername)</DefaultFrom>
+               <PropertyClassName>EmpNum</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -82,7 +85,7 @@
             </Component>
             <Component Name="c_assigned_username">
                <DeviceID>-1</DeviceID>
-               <Type>27</Type>
+               <Type>1</Type>
                <TabOrder>3</TabOrder>
                <TopPos>2.9</TopPos>
                <LeftPos>57</LeftPos>
@@ -93,9 +96,7 @@
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.AssignedUsername</DataSource>
-               <Binding>1</Binding>
-               <ComboListSource>STDOLE SLEmployees( PROPERTIES(Username,EmpNum,Name) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
-               <Flags>1</Flags>
+               <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
@@ -351,6 +352,8 @@
                <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
+               <DefaultFrom>Dept(DeptDescription)</DefaultFrom>
+               <PropertyClassName>Dept</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -583,6 +586,8 @@
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLItems(  PROPERTIES(Item,Description) DISPLAY(1,2))</ComboListSource>
+               <DefaultFrom>Item(ItemDescription)</DefaultFrom>
+               <PropertyClassName>Item</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1365,6 +1370,8 @@
                <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
+               <DefaultFrom>Wc(WcDescription)</DefaultFrom>
+               <PropertyClassName>Wc</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
