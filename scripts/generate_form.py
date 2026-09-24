@@ -100,7 +100,7 @@ SL_POITEMS_NUM = "STDOLE SLPoItems( PROPERTIES(PoNum,Item,PoLine) DISPLAY(1,2,3)
 # first there) while making Item show first in whatever label the closed box displays.
 # UNCONFIRMED whether DISPLAY() order actually affects the closed/collapsed combo's text (as
 # opposed to only the open dropdown grid's column order) - needs a live check after re-import.
-SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(2,1,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
+SL_POITEMS_LINE = "STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3) READMODE(UNCOMMITTED) DISTINCT() FILTER(PoNum='P(PoNum)') RECORDCAP(0))"
 # Job Num: real syntax confirmed directly from the legacy QC_CMRs form's own Job Num combo
 # (comboBox4_SITE) - STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED)
 # DISTINCT() FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) RECORDCAP(0)). Two wrong guesses tried
@@ -265,7 +265,7 @@ LAYOUT = [
     # returns the username, not the employee number. Reviewer ID restored on its own row
     # (per direct request) - plain writable box, same no-confirmed-sync caveat as Assigned ID.
     (PAIR, f("QC Disposition:", "qc_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer ID:", "qc_reviewer_empnum", TYPE_EDIT), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    (PAIR, f("Reviewer ID:", "qc_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Reviewer:", "qc_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("QC RCA Notes:", "qc_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "ENGINEERING"),
@@ -273,7 +273,7 @@ LAYOUT = [
     (PAIR, f("MDL:", "mdl", TYPE_EDIT), None),
     # Same treatment as Quality's Reviewer above.
     (PAIR, f("Engineering Disposition:", "eng_disposition", TYPE_COMBO), None),
-    (PAIR, f("Reviewer ID:", "eng_reviewer_empnum", TYPE_EDIT), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
+    (PAIR, f("Reviewer ID:", "eng_reviewer_empnum", TYPE_COMBO, SL_EMPLOYEES), f("Reviewer:", "eng_reviewer_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED)),
     (SPAN, f("Eng RCA Notes:", "eng_rca_notes", TYPE_MULTILINE)),
 
     (HEADER, "IMPLEMENTATION"),
@@ -468,7 +468,10 @@ def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
     # into the old 2-37.5 range) - checkbox on the far left, then ID and Reviewer spread out
     # across the extra width instead of bunching in the first third of the row.
     out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, LABEL_X_A, CTRL_X_A, y, ctrl_w=15)
-    out += emit_field("ID:", id_col, TYPE_EDIT, None, False, 31, 35, y, ctrl_w=9)
+    # Combo per direct request - all Reviewer ID fields should be dropdowns, not plain typed
+    # boxes. SL_EMPLOYEES lists EmpNum first, matching these fields' own DataSource
+    # (*_reviewer_empnum) - same positional-write-back pattern as Assigned Buyer's combo.
+    out += emit_field("ID:", id_col, TYPE_COMBO, SL_EMPLOYEES, False, 31, 35, y, ctrl_w=9)
     out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 48, 56, y, ctrl_w=30)
     return out
 

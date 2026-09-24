@@ -235,7 +235,7 @@
             </Component>
             <Component Name="c_cm_reviewer_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>62</TabOrder>
                <TopPos>86.8</TopPos>
                <LeftPos>35</LeftPos>
@@ -247,6 +247,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.CmReviewerEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -442,7 +443,7 @@
             </Component>
             <Component Name="c_eng_reviewer_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>52</TabOrder>
                <TopPos>74.35</TopPos>
                <LeftPos>11.25</LeftPos>
@@ -454,6 +455,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.EngReviewerEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -738,7 +740,7 @@
             </Component>
             <Component Name="c_planning_reviewer_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>56</TabOrder>
                <TopPos>83.3</TopPos>
                <LeftPos>35</LeftPos>
@@ -750,6 +752,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PlanningReviewerEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -885,7 +888,7 @@
             </Component>
             <Component Name="c_purchasing_reviewer_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>59</TabOrder>
                <TopPos>85.05</TopPos>
                <LeftPos>35</LeftPos>
@@ -897,6 +900,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.PurchasingReviewerEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -968,7 +972,7 @@
             </Component>
             <Component Name="c_qc_reviewer_empnum">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>46</TabOrder>
                <TopPos>59.85</TopPos>
                <LeftPos>11.25</LeftPos>
@@ -980,6 +984,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.QcReviewerEmpNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLEmployees( PROPERTIES(EmpNum,Name,Username) DISPLAY(1,2,3) RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

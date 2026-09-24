@@ -76,9 +76,12 @@ premium instead of corporate-template bold-everywhere.
   single most important action on a page/deck; if every button is red, none of them are.
 - **Section labels**: short, bold, Enflite Red, uppercase, sitting above a light-weight Ink/
   White heading (e.g. "THE CORE CATALOG" in red above a light-weight "Products By Enflite").
-- **Icon badges**: skip the filled circular/rounded-square badge behind an icon where
-  possible — a plain line-weight icon in Ink or Red, sized generously, reads cleaner. Where a
-  badge genuinely helps (a numbered step), keep it a thin outlined circle, not a filled tint.
+- **Icon badges**: solid Enflite Red rounded-square, white icon glyph centered on top —
+  confirmed in the actual plan deck (`eCMRs_plan.pptx`), not the outlined/no-badge look this
+  section used to recommend (that direction was tried and superseded live). Corner rounding
+  is modest, not a pill/circle — PowerPoint's roundRect `adj` around `8000` (out of 50000),
+  i.e. roughly 16% of the shorter side. Icon and badge are the same square aspect ratio, icon
+  inset with a comfortable margin inside the badge (not edge-to-edge).
 - **Dark sections**: Charcoal or full-bleed photography with a dark overlay, white light-
   weight heading text, Enflite Red reserved for the one number/word that should pop.
 - **Dividers**: thin, Divider Gray, never colored, never doubling as a card border.
