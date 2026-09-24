@@ -16,7 +16,7 @@
          <Height>105.4</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <Width>140</Width>
+         <Width>160</Width>
          <PaneZeroSize>40.25</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
@@ -281,7 +281,7 @@
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>eCMRs — Change Management Request</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -291,7 +291,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>eCMRs — Change Management Request</EffectiveCaption>
             </Component>
             <Component Name="hdr_CMR_DETAILS">
@@ -302,7 +302,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>CMR DETAILS</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -312,7 +312,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>CMR DETAILS</EffectiveCaption>
             </Component>
             <Component Name="l_cmr_num">
@@ -362,10 +362,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>4.950</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Status:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -384,10 +384,10 @@
                <Type>27</Type>
                <TabOrder>2</TabOrder>
                <TopPos>4.800</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -573,7 +573,7 @@
                <Type>8</Type>
                <TabOrder>7</TabOrder>
                <TopPos>11.800</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
                <Width>15</Width>
@@ -587,7 +587,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )</Post301Format>
             </Component>
             <Component Name="l_assigned_buyer">
                <DeviceID>-1</DeviceID>
@@ -680,10 +680,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>15.450</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>PO Line:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -702,10 +702,10 @@
                <Type>27</Type>
                <TabOrder>10</TabOrder>
                <TopPos>15.300</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -765,10 +765,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>17.200</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>POC:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -787,10 +787,10 @@
                <Type>1</Type>
                <TabOrder>12</TabOrder>
                <TopPos>17.050</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -849,10 +849,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>18.950</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Initial Change:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -871,10 +871,10 @@
                <Type>27</Type>
                <TabOrder>14</TabOrder>
                <TopPos>18.800</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -916,7 +916,7 @@
                <LeftPos>14.500</LeftPos>
                <Height>4.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>98</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1062,10 +1062,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>30.000</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Latest Revision:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1084,10 +1084,10 @@
                <Type>1</Type>
                <TabOrder>19</TabOrder>
                <TopPos>29.850</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1149,10 +1149,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>31.750</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Qty:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1171,10 +1171,10 @@
                <Type>1</Type>
                <TabOrder>21</TabOrder>
                <TopPos>31.600</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1278,10 +1278,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>35.250</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Job Num:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1300,10 +1300,10 @@
                <Type>27</Type>
                <TabOrder>24</TabOrder>
                <TopPos>35.100</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1363,10 +1363,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>37.000</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Internal Review Date:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1385,10 +1385,10 @@
                <Type>26</Type>
                <TabOrder>26</TabOrder>
                <TopPos>36.850</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1408,7 +1408,7 @@
                <LeftPos>2</LeftPos>
                <Height>1.2</Height>
                <ListHeight>0</ListHeight>
-               <Width>60</Width>
+               <Width>70</Width>
                <Caption>Change Request Fields</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1418,7 +1418,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(207,12,44) JUSTIFY(L)</Post301Format>
+               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(107,63,160) JUSTIFY(L)</Post301Format>
                <EffectiveCaption>Change Request Fields</EffectiveCaption>
             </Component>
             <Component Name="l_dept">
@@ -1440,7 +1440,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Dept:</EffectiveCaption>
             </Component>
             <Component Name="c_dept">
@@ -1464,17 +1464,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_wc">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>40.350</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Work Center:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1485,7 +1485,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Work Center:</EffectiveCaption>
             </Component>
             <Component Name="c_wc">
@@ -1493,10 +1493,10 @@
                <Type>27</Type>
                <TabOrder>28</TabOrder>
                <TopPos>40.200</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1509,7 +1509,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_dept_description">
                <DeviceID>-1</DeviceID>
@@ -1530,7 +1530,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Dept Description:</EffectiveCaption>
             </Component>
             <Component Name="c_dept_description">
@@ -1551,17 +1551,17 @@
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_wc_description">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>42.100</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>WC Description:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1572,7 +1572,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>WC Description:</EffectiveCaption>
             </Component>
             <Component Name="c_wc_description">
@@ -1580,10 +1580,10 @@
                <Type>1</Type>
                <TabOrder>30</TabOrder>
                <TopPos>41.950</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1593,7 +1593,7 @@
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_due_date">
                <DeviceID>-1</DeviceID>
@@ -1614,7 +1614,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Due Date:</EffectiveCaption>
             </Component>
             <Component Name="c_due_date">
@@ -1635,17 +1635,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_reported_by">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>43.850</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Reported By:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1656,7 +1656,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Reported By:</EffectiveCaption>
             </Component>
             <Component Name="c_reported_by">
@@ -1664,10 +1664,10 @@
                <Type>1</Type>
                <TabOrder>32</TabOrder>
                <TopPos>43.700</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1677,7 +1677,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_costing">
                <DeviceID>-1</DeviceID>
@@ -1698,17 +1698,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_documentation">
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>34</TabOrder>
                <TopPos>45.450</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>61</Width>
                <Caption>Req: Documentation</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1719,7 +1719,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_tool_machine">
                <DeviceID>-1</DeviceID>
@@ -1740,17 +1740,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_process">
                <DeviceID>-1</DeviceID>
                <Type>5</Type>
                <TabOrder>36</TabOrder>
                <TopPos>47.200</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>61</Width>
                <Caption>Req: Process</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1761,7 +1761,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_material">
                <DeviceID>-1</DeviceID>
@@ -1782,7 +1782,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_general_note">
                <DeviceID>-1</DeviceID>
@@ -1803,7 +1803,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>General Note:</EffectiveCaption>
             </Component>
             <Component Name="c_general_note">
@@ -1814,7 +1814,7 @@
                <LeftPos>14.500</LeftPos>
                <Height>4.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>98</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1824,7 +1824,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="grp_Additional_Fields">
                <DeviceID>-1</DeviceID>
@@ -1834,7 +1834,7 @@
                <LeftPos>2</LeftPos>
                <Height>1.2</Height>
                <ListHeight>0</ListHeight>
-               <Width>60</Width>
+               <Width>70</Width>
                <Caption>Additional Fields</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1844,7 +1844,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(207,12,44) JUSTIFY(L)</Post301Format>
+               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(107,63,160) JUSTIFY(L)</Post301Format>
                <EffectiveCaption>Additional Fields</EffectiveCaption>
             </Component>
             <Component Name="l_serial_num">
@@ -1866,7 +1866,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Serial #:</EffectiveCaption>
             </Component>
             <Component Name="c_serial_num">
@@ -1887,17 +1887,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_lot_num">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>58.250</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>LOT #:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1908,7 +1908,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>LOT #:</EffectiveCaption>
             </Component>
             <Component Name="c_lot_num">
@@ -1916,10 +1916,10 @@
                <Type>1</Type>
                <TabOrder>40</TabOrder>
                <TopPos>58.100</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1929,7 +1929,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_top_level_pn">
                <DeviceID>-1</DeviceID>
@@ -1950,7 +1950,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Top Level PN:</EffectiveCaption>
             </Component>
             <Component Name="c_top_level_pn">
@@ -1971,17 +1971,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_sub_assembly">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>60.000</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Sub Assembly:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -1992,7 +1992,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Sub Assembly:</EffectiveCaption>
             </Component>
             <Component Name="c_sub_assembly">
@@ -2000,10 +2000,10 @@
                <Type>1</Type>
                <TabOrder>42</TabOrder>
                <TopPos>59.850</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2013,7 +2013,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="hdr_QUALITY">
                <DeviceID>-1</DeviceID>
@@ -2023,7 +2023,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>QUALITY</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2033,7 +2033,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>QUALITY</EffectiveCaption>
             </Component>
             <Component Name="c_general_review_complete">
@@ -2062,10 +2062,10 @@
                <Type>5</Type>
                <TabOrder>44</TabOrder>
                <TopPos>63.500</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>61</Width>
                <Caption>SOX Impacted</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2104,10 +2104,10 @@
                <Type>5</Type>
                <TabOrder>46</TabOrder>
                <TopPos>65.250</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>36.5</Width>
+               <Width>61</Width>
                <Caption>Authorization For Supplier To Ship</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2139,7 +2139,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Reason Code:</EffectiveCaption>
             </Component>
             <Component Name="c_reason_code">
@@ -2161,17 +2161,17 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_cause_code">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>67.150</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Cause Code:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2182,7 +2182,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Cause Code:</EffectiveCaption>
             </Component>
             <Component Name="c_cause_code">
@@ -2190,10 +2190,10 @@
                <Type>27</Type>
                <TabOrder>48</TabOrder>
                <TopPos>67.000</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2204,7 +2204,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="l_qc_disposition">
                <DeviceID>-1</DeviceID>
@@ -2295,10 +2295,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>70.650</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Reviewer:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2317,10 +2317,10 @@
                <Type>27</Type>
                <TabOrder>51</TabOrder>
                <TopPos>70.500</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2363,7 +2363,7 @@
                <LeftPos>14.500</LeftPos>
                <Height>4.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>98</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2383,7 +2383,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>ENGINEERING</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2393,7 +2393,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>ENGINEERING</EffectiveCaption>
             </Component>
             <Component Name="l_eo_num">
@@ -2569,10 +2569,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>85.350</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Reviewer:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2591,10 +2591,10 @@
                <Type>27</Type>
                <TabOrder>57</TabOrder>
                <TopPos>85.200</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2637,7 +2637,7 @@
                <LeftPos>14.500</LeftPos>
                <Height>4.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>65</Width>
+               <Width>98</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2657,7 +2657,7 @@
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>IMPLEMENTATION</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2667,7 +2667,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>IMPLEMENTATION</EffectiveCaption>
             </Component>
             <Component Name="c_planning_complete">
@@ -2678,7 +2678,7 @@
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>12</Width>
+               <Width>27.5</Width>
                <Caption>Planning</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2696,10 +2696,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>94.800</TopPos>
-               <LeftPos>15.000</LeftPos>
+               <LeftPos>31.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>4.0</Width>
+               <Width>3.5</Width>
                <Caption>ID:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2718,10 +2718,10 @@
                <Type>1</Type>
                <TabOrder>60</TabOrder>
                <TopPos>94.650</TopPos>
-               <LeftPos>19.500</LeftPos>
+               <LeftPos>35.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>8</Width>
+               <Width>9</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2738,10 +2738,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>94.800</TopPos>
-               <LeftPos>29.000</LeftPos>
+               <LeftPos>48.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>8.0</Width>
+               <Width>7.5</Width>
                <Caption>Reviewer:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2760,10 +2760,10 @@
                <Type>27</Type>
                <TabOrder>61</TabOrder>
                <TopPos>94.650</TopPos>
-               <LeftPos>37.500</LeftPos>
+               <LeftPos>56.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>15</Width>
+               <Width>30</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2784,7 +2784,7 @@
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>12</Width>
+               <Width>27.5</Width>
                <Caption>Purchasing</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2802,10 +2802,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>96.550</TopPos>
-               <LeftPos>15.000</LeftPos>
+               <LeftPos>31.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>4.0</Width>
+               <Width>3.5</Width>
                <Caption>ID:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2824,10 +2824,10 @@
                <Type>1</Type>
                <TabOrder>63</TabOrder>
                <TopPos>96.400</TopPos>
-               <LeftPos>19.500</LeftPos>
+               <LeftPos>35.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>8</Width>
+               <Width>9</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2844,10 +2844,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>96.550</TopPos>
-               <LeftPos>29.000</LeftPos>
+               <LeftPos>48.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>8.0</Width>
+               <Width>7.5</Width>
                <Caption>Reviewer:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2866,10 +2866,10 @@
                <Type>27</Type>
                <TabOrder>64</TabOrder>
                <TopPos>96.400</TopPos>
-               <LeftPos>37.500</LeftPos>
+               <LeftPos>56.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>15</Width>
+               <Width>30</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2890,7 +2890,7 @@
                <LeftPos>2.000</LeftPos>
                <Height>1.3</Height>
                <ListHeight>0</ListHeight>
-               <Width>12</Width>
+               <Width>27.5</Width>
                <Caption>CM</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2908,10 +2908,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>98.300</TopPos>
-               <LeftPos>15.000</LeftPos>
+               <LeftPos>31.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>4.0</Width>
+               <Width>3.5</Width>
                <Caption>ID:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2930,10 +2930,10 @@
                <Type>1</Type>
                <TabOrder>66</TabOrder>
                <TopPos>98.150</TopPos>
-               <LeftPos>19.500</LeftPos>
+               <LeftPos>35.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>8</Width>
+               <Width>9</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2950,10 +2950,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>98.300</TopPos>
-               <LeftPos>29.000</LeftPos>
+               <LeftPos>48.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>8.0</Width>
+               <Width>7.5</Width>
                <Caption>Reviewer:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -2972,10 +2972,10 @@
                <Type>27</Type>
                <TabOrder>67</TabOrder>
                <TopPos>98.150</TopPos>
-               <LeftPos>37.500</LeftPos>
+               <LeftPos>56.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>15</Width>
+               <Width>30</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -3035,10 +3035,10 @@
                <Type>0</Type>
                <TabOrder>0</TabOrder>
                <TopPos>100.050</TopPos>
-               <LeftPos>43.000</LeftPos>
+               <LeftPos>53.000</LeftPos>
                <Height>1</Height>
                <ListHeight>0</ListHeight>
-               <Width>12.0</Width>
+               <Width>11.5</Width>
                <Caption>Closed By:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -3057,10 +3057,10 @@
                <Type>1</Type>
                <TabOrder>69</TabOrder>
                <TopPos>99.900</TopPos>
-               <LeftPos>55.500</LeftPos>
+               <LeftPos>65.000</LeftPos>
                <Height>1.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>24</Width>
+               <Width>49</Width>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>

@@ -19,11 +19,16 @@ TYPE_MULTILINE = 18
 TYPE_DATE = 26
 TYPE_COMBO = 27
 
+# Widths/positions below are measured directly from the real legacy form's own export
+# (cmr-project's exports/QC_CMRs_Original.XML) - Form Width=160, banner Width=113.25,
+# right-column controls (Assigned/Assigned Buyer/POC) Width=49 starting around LeftPos 65 -
+# not invented numbers. Matching them is what makes this form as wide as the real one instead
+# of a cramped recreation that forces more scrolling than the original ever needed.
 LABEL_X_A, CTRL_X_A, CTRL_W = 2, 14.5, 24
-LABEL_X_B, CTRL_X_B = 43, 55.5
+LABEL_X_B, CTRL_X_B, CTRL_W_B = 53, 65, 49
 ROW_H = 1.75
 SECTION_H = 1.6
-SPAN_X, SPAN_W = 14.5, 65
+SPAN_X, SPAN_W = 14.5, 98
 
 SL_ITEMS = "STDOLE SLItems( PROPERTIES(Item, Description) )"
 SL_DEPTS = "STDOLE SLDepts( PROPERTIES(Dept, Description) )"
@@ -89,10 +94,12 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
 
-# Same BACKCOLOR(...) syntax already used by the section header/title bands below, just a
-# light purple instead of solid black - marks the two brand-new BRD fields (Top Level PN,
-# Sub Assembly) so they visually stand out as additions on the live form.
-HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )"
+# Matches the design mockup's .new-box class exactly (background: #ede0ff -> RGB 237,224,255).
+# Marks every brand-new/carried-over field (Change Request Fields, Additional Fields, Reason
+# Code/Cause Code) so they visually stand out as additions on the live form. SyteLine's
+# Post301Format has no border property, so the mockup's #9b6fd1 border can't be replicated -
+# background match is the closest available approximation.
+HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )"
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
     return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight)
@@ -360,12 +367,17 @@ def emit_span(label, column, ctype, y, highlight=False):
     return out
 
 def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
-    out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, 2, 2, y, ctrl_w=12)
-    out += emit_field("ID:", id_col, TYPE_EDIT, None, False, 15, 19.5, y, ctrl_w=8)
-    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 29, 37.5, y, ctrl_w=15)
+    # Widened to use the same overall span as the rest of the now-160-wide form (was cramped
+    # into the old 2-37.5 range) - checkbox on the far left, then ID and Reviewer spread out
+    # across the extra width instead of bunching in the first third of the row.
+    out = emit_field(checkbox_caption, checkbox_col, TYPE_CHECKBOX, None, False, LABEL_X_A, CTRL_X_A, y, ctrl_w=15)
+    out += emit_field("ID:", id_col, TYPE_EDIT, None, False, 31, 35, y, ctrl_w=9)
+    out += emit_field("Reviewer:", combo_col, TYPE_COMBO, SL_EMPLOYEES_ASSIGNED, False, 48, 56, y, ctrl_w=30)
     return out
 
 def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
+    # Matches the design mockup's Notify button exactly (background: #2f6fed -> RGB
+    # 47,111,237, white text) - previously left uncolored (plain system-gray button).
     return f"""            <Component Name="{name}">
                <DeviceID>-1</DeviceID>
                <Type>8</Type>
@@ -385,7 +397,7 @@ def emit_button(name, caption, event_to_generate, x, y, w=15, h=1.4):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )</Post301Format>
             </Component>
 """
 
@@ -398,7 +410,7 @@ def emit_header(text, y):
                <LeftPos>1</LeftPos>
                <Height>1.5</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -408,17 +420,17 @@ def emit_header(text, y):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(14,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>{esc(text)}</EffectiveCaption>
             </Component>
 """
 
 def emit_grouplabel(text, y):
-    # A plain bold red text label (no colored banner) - marks a sub-group within the
+    # A plain bold purple text label (no colored banner) - marks a sub-group within the
     # continuous unlabeled area (e.g. "Change Request Fields", "Additional Fields"),
-    # matching the design mockup's small bold-red ".grouplabel" style. Distinct from
-    # emit_header's full-width black banner, which is reserved for the three section
-    # banners (QUALITY/ENGINEERING/IMPLEMENTATION) that were real on the original form.
+    # matching the design mockup's .grouplabel color exactly (#6b3fa0 -> RGB 107,63,160).
+    # Distinct from emit_header's full-width blue banner, which is reserved for the three
+    # section banners (QUALITY/ENGINEERING/IMPLEMENTATION) that were real on the original form.
     return f"""            <Component Name="grp_{text.replace(' ', '_').replace('/', '_')}">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
@@ -427,7 +439,7 @@ def emit_grouplabel(text, y):
                <LeftPos>{LABEL_X_A}</LeftPos>
                <Height>1.2</Height>
                <ListHeight>0</ListHeight>
-               <Width>60</Width>
+               <Width>70</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -437,7 +449,7 @@ def emit_grouplabel(text, y):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(207,12,44) JUSTIFY(L)</Post301Format>
+               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(107,63,160) JUSTIFY(L)</Post301Format>
                <EffectiveCaption>{esc(text)}</EffectiveCaption>
             </Component>
 """
@@ -451,7 +463,7 @@ def emit_title(text, y):
                <LeftPos>1</LeftPos>
                <Height>2.4</Height>
                <ListHeight>0</ListHeight>
-               <Width>96</Width>
+               <Width>113.25</Width>
                <Caption>{esc(text)}</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
@@ -461,7 +473,7 @@ def emit_title(text, y):
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 0,0,0]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
+               <Post301Format>FONT(20,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 41,163,224]; ) JUSTIFY(C) THEMECLASS(G2Header)</Post301Format>
                <EffectiveCaption>{esc(text)}</EffectiveCaption>
             </Component>
 """
@@ -544,7 +556,7 @@ def build_components():
                 row_h = max(row_h, 1.4)
             if b:
                 _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight = b
-                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
+                out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 row_h = max(row_h, 1.4)
             y += ROW_H
         elif kind == SPAN:
@@ -698,7 +710,7 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <Height>{TOTAL_HEIGHT + 2:.1f}</Height>
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
-         <Width>140</Width>
+         <Width>160</Width>
          <PaneZeroSize>{PANE_ZERO_SIZE:.2f}</PaneZeroSize>
          <HelpContextID>-1</HelpContextID>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
