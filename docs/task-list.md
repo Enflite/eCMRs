@@ -12,35 +12,53 @@ and a fresh direct comparison against the real legacy form's own XML
 (`Enflite/cmr-project`'s `exports/QC_CMRs_Original.XML`) — that comparison surfaced several
 corrections to earlier assumptions, flagged inline below with **⚠ per the original form**.
 
+## Form changes not reaching the live form (check this first)
+
+- [ ] **Inferred, not confirmed**: every form-XML change committed after `ec0106a` (the
+  2026-09-24 16:26 adoption of the hand-edited Application Studio export) appears to be missing
+  live, while everything confirmed working is either older than that or lives on the IDO, not
+  the form. From the last screenshots:
+  - Not applied: General Review Complete removed (`785587e`) - still visible. Type flips
+    (`15c423b`, `daca505`) and the `_v2` renames (`55c0f7c`) - unchanged. Dept's
+    `DefaultFrom` re-added (`daca505`) - Dept now silently does nothing, where the same
+    `DefaultFrom` crashed with OfcAddr4 before `ec0106a` removed it.
+  - Applied: Job Num's list source (`e8233df`, before `ec0106a`), Cause Code's
+    `PropertyClassName` (`c5fb122`, before), and the Status/Priority/Initial Change/QC
+    Disposition Inline Lists (IDO-level, not form XML).
+
+  The likeliest cause is a second, more specific copy of the form shadowing the imported one:
+  the hand edits that produced `edit1_SITE`/`l_item1_SITE` were made in Application Studio's
+  Form Designer, and a copy saved at User scope (`Scope="3"`, `ScopeName="jsmith1@enflite.com"`,
+  like the `ue_QC_CMR_Consolidated` exports in `cmr-project`) wins over the Site-scope form
+  this XML imports into (`Scope="1"`). **Check**: in Application Studio / Form Sync, look for an
+  `eCMRs` form at User (or any scope other than the one being imported); or open eCMRs as a
+  different user and see whether General Review Complete is gone. If a shadowing copy exists,
+  deleting it should make every change since `ec0106a` - including the `_v2` Type fixes -
+  show up at once, and the manual Form Designer Type fixes below may not be needed.
+
 ## Top row
 
-- [ ] **Status** — Combo, but its fixed value list isn't wired yet: needs `Inline List` set
-  directly on the property in Application Studio (`ENTRIES(CM,Complete,Data Input,Eng Review,
-  Planning,Purchasing,QC Approval)`), then the IDO checked in. The real original used a
-  different mechanism entirely (`DefaultFrom="QCStatusListings()"` + `PropertyClassName=
-  "QCOpenClosedStatus"`, a real system class/function) — not applicable here since our value
-  list is a custom 7-state workflow, not the original's open/closed concept. Our own Inline
-  List approach is already confirmed live on this exact property, so no need to chase the
-  original's mechanism.
-- [ ] **AssignedEmpNum** (`assigned_empnum`) — Combo, renamed `c_assigned_empnum_v2` this
-  session to force Form Sync to apply its Combo `Type` (Rule #1C) — unconfirmed live. Also
-  carries an untested `DefaultFrom="EmpNum(AssignedUsername)"` auto-fill experiment. **⚠ per the
-  original form**: the real original never had this mechanism — its equivalent field's
-  companion-name population used `SelectionEvent` (`UpdateAssignedToNameDisp`), confirmed dead
-  in this tenant. So this `DefaultFrom` experiment has no real working precedent anywhere, ours
-  or the original's — it's a genuine unknown, not "same pattern as something proven." Needs a
-  live re-import to confirm both: renders as an actual dropdown, and whether the auto-fill does
-  anything at all.
-- [ ] **AssignedUsername** (`assigned_username`) — Renamed `c_assigned_username_v2` (Rule #1C,
-  same as above). Combo binds here directly per the Username-first pattern; needs its `Read
-  Only` flag confirmed cleared in Application Studio (Rule #1B) — `docs/deploy-checklist.md`'s
-  checkbox for this has never been ticked off, so confirm live rather than assume it's done.
-  **⚠ per the original form**: its equivalent (`rs_cmrUf_ENF_CMR_AssignedUser`) used
-  `DefaultFrom="UserName()"` — a real, simpler mechanism meaning "default to whoever is
-  currently logged in," not a lookup off the selected EmpNum. That's a different semantic (who
-  created the record, not who it's assigned to) but it's an actual confirmed-real mechanism in
-  the original, worth trying here as an alternative if the EmpNum-sync experiment above doesn't
-  pan out — just confirm it's the behavior actually wanted before using it.
+- [x] **Status** — **Confirmed live**: latest screenshot shows the combo with `Eng Review`
+  selected, a valid value from the intended 7-state list — the `Inline List` is wired and
+  working. The real original used a different mechanism entirely (`DefaultFrom=
+  "QCStatusListings()"` + `PropertyClassName="QCOpenClosedStatus"`) but that's a different,
+  simpler open/closed concept, not applicable to our custom workflow list.
+- [ ] **AssignedEmpNum** (`assigned_empnum`) — **Confirmed broken live, post-`_v2`-rename**:
+  screenshot after the Rule #1C rename fix (commit `55c0f7c`) shows Assigned still rendering as
+  `[textbox][dropdown]` — the reverse of intended (`[EmpNum combo][Username textbox]`). The
+  rename-to-force-fresh-creation workaround did not fix this after all; see
+  `docs/troubleshooting.md` Rule #1C for the full write-up. **Only remaining fix is manual**:
+  delete `c_assigned_empnum_v2` in Application Studio's Form Designer and let the next
+  re-import create it fresh as a Combo, or hand-retype it there directly. The
+  `DefaultFrom="EmpNum(AssignedUsername)"` auto-fill still can't be evaluated until the Type
+  itself is fixed.
+- [ ] **AssignedUsername** (`assigned_username`) — Same confirmed-broken pairing as above
+  (`c_assigned_username_v2` shows as the dropdown instead of the plain textbox it should be).
+  Needs the same manual Application Studio fix. Its `Read Only` flag status is still unverified
+  independently of this Type bug — check both while in there. **⚠ per the original form**: its
+  equivalent (`rs_cmrUf_ENF_CMR_AssignedUser`) used `DefaultFrom="UserName()"` (defaults to
+  whoever is currently logged in) — a real mechanism, different semantics than syncing off the
+  selected EmpNum, worth considering once the Type is fixed and if that's the behavior wanted.
 
 ## CMR Details
 
@@ -59,9 +77,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [x] **AssignedBuyer** (`assigned_buyer`) — Combo, `SLEmployees`. No open issues flagged.
 - [x] **Qty**, **Poc** — Plain fields, nothing flagged.
 - [x] **RfqNum** — Plain field, nothing flagged.
-- [ ] **JobNum** (`job_num`) — Fixed (real `SLMatltrans`/`RefNum`, `FILTER` dropped, same
-  zero-padding bug confirmed present in the original's own Job Num combo) but **not yet
-  confirmed live** — verify a zero-padded Job Number (e.g. `DK00084716`) actually resolves.
+- [x] **JobNum** (`job_num`) — Fixed (real `SLMatltrans`/`RefNum`, `FILTER` dropped, same
+  zero-padding bug confirmed present in the original's own Job Num combo) and **now confirmed
+  live**: latest screenshot shows a real resolved value (`2026_MISC`) selected in the combo.
 - [x] **Revision**, **LatestRevision** — Plain fields, nothing flagged.
 - [x] **RequestedAction** — Plain multiline, nothing flagged.
 - [x] **NextAssyItem** (`next_assy_item`) — Combo, `SLJobmatls`/`JobItem`, cascades off Item via
@@ -75,25 +93,27 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   `PurchaseOrders` form). No `DefaultFrom` set on it, deliberately — see VendorName below.
 - [ ] **VendorName** (`vendor_name`) — Added as a plain manual-entry field beside Vendor, per
   direct request (`c_vendor_name`). Same Read Only clearance and live check as NextAssyDescription.
-- [ ] **Priority** (`priority`) — Combo, fixed value list not wired: needs `Inline List`
-  `ENTRIES(High,Medium,Low)` set directly in Application Studio + Check In. (The original had
-  no combo for Priority at all — two plain typed fields, `RsCrcvrPriority`/`RsPriorityPriority`
-  — so there's no legacy precedent to compare against here; our Inline List plan stands on its
-  own, same mechanism already confirmed live on Status.)
+- [x] **Priority** (`priority`) — **Confirmed live**: latest screenshot shows the combo with
+  `Low` selected, a valid value from the intended list — the `Inline List`
+  `ENTRIES(High,Medium,Low)` is wired and working. (The original had no combo for Priority at
+  all — two plain typed fields — so there was no legacy precedent to compare against; this was
+  built and confirmed on our own.)
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — Description now auto-fills on selection: `SelectionEvent="DeptChanged"`,
-  a script that looks the code up in `SLDepts` and writes `DeptDescription`. The crashing
-  `DefaultFrom="Dept(DeptDescription)"` and `PropertyClassName="Dept"` are removed. Same
-  SelectionEvent-to-script pattern as the legacy Create Change Request form's own Initial Change
-  combo (`ChangeEdit` → `SetChangeAll`); **not the ResponseType 49 lookup that jams the form**
-  (troubleshooting Rule #1A). Needs a live check: pick a Dept and confirm the description fills
-  and the rest of the form stays editable. If the old OfcAddr4 crash still shows, the removed
-  `DefaultFrom`/Property Class didn't clear on re-import (same class of bug as Rule #1C) - clear
-  them by hand in the Form Designer.
+- [ ] **Dept** (`dept`) — Auto-fill kept, per direct request ("after the id is selected the
+  description should be auto filled"), but no longer via `DefaultFrom`:
+  `SelectionEvent="DeptChanged"` runs a script that looks the code up in `SLDepts` and writes
+  `DeptDescription`. `DefaultFrom="Dept(DeptDescription)"`/`PropertyClassName="Dept"` are
+  removed. Same SelectionEvent-to-script pattern as the legacy Create Change Request form's own
+  Initial Change combo (`ChangeEdit` → `SetChangeAll`); **not the ResponseType 49 lookup that
+  jams the form** (troubleshooting Rule #1A). The last live screenshot (Dept `150`, blank
+  description, no crash) predates this. Live check after re-import: pick a Dept, confirm the
+  description fills and the rest of the form stays editable. **See "Form changes not reaching
+  the live form" below first** - the silent no-op (instead of the earlier OfcAddr4 crash) is
+  itself evidence the re-added `DefaultFrom` never reached the live form.
 - [ ] **Wc** (`wc`) — Same as Dept: `SelectionEvent="WcChanged"` fills `WcDescription` from
-  `SLWcs`. Same live check.
+  `SLWcs`. Same live check (last screenshot: `EMI`, blank description - predates this).
 - [ ] **DeptDescription**, **WcDescription** — Read-only on the form, filled by the scripts above.
   Their properties' Read Only flag has to be cleared in Application Studio so the script can
   write them (`docs/deploy-checklist.md`).
@@ -101,13 +121,16 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   from `SLItems`; `DefaultFrom`/`PropertyClassName` removed. Same live check.
 - [ ] **ItemDescription** (`item_description`) — On the form as `edit1_SITE` (hand-added in
   Application Studio; the generator now emits the same name). Filled by ItemChanged; needs its
-  property's Read Only flag cleared like the other descriptions.
+  property's Read Only flag cleared like the other descriptions. Last screenshot showed it
+  mirroring Item's own value (`00000-42560`) - the script writes `SLItems.Description`, so after
+  re-import it should show real text; if it still mirrors Item, the live component isn't the
+  one in this XML (see "Form changes not reaching the live form" below).
 - [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
-- [ ] **InitialChange** (`initial_change`) — Combo, fixed value list not wired (`Inline List`
-  `ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))`
-  + Check In). Now drives the Requirements cascade: `SelectionEvent="InitialChangeChanged"`,
-  a script that sets the 5 Req checkboxes from `docs/field-mapping.md`'s table (and clears the
-  others). Needs a live check once the Inline List is in.
+- [ ] **InitialChange** (`initial_change`) — **Inline List confirmed live** (`Other` selected).
+  Now drives the Requirements cascade: `SelectionEvent="InitialChangeChanged"`, a script that
+  sets the 5 Req checkboxes from `docs/field-mapping.md`'s table (and clears the others). Note
+  the last screenshot (`Other`, all 5 unchecked) is exactly what the table says for `Other`, so
+  it proves nothing either way - test with e.g. `Machine`.
 - [ ] **ReqCosting**, **ReqDocumentation**, **ReqToolMachine**, **ReqProcess**, **ReqMaterial**
   — Set by the InitialChangeChanged script, still clickable afterwards. Note: per the mapping table,
   no Initial Change value ticks **Material**, not even "Material" itself - confirm that's intended.
@@ -115,15 +138,15 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Additional Fields
 
-- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — Combos renamed `c_serial_num_v2`/
-  `c_lot_num_v2` this session (Rule #1C Type-fix experiment, unconfirmed live). List sources use
-  the now-confirmed-correct `SLSerials`/`SLLots` IDOs, cascading off Item via `'P(Item)'`. The
-  underlying `ue_ecmrs.SerialNum`/`LotNum` properties are confirmed to exist live (GitHub issue
-  #1, closed). Brand-new fields, no legacy precedent to compare against. Still open: confirm on
-  re-import that (a) the components now render as combos under the new name, not stuck as the
-  old broken type, and (b) the `SerialNum`/`LotNum` property names *inside* `SLSerials`/`SLLots`
-  are correct — unconfirmed assumption, though a wrong name here should throw a clear error
-  rather than fail silently.
+- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — **Confirmed broken live, post-
+  `_v2`-rename**: latest screenshot shows both as plain boxes with no dropdown arrow — still
+  not rendering as combos despite the rename (same failure as the Reviewer/Assigned fields, see
+  `docs/troubleshooting.md` Rule #1C). List sources use the confirmed-correct `SLSerials`/
+  `SLLots` IDOs, cascading off Item via `'P(Item)'`, and the underlying `ue_ecmrs.SerialNum`/
+  `LotNum` properties are confirmed to exist live (GitHub issue #1, closed) — so once the Type
+  is fixed manually in Application Studio, the combo itself should work. Still can't test
+  whether the `SerialNum`/`LotNum` property names *inside* `SLSerials`/`SLLots` are correct
+  until the Type is fixed.
 - [x] **TopLevelPn** — Plain field, nothing flagged. No legacy equivalent (brand-new per BRD).
 - [ ] **SubAssembly** (`sub_assembly`) — Plain field, on the form. No legacy equivalent either.
   Open conceptual question, not a technical bug: still unconfirmed whether this is actually the
@@ -134,24 +157,27 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 - [x] **SoxImpacted**, **HoldOnPo**, **AuthSupplierShip** — Plain checkboxes, matching the
   original's own plain `ListYesNo` checkboxes for these. Nothing flagged.
-- [ ] **ReasonCode**, **CauseCode** (`reason_code`, `cause_code`) — Reference the real,
-  existing system classes `QCReasonCode`/`QCCauseCode` directly via a component-level
-  `PropertyClassName` (per direct request, sharing QC_MRRs' list for now — a known, deliberate
-  trade-off, not a bug; QC_CMRs itself never had these fields at all, so there's no comparison
-  to make against the original form here). **Unconfirmed**: whether a component's
-  `PropertyClassName` can validly point at a class architecturally unrelated to its own bound
-  property — verify live after import.
-- [ ] **QcDisposition** — Fixed value list not wired: `Inline List`
-  `ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)` + Check In. (The original used
-  `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead — a different, more complex
-  two-step mechanism; our simpler Inline List approach is already confirmed live elsewhere on
-  this form, so there's no reason to chase the original's version.)
-- [ ] **QcReviewerEmpNum**, **QcReviewerUsername** — Renamed `_v2` this session (Rule #1C,
-  unconfirmed live, same as Assigned above). `DefaultFrom="EmpNum(QcReviewerUsername)"` on the
-  ID field is an explicit experiment with **no working precedent in the original** (its
-  equivalent used `SelectionEvent`, confirmed dead — see the Assigned entry above for the same
-  correction). Confirm Read Only is actually cleared on `QcReviewerUsername` too (Rule #1B,
-  same ambiguity as AssignedUsername above).
+- [ ] **ReasonCode** (`reason_code`) — References the real system class `QCReasonCode` via a
+  component-level `PropertyClassName` (per direct request, sharing QC_MRRs' list for now — a
+  known, deliberate trade-off, not a bug). Latest screenshot shows the combo present but with
+  no value selected, so the cross-class `PropertyClassName` reference is still unconfirmed for
+  this specific field (CauseCode below did get confirmed) — pick a value live and check it
+  resolves without error. Cosmetic note: the combo's own label rendered as "Reason", not "Reason
+  Code:" as coded — likely the system class's own display label overriding our caption; not a
+  functional issue.
+- [x] **CauseCode** (`cause_code`) — Same mechanism as ReasonCode (`QCCauseCode` class).
+  **Confirmed live**: screenshot shows a real value (`100`) selected — the cross-class
+  `PropertyClassName` reference works.
+- [x] **QcDisposition** — **Confirmed live**: latest screenshot shows `Hold` selected, a valid
+  value from the intended list — the `Inline List` is wired and working. (The original used
+  `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead, a different mechanism; ours
+  is confirmed working on its own terms.)
+- [ ] **QcReviewerEmpNum**, **QcReviewerUsername** — **Confirmed broken live, post-`_v2`-
+  rename**: screenshot shows "Reviewer ID: [textbox], Reviewer: [dropdown]" — same reversed
+  arrangement as Assigned above, meaning the rename workaround failed here too. See
+  `docs/troubleshooting.md` Rule #1C. **Only remaining fix is manual** — delete/retype
+  `c_qc_reviewer_empnum_v2`/`c_qc_reviewer_username_v2` directly in Application Studio's Form
+  Designer. Confirm Read Only on `QcReviewerUsername` while in there (Rule #1B).
 - [ ] **InternalReviewDate** (`internal_review_date`) — Added to Quality's first row, per direct
   request (`c_internal_review_date`). Confirm live after re-import.
 - [x] **QcRcaNotes** — Plain multiline, nothing flagged.
@@ -163,29 +189,37 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   `ENTRIES(NFF,NRS,Other,Rework,Scrap)` + Check In. Same original-vs-ours mechanism difference
   as QcDisposition above (original used `UserDefinedType(Cmr_EngDispositionStatus)`) — no
   action needed beyond our own already-confirmed Inline List approach.
-- [ ] **EngReviewerEmpNum**, **EngReviewerUsername** — Same open items as QcReviewerEmpNum/
-  QcReviewerUsername above (rename unconfirmed, DefaultFrom experiment has no real precedent,
-  Read Only clearance unconfirmed).
+- [ ] **EngReviewerEmpNum**, **EngReviewerUsername** — **Confirmed broken live**, same as
+  QcReviewerEmpNum/QcReviewerUsername above — screenshot shows "Reviewer ID: [textbox],
+  Reviewer: [dropdown]" reversed. Same manual-fix-only conclusion, same Read Only check needed.
 - [x] **EngRcaNotes** — Plain multiline, nothing flagged.
 
 ## Implementation
 
-- [ ] **PlanningReviewerEmpNum**, **PlanningReviewerName** — Same open items as the Quality/
-  Engineering reviewer pairs. **⚠ per the original form**: worth noting the original's Planning
-  reviewer combo used `SLEmployees(PROPERTIES(EmpNum,Name))` while Purchasing/CM used a
-  completely different table, `ue_employee_msts(PROPERTIES(emp_num,name))` — a legacy
-  inconsistency we deliberately didn't carry forward (we use `SLEmployees` uniformly). Not an
-  action item, just context for why our version doesn't match the original 1:1 here.
-- [x] **PlanningComplete** — Plain checkbox, not gated by anything, nothing flagged.
-- [ ] **PurchasingReviewerEmpNum**, **PurchasingReviewerName** — Same open items as above.
-- [x] **PurchasingComplete** — Plain checkbox, nothing flagged.
-- [ ] **CmReviewerEmpNum**, **CmReviewerName** — Same open items as above.
-- [x] **CmComplete** — Plain checkbox, nothing flagged.
+- [ ] **PlanningReviewerEmpNum**, **PlanningReviewerName** — **Confirmed broken live**: latest
+  screenshot shows all three Implementation rows (Planning/Purchasing/CM) as "ID: [textbox],
+  Reviewer: [dropdown]", the same reversed arrangement as Quality/Engineering. Same
+  manual-fix-only conclusion (delete/retype `c_planning_reviewer_empnum_v2`/
+  `c_planning_reviewer_name_v2` in Application Studio). **⚠ per the original form**: worth
+  noting the original's Planning reviewer combo used `SLEmployees(PROPERTIES(EmpNum,Name))`
+  while Purchasing/CM used a completely different table, `ue_employee_msts(PROPERTIES(emp_num,
+  name))` — a legacy inconsistency we deliberately didn't carry forward (we use `SLEmployees`
+  uniformly). Not an action item, just context for why our version doesn't match 1:1.
+- [x] **PlanningComplete** — Plain checkbox, not gated by anything. **Confirmed live**:
+  unchecked, as expected, nothing flagged.
+- [ ] **PurchasingReviewerEmpNum**, **PurchasingReviewerName** — Same confirmed-broken pairing
+  as above, same fix.
+- [x] **PurchasingComplete** — Plain checkbox, confirmed live (unchecked, nothing flagged).
+- [ ] **CmReviewerEmpNum**, **CmReviewerName** — Same confirmed-broken pairing as above, same
+  fix.
+- [x] **CmComplete** — Plain checkbox, confirmed live (unchecked, nothing flagged).
 - [ ] **CloseDate**, **ClosedBy**, **Closed** — The `SetCloseInfo` mechanism (checkbox toggle →
   auto-sets/clears these two) was restored and moved into this section, matching the original's
-  own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly. Only
-  open item: this *specific* restored/relocated instance hasn't been explicitly re-confirmed
-  live since the move — verify toggling Closed still correctly sets/clears CloseDate/ClosedBy.
+  own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly.
+  Latest screenshot shows all three in the expected pre-check state (Close Date/Closed By
+  grayed-out and empty, Closed unchecked) — consistent, but doesn't exercise the toggle itself.
+  Still open: actually check the Closed box live and confirm CloseDate/ClosedBy populate, then
+  uncheck and confirm they clear.
 
 ## Not on the form (deliberately orphaned — tracked, not forgotten)
 
@@ -198,9 +232,15 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   deliberately orphaned until/unless the Requirements cascade (see InitialChange above) is ever
   built and needs them. Matches the original's own plain checkboxes for these — the gap is the
   missing cascade, not the fields themselves.
-- [x] **GeneralReviewComplete** — Dropped from the form per direct request (nothing ever set it,
-  matches the original's own `GeneralComplete`, which likewise had no `EventToGenerate` and was
-  `Hidden=True`). Deliberately excluded, no action needed.
+- [ ] **GeneralReviewComplete** — Was dropped from the form/schema per direct request, but
+  **the latest screenshot shows a "General Review Complete" checkbox still visible live**
+  (grayed out) in the Quality section. Needs a live check: is this a genuinely still-bound,
+  still-functioning component (meaning removing it from the XML did not actually remove it —
+  which would also explain why the `_v2` rename workaround above didn't force a fresh
+  component, since "absent from the XML" apparently doesn't reliably mean "absent live"), or
+  just a disabled leftover visual artifact that isn't really bound to anything anymore? This
+  needs resolving either way, since it affects how much to trust the rename-forces-fresh theory
+  for anything else.
 - [ ] **GeneralCloseDate**, **GeneralClosedBy** — Not placed. **⚠ per the original form**: these
   are real legacy fields (`dateCombo5`/`enhancedCombo2`, `PropertyClassName="Date"`/`"EmpNum"`),
   not invented schema cruft — so the "purpose vs. CloseDate" question is a genuine legacy

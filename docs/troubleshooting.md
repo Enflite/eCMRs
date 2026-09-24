@@ -91,18 +91,49 @@ fresh, not "updates" it), or change its Type by hand directly in the
 Form Designer. A fresh XML re-import alone is not enough, no matter how
 many times it's repeated.
 
-**XML-only alternative, untested as of this writing**: renaming a
-component (giving it a new `Name` and leaving everything else the same)
-forces Form Sync to treat it as a brand-new component rather than an
-update to an existing one, since the pre-existing "General Review
-Complete" checkbox correctly vanished live the moment it was removed from
-the XML entirely - the same "not present under this name yet" condition a
-rename produces. Applied this to all ten fields above plus
-`c_assigned_empnum`/`c_assigned_username` and `c_serial_num`/`c_lot_num`
-(fresh `_v2` suffix on each). This avoids any manual Application Studio
-step, but hasn't yet been confirmed live - if the old-named component
-still lingers on the form underneath the new one (rather than being
-cleanly replaced), that's the next failure mode to check for.
+**XML-only alternative tried, and it did not work.** Renaming a component
+(giving it a new `Name` and leaving everything else the same), on the
+theory that Form Sync would treat it as brand-new rather than an update -
+applied to all ten fields above plus `c_assigned_empnum`/
+`c_assigned_username` and `c_serial_num`/`c_lot_num` (fresh `_v2` suffix
+on each, commit `55c0f7c`). **Confirmed live after re-import: the exact
+same symptom persists under the new name** - every renamed ID/EmpNum
+field still shows as a plain textbox and every renamed Username/Reviewer/
+Name field still shows as the dropdown, the reverse of the intended Type
+for each. Screenshots of Assigned, QC/Eng Reviewer, and all three
+Implementation Reviewer rows all show the identical swapped arrangement
+after the `_v2` re-import.
+
+This also throws doubt on the premise the rename was based on: General
+Review Complete's own checkbox is **still visible on the live form**
+(grayed out) despite being fully removed from the schema/XML - so "an
+absent-by-name component correctly vanishes live" may not be as reliably
+true as it looked when this was proposed, which would explain why
+treating a renamed component as "not present under this name yet" didn't
+produce the hoped-for fresh creation either.
+
+**Conclusion: there is no known XML-only fix for this bug.** Both XML
+approaches (changing `Type` directly, and renaming to force a fresh
+component) have now been tried and confirmed to fail, live, on the same
+14 fields. The only remaining fix is manual, in Application Studio's Form
+Designer: delete each affected component and let the next re-import
+create it fresh, or change its Type by hand directly in the Designer.
+Affected components (as currently named, `_v2` suffix): `c_assigned_empnum_v2`,
+`c_assigned_username_v2`, `c_qc_reviewer_empnum_v2`, `c_qc_reviewer_username_v2`,
+`c_eng_reviewer_empnum_v2`, `c_eng_reviewer_username_v2`,
+`c_planning_reviewer_empnum_v2`, `c_planning_reviewer_name_v2`,
+`c_purchasing_reviewer_empnum_v2`, `c_purchasing_reviewer_name_v2`,
+`c_cm_reviewer_empnum_v2`, `c_cm_reviewer_name_v2`, `c_serial_num_v2`,
+`c_lot_num_v2` (the last two also still render as plain edit boxes, no
+dropdown arrow, in the same live screenshot).
+
+**Possible explanation for all of Rule #1C (inferred, unconfirmed)**: every form-XML change
+since the hand-edited export was adopted (`ec0106a`) is missing live - not just Type changes, but
+General Review Complete's removal and Dept's re-added `DefaultFrom` too. That pattern fits a
+more specific copy of the form (e.g. a User-scope copy saved from Form Designer) shadowing the
+Site-scope form Form Sync imports into, rather than Form Sync refusing Type changes. See the
+"Form changes not reaching the live form" item at the top of `docs/task-list.md` for the
+evidence and how to check.
 
 ## `EventToGenerate` custom scripts on a combo's value-change: not real here
 
