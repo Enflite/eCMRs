@@ -129,13 +129,15 @@ TOP_ROW = "top_row"    # Status / Assigned ID / Assigned / Notify - the real for
 # checkboxes carry purple TEXT as well as the purple background, not background alone.
 HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)"
 
-def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False, ctrl_w=None):
+def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False, ctrl_w=None, tall=True):
     # ctrl_w: optional per-field override of the control width the row's slot (A/A2/B) would
     # otherwise default to - added because a slot's default width is tuned for that COLUMN's
     # typical field (e.g. B defaults to 49, sized for long fields like Assigned Buyer/POC),
     # not every field that happens to land in it (e.g. Work Center is a short code, not a
     # long field, even though it shares Dept's row on the B side).
-    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w)
+    # tall: SPAN fields only - the design mockup gives General Note a shorter box than
+    # Requested Action/QC RCA Notes/Eng RCA Notes (see emit_span); ignored elsewhere.
+    return (FIELD, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, tall)
 
 LAYOUT = [
     # Everything below, up to QUALITY, sat in one continuous unlabeled area on the real
@@ -211,7 +213,7 @@ LAYOUT = [
     (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX, highlight=True), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX, highlight=True)),
     (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX, highlight=True), f("Req: Process", "req_process", TYPE_CHECKBOX, highlight=True)),
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX, highlight=True), None),
-    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True)),
+    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True, tall=False)),
 
     (GROUPLABEL, "Additional Fields"),
     (PAIR, f("Serial #:", "serial_num", TYPE_EDIT, highlight=True), f("LOT #:", "lot_num", TYPE_EDIT, highlight=True)),
@@ -414,19 +416,26 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
     out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight)
     return out
 
-def emit_span(label, column, ctype, y, highlight=False):
-    # Span labels sit alone on their own line ABOVE a full-width box, not beside it like a
-    # normal paired field's label - so right-justifying it (emit_label's default, correct for
-    # a label hugging its control to the right) instead floats the caption away from the
-    # box's left edge, inside an arbitrary-width box. Left-justified and flush with the box's
-    # own LeftPos (SPAN_X) instead, matching a plain "Label:" tag sitting directly above it.
-    # Applies uniformly to all four multiline fields (Requested Action, General Note, QC RCA
-    # Notes, Eng RCA Notes) - they already share identical box geometry (98 wide, 4.5 tall,
-    # 1.1 label-to-box gap) since they all go through this same function; only General Note
-    # additionally carries the purple highlight, which stays scoped to it via the `highlight`
-    # arg its own LAYOUT entry passes - not touched here.
-    out = emit_label("l_" + column, label, SPAN_X, y, w=40, highlight=highlight, justify="L")
-    out += emit_control(column, ctype, SPAN_X, y + 1.1, None, False, w=SPAN_W, h=4.5, highlight=highlight)
+def emit_span(label, column, ctype, y, highlight=False, tall=True):
+    # Matches the design mockup's own markup exactly: the label sits BESIDE the box on the
+    # SAME row (a plain "Label: [box]" pattern, right-justified ending flush at the box's
+    # left edge), not stacked above it - the mockup's Requested Action/General Note/QC RCA
+    # Notes/Eng RCA Notes rows are literally `<div class="lbl">...</div><div class="box
+    # ta">...</div>` siblings in one flex row, same as every other field on the form. The
+    # previous "label above, box below" layout (and this function's own label-left-justified-
+    # into-an-arbitrary-box workaround) didn't match that at all - reported directly against
+    # the live render. Reuses the identity block's own label column (LABEL_X_A/SPAN_X) so it
+    # lines up with every other field's label, with the same tall-caption wrap protection.
+    #
+    # Height also now varies: the mockup gives Requested Action/QC RCA Notes/Eng RCA Notes the
+    # same tall box (.box.ta.tall, 226px) but General Note a shorter one (.box.ta, 96px) -
+    # roughly a 2.35x ratio - so `tall=False` (General Note's LAYOUT entry) gets a
+    # proportionally shorter box instead of matching the other three's height.
+    box_h = 4.5 if tall else 1.9
+    w = label_width(LABEL_X_A, SPAN_X)
+    label_tall = is_tall(label, w)
+    out = emit_label("l_" + column, label, LABEL_X_A, y + (0.05 if label_tall else 0.15), w=w, highlight=highlight, h=1.8 if label_tall else 1)
+    out += emit_control(column, ctype, SPAN_X, y, None, False, w=SPAN_W, h=box_h, highlight=highlight)
     return out
 
 def emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y):
@@ -627,11 +636,11 @@ def build_components():
             a, b = item[1], item[2]
             tall = False
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, _tall = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A, CTRL_X_A))
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = b
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, _tall = b
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_B, CTRL_X_B))
             y += ROW_H + 0.3 if tall else ROW_H
@@ -639,15 +648,15 @@ def build_components():
             a, a2, b = item[1], item[2], item[3]
             tall = False
             if a:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, _tall = a
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A, CTRL_X_A, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A, CTRL_X_A))
             if a2:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = a2
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, _tall = a2
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_A2, CTRL_X_A2, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_A2, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_A2, CTRL_X_A2))
             if b:
-                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = b
+                _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, _tall = b
                 out.append(emit_field(label, column, ctype, list_source, readonly, LABEL_X_B, CTRL_X_B, y, ctrl_w=ctrl_w if ctrl_w is not None else CTRL_W_B, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight))
                 tall = tall or is_tall(label, label_width(LABEL_X_B, CTRL_X_B))
             y += ROW_H + 0.3 if tall else ROW_H
@@ -655,9 +664,9 @@ def build_components():
             out.append(emit_top_row(y))
             y += ROW_H
         elif kind == SPAN:
-            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w = item[1]
-            out.append(emit_span(label, column, ctype, y, highlight=highlight))
-            y += 5.8
+            _, label, column, ctype, list_source, readonly, maintain_from_spec, property_class_name, default_from, highlight, ctrl_w, tall = item[1]
+            out.append(emit_span(label, column, ctype, y, highlight=highlight, tall=tall))
+            y += (4.5 if tall else 1.9) + 0.8
         elif kind == IMPL_ROW:
             _, checkbox_col, checkbox_caption, combo_col, id_col = item
             out.append(emit_impl_row(checkbox_col, checkbox_caption, combo_col, id_col, y))
