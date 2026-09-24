@@ -191,6 +191,26 @@
                <Post301Format />
                <EffectiveCaption>Closed</EffectiveCaption>
             </Component>
+            <Component Name="c_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>69</TabOrder>
+               <TopPos>92.6111111111111</TopPos>
+               <LeftPos>11.25</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>17.25</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.InternalReviewDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
             <Component Name="c_closed_by">
                <DeviceID>-1</DeviceID>
                <Type>1</Type>
@@ -352,8 +372,6 @@
                <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
-               <DefaultFrom>Dept(DeptDescription)</DefaultFrom>
-               <PropertyClassName>Dept</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -376,7 +394,7 @@
                <DataSource>object.DeptDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
@@ -699,6 +717,26 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
+            </Component>
+            <Component Name="c_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>67</TabOrder>
+               <TopPos>19.3</TopPos>
+               <LeftPos>37</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>15</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.NextAssyDescription</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
             </Component>
             <Component Name="c_planning_complete">
                <DeviceID>-1</DeviceID>
@@ -1357,6 +1395,26 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
+            <Component Name="c_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>68</TabOrder>
+               <TopPos>21.35</TopPos>
+               <LeftPos>37</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>15</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.VendorName</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
             <Component Name="c_wc">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
@@ -1372,8 +1430,6 @@
                <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
-               <DefaultFrom>Wc(WcDescription)</DefaultFrom>
-               <PropertyClassName>Wc</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1396,7 +1452,7 @@
                <DataSource>object.WcDescription</DataSource>
                <Binding>1</Binding>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
@@ -1911,6 +1967,28 @@
                <Post301Format />
                <EffectiveCaption>Closed By:</EffectiveCaption>
             </Component>
+            <Component Name="l_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>92.7777777777778</TopPos>
+               <LeftPos>2</LeftPos>
+               <Height>1.8</Height>
+               <ListHeight>0</ListHeight>
+               <Width>8.75</Width>
+               <Caption>Internal Review Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Internal Review Date:</EffectiveCaption>
+            </Component>
             <Component Name="l_cm_reviewer_empnum">
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
@@ -2394,6 +2472,28 @@
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
                <EffectiveCaption>Next Lvl Assy:</EffectiveCaption>
+            </Component>
+            <Component Name="l_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>19.45</TopPos>
+               <LeftPos>30</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>6.5</Width>
+               <Caption>Next Assy Description:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Next Assy Description:</EffectiveCaption>
             </Component>
             <Component Name="l_planning_reviewer_empnum">
                <DeviceID>-1</DeviceID>
@@ -2900,6 +3000,28 @@
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
                <EffectiveCaption>Vendor:</EffectiveCaption>
+            </Component>
+            <Component Name="l_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>21.5</TopPos>
+               <LeftPos>30</LeftPos>
+               <Height>1</Height>
+               <ListHeight>0</ListHeight>
+               <Width>6.5</Width>
+               <Caption>Vendor Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Vendor Name:</EffectiveCaption>
             </Component>
             <Component Name="l_wc">
                <DeviceID>-1</DeviceID>

@@ -175,11 +175,13 @@ LAYOUT = [
     # position, since that section is meant to gather everything Create Change Request touches
     # in one place. They keep their ORIGINAL (non-purple) styling there, per "unrelated
     # existing fields should retain their original styling" - they're relocated for
-    # consolidation, not restyled as new. (Item Description/Next Assy Description/Vendor
-    # Name/Internal Review Date were also previously inserted here as extra fields that don't
-    # exist on the real form at all - dropped entirely; their DefaultFrom/PropertyClassName
-    # auto-fill on Item/Next Lvl Assy/Vendor is dropped along with them since it had no other
-    # purpose.)
+    # consolidation, not restyled as new.
+    #
+    # NextAssyDescription/VendorName restored as plain manual-entry fields (not the auto-fill
+    # companions the schema description used to imply) - the real legacy mechanism for both
+    # was SelectionEvent (UpdateDescriptionNextAssy/UpdateVendorDescription), confirmed dead in
+    # this tenant (Rule #1A, docs/troubleshooting.md), and there's no DefaultFrom precedent for
+    # either on the original form. Manual entry beats not having the field at all.
     (TOP_ROW,),
     (TRIPLE, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Create Date:", "create_date", TYPE_DATE, readonly=True), f("Created By:", "created_by", TYPE_EDIT, readonly=True)),
     (TRIPLE, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE), f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES)),
@@ -187,12 +189,16 @@ LAYOUT = [
     (TRIPLE, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB), None),
     (TRIPLE, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT), None),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), None),
+    # NextAssyDescription/VendorName use the TRIPLE row's A2 slot (LeftPos=37, same slot
+    # Latest Revision already uses safely) rather than the B slot - the B slot at this Y range
+    # is occupied by the Requested Action sidebar note box (LeftPos 54-112.5, a tall box
+    # spanning several rows), confirmed by a geometry collision check against the checked-in
+    # XML. ctrl_w=15 is cramped for a description field but it's what fits without touching
+    # that sidebar box's own hand-tuned dimensions.
+    (TRIPLE, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Assy Description:", "next_assy_description", TYPE_EDIT, ctrl_w=15), None),
     # VendNum is directly confirmed as the real Property Class name for a vendor number field -
-    # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess. Kept
-    # even without a visible Vendor Name display field, in case some other live mechanism
-    # (e.g. a MaintainFromSpec on the property itself) still depends on it being set.
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum"), None),
+    # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess.
+    (TRIPLE, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum"), f("Vendor Name:", "vendor_name", TYPE_EDIT, ctrl_w=15), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), None),
 
     # Everything from here down, up to QUALITY, is new-since-the-legacy-form - grouped and
@@ -206,29 +212,30 @@ LAYOUT = [
     # Work Center is a short code, same as Dept - not a long field like Assigned Buyer/POC,
     # which is what the B slot's default width (49) is tuned for - overridden to a compact
     # width matching Dept's own (per direct request: "WC should be compact").
-    # PropertyClassName/DefaultFrom removed from both - confirmed live-breaking: importing
-    # with PropertyClassName="Dept" + DefaultFrom="Dept(DeptDescription)" throws "internal
-    # validation error on c_dept validator Dept... Bad SETPROPERTIES specification in
-    # validator Dept: this cache property OfcAddr4 not in cache" the moment a value is
-    # selected. The "Dept" class name isn't a safe, form-scoped label - it's SyteLine's real,
-    # system-wide Department property class (departments carry an office address in the
-    # standard data model, hence OfcAddr4), and naming it in DefaultFrom's
+    # PropertyClassName/DefaultFrom permanently dropped from both, confirmed live-breaking
+    # twice now: importing with PropertyClassName="Dept" + DefaultFrom="Dept(DeptDescription)"
+    # throws "internal validation error on c_dept validator Dept... Bad SETPROPERTIES
+    # specification in validator Dept: this cache property OfcAddr4 not in cache" the moment a
+    # value is selected, and re-adding it unchanged reproduced the identical failure a second
+    # time (silent no-op that live screenshot). "Dept" isn't a safe, form-scoped label - it's
+    # SyteLine's real, system-wide Department property class (departments carry an office
+    # address in the standard data model, hence OfcAddr4), and naming it in DefaultFrom's
     # ClassName(TargetProperty) syntax pulls in that whole class's validators, which expect
-    # properties our ue_ecmrs IDO's cache doesn't have. "Wc" is the exact same extrapolated,
-    # never-independently-confirmed pattern (both were guessed from Item's real DefaultFrom
-    # example, not confirmed individually - see the comment above Item's own row) - removed
-    # pre-emptively rather than waiting to hit the same crash on it live. Dept/WC Description
-    # are still on the form, just no longer auto-filled - they'd need to be typed manually
-    # (or the real, safe mechanism for this - if one exists - found and confirmed live first).
-    # Dept(DeptDescription)/Wc(WcDescription) DefaultFrom RE-ADDED per direct request - this is
-    # the EXACT mechanism that already crashed live once ("internal validation error on c_dept
-    # validator Dept... this cache property OfcAddr4 not in cache", see
-    # docs/troubleshooting.md). Retrying it unchanged is very likely to reproduce the identical
-    # crash, not a new experiment - flagged so it's obvious what happened if it does.
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True, property_class_name="Dept", default_from="Dept(DeptDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25, property_class_name="Wc", default_from="Wc(WcDescription)")),
-    # Dept Description widened - a description field, same as WC Description, not a short
-    # code like Dept itself (per direct request: "probably too narrow, give more room").
-    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
+    # properties our ue_ecmrs IDO's cache doesn't have. "Wc" is the exact same extrapolated
+    # pattern, same confirmed failure on re-test. Neither Dept nor Item/Wc ever had a combo or
+    # any auto-fill mechanism at all on the real original form either (both were plain typed
+    # fields there - see docs/task-list.md) - there is no working precedent anywhere for this
+    # cascade on these two fields. Not retrying again; Dept/WC Description are now plain
+    # manually-typed fields instead (see next row).
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25)),
+    # Dept Description/WC Description widened - description fields, not a short code like Dept
+    # itself (per direct request: "probably too narrow, give more room"). No longer read-only:
+    # the DefaultFrom that was supposed to auto-populate these is permanently abandoned (see
+    # above), so these are now plain manually-typed fields, same visual treatment otherwise.
+    # NOTE: the underlying DeptDescription/WcDescription properties' own live Read Only flag in
+    # Application Studio still needs manually clearing too (Rule #1B, docs/troubleshooting.md) -
+    # Form Sync re-import won't flip that flag on an already-existing property either.
+    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, highlight=True)),
     # Item and Reported By consolidated here per direct request. Item is now purple per
     # direct request ("all Change Request fields should be purple") - superseding the earlier
     # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
@@ -320,6 +327,14 @@ LAYOUT = [
     (IMPL_ROW, "cm_complete", "CM", "cm_reviewer_name", "cm_reviewer_empnum"),
     (PAIR, f("Close Date:", "close_date", TYPE_DATE, readonly=True), f("Closed By:", "closed_by", TYPE_EDIT, readonly=True)),
     (PAIR, f("Closed", "closed", TYPE_CHECKBOX), None),
+    # Internal Review Date restored - a real field on the original form (dateCombo2, plain
+    # Date type, its own grid column) that was missing here entirely, not even tracked in
+    # ORPHANED_COLUMNS - a plain oversight, not a deliberate exclusion. Placed here rather
+    # than Quality: Quality's own right-hand space is fully occupied by the QC RCA Notes
+    # sidebar note box across every row that could otherwise hold it (confirmed by a geometry
+    # collision check against the checked-in XML), whereas this is the first genuinely free
+    # row below everything else on the form.
+    (PAIR, f("Internal Review Date:", "internal_review_date", TYPE_DATE), None),
 ]
 
 # Grid pane (left side) - a master-list overview of multiple records at once, matching the
