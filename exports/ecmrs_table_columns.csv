@@ -4,21 +4,21 @@ status,String,40,,Yes,N,,"Overall CMR status. Confirmed 7-value list: CM, Comple
 workflow_status,String,40,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; its fixed value list was never confirmed either] Workflow status. Fixed value list not yet confirmed.
 priority,String,12,,Yes,N,,"Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."
 item,String,30,,Yes,N,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
-item_description,String,40,,Yes,N,,"Read-only, restored to the form next to Item. Auto-populate now via DefaultFrom on Item's own component (Item(ItemDescription)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - copied directly from the real PurchaseOrders form's TermsCode/ShipCode fields, which use this exact pattern with no SelectionEvent at all. Item as the real Property Class name is an extrapolation from that same live form, not independently confirmed for this class name - verify after import."
+item_description,String,40,,Yes,N,,Auto-filled from SLItems.Description by the ItemChanged script (SelectionEvent on Item). Read Only cleared so the script can write it - the form component itself stays read-only for display.
 wc,String,6,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
-wc_description,String,40,,Yes,N,,"Read-only, restored to the form next to Wc. Auto-populate now via DefaultFrom on Wc's own component (Wc(WcDescription)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - copied directly from the real PurchaseOrders form's TermsCode/ShipCode fields, which use this exact pattern with no SelectionEvent at all. Wc as the real Property Class name is an extrapolation from that same live form, not independently confirmed for this class name - verify after import."
+wc_description,String,40,,Yes,N,,Auto-filled from SLWcs.Description by the WcChanged script (SelectionEvent on Wc). Read Only cleared so the script can write it - the form component itself stays read-only for display.
 dept,String,6,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
-dept_description,String,40,,Yes,N,,"Read-only, restored to the form next to Dept. Auto-populate now via DefaultFrom on Dept's own component (Dept(DeptDescription)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - copied directly from the real PurchaseOrders form's TermsCode/ShipCode fields, which use this exact pattern with no SelectionEvent at all. Dept as the real Property Class name is an extrapolation from that same live form, not independently confirmed for this class name - verify after import."
-initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
+dept_description,String,40,,Yes,N,,Auto-filled from SLDepts.Description by the DeptChanged script (SelectionEvent on Dept). Read Only cleared so the script can write it - the form component itself stays read-only for display.
+initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade via the InitialChangeChanged script (SelectionEvent)."
 additional_changes,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout] Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,String,1000,,Yes,N,,
 general_note,String,1000,,Yes,N,,
 revision,String,8,,Yes,N,,Drawing Revision.
 latest_revision,String,8,,Yes,N,,
 next_assy_item,String,30,,Yes,N,,"STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0)) - Next Level Assembly item. Case matters for the 'P(x)' cross-field reference - it's the property name Item, not the column item."
-next_assy_description,String,40,,Yes,N,,"Read-only, restored to the form next to NextAssyItem. Auto-populate now via DefaultFrom on NextAssyItem's own component (Item(NextAssyDescription)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - copied directly from the real PurchaseOrders form's TermsCode/ShipCode fields, which use this exact pattern with no SelectionEvent at all. Item as the real Property Class name is an extrapolation from that same live form, not independently confirmed for this class name - verify after import."
+next_assy_description,String,40,,Yes,N,,"Plain manual-entry field next to Next Lvl Assy, per direct request."
 vendor,String,15,,Yes,N,,"STDOLE SLVendors( PROPERTIES(VendNum, Name) )"
-vendor_name,String,255,,Yes,N,,"Read-only, restored to the form next to Vendor. Auto-populate now via DefaultFrom on Vendor's own component (VendNum(VendorName)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - VendNum is the real, confirmed Property Class name for a vendor number field, taken directly from the real PurchaseOrders form's own VendNumEdit component, not a guess."
+vendor_name,String,255,,Yes,N,,"Plain manual-entry field next to Vendor, per direct request."
 qty,Decimal,,4,Yes,N,,
 job_num,String,15,,Yes,N,,"STDOLE SLMatltrans( PROPERTIES(RefNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() RECORDCAP(0)) - deliberately no FILTER. Confirmed real syntax straight from the legacy QC_CMRs form's own Job Num combo, which had FILTER(RefNum=FP(rs_cmrUf_ENF_CMR_JobNum)) - same self-referencing exact-match bug already fixed for po_num (FP() has no padding, real Job Numbers are zero-padded like DK00084716), same fix: drop the FILTER. See docs/troubleshooting.md. Coldtype uses char, matching po_num/vendor's pattern."
 serial_num,String,50,,Yes,N,,"New field per direct request - currently these get copied into the Notes area on the legacy 3-form process, but they're common enough to need their own field on eCMRs. Created live as char, not nvarchar."
@@ -32,15 +32,15 @@ eo_num,String,15,,Yes,N,,
 mdl,String,40,,Yes,N,,
 poc,String,60,,Yes,N,,"Point of contact, free text."
 reported_by,String,60,,Yes,N,,"New field per direct request - who requested/reported the change on the legacy Create Change Request form (distinct from CreatedBy, the system field for who created this CMR record). Plain free-text field, same treatment as SerialNum/LotNum."
-req_costing,Bit,,,Yes,N,,Cascades off InitialChange.
+req_costing,Bit,,,Yes,N,,Set by the InitialChangeChanged script when Initial Change is picked; still manually editable afterwards.
 cost_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-req_documentation,Bit,,,Yes,N,,Cascades off InitialChange.
+req_documentation,Bit,,,Yes,N,,Set by the InitialChangeChanged script when Initial Change is picked; still manually editable afterwards.
 documentation_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-req_tool_machine,Bit,,,Yes,N,,Cascades off InitialChange.
+req_tool_machine,Bit,,,Yes,N,,Set by the InitialChangeChanged script when Initial Change is picked; still manually editable afterwards.
 machinery_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-req_process,Bit,,,Yes,N,,Cascades off InitialChange.
+req_process,Bit,,,Yes,N,,Set by the InitialChangeChanged script when Initial Change is picked; still manually editable afterwards.
 process_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-req_material,Bit,,,Yes,N,,Cascades off InitialChange.
+req_material,Bit,,,Yes,N,,Set by the InitialChangeChanged script when Initial Change is picked; still manually editable afterwards.
 material_review_complete,Bit,,,Yes,N,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 general_review_complete,Bit,,,Yes,N,,"[ORPHANED - not bound to any form control: read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule] Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."
 sox_impacted,Bit,,,Yes,N,,"Standalone, not part of the 5-category cascade."

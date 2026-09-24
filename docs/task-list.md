@@ -67,23 +67,14 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [x] **NextAssyItem** (`next_assy_item`) — Combo, `SLJobmatls`/`JobItem`, cascades off Item via
   the confirmed-safe `'P(Item)'` pattern (the original's own filter used the same idea, just
   against its own field name). No open issues flagged for this field itself.
-- [ ] **NextAssyDescription** (`next_assy_description`) — Not on the form at all — absent from
-  both `generate_form.py` and the checked-in XML, and not in `ORPHANED_COLUMNS` either (a real
-  tracking gap, not a deliberate exclusion). **⚠ per the original form**: its real equivalent
-  (`rs_cmrUf_ENF_CMR_NextAssyDescription`) was populated via `SelectionEvent`
-  (`UpdateDescriptionNextAssy`) — confirmed dead in this tenant — **not** a `DefaultFrom`. So
-  there is no known-working mechanism to auto-fill this even if added. Decide: add it as a
-  plain manual-entry field (matching what a dead auto-fill would fall back to anyway), or
-  correct `ORPHANED_COLUMNS` to admit it's out of scope.
+- [ ] **NextAssyDescription** (`next_assy_description`) — Added as a plain manual-entry field beside
+  Next Lvl Assy, per direct request (`c_next_assy_description`). Its property's Read Only flag has
+  to be cleared in Application Studio (it used to be a read-only companion - see
+  `docs/deploy-checklist.md`). Confirm live after re-import that it saves.
 - [x] **Vendor** (`vendor`) — Combo, `PropertyClassName="VendNum"` confirmed real (from the live
   `PurchaseOrders` form). No `DefaultFrom` set on it, deliberately — see VendorName below.
-- [ ] **VendorName** (`vendor_name`) — Not on the form — same tracking gap as
-  NextAssyDescription (implied "restored" by the schema description, but absent from
-  `generate_form.py`, the XML, and `ORPHANED_COLUMNS`). **⚠ per the original form**: same
-  correction as NextAssyDescription — the real `rs_cmrUf_ENF_CMR_VendorName` was populated via
-  `SelectionEvent` (`UpdateVendorDescription`), confirmed dead here, not a `TermsCode`-style
-  `DefaultFrom`. No known-working auto-fill mechanism exists for this pairing in this tenant.
-  Same decision needed as NextAssyDescription.
+- [ ] **VendorName** (`vendor_name`) — Added as a plain manual-entry field beside Vendor, per
+  direct request (`c_vendor_name`). Same Read Only clearance and live check as NextAssyDescription.
 - [ ] **Priority** (`priority`) — Combo, fixed value list not wired: needs `Inline List`
   `ENTRIES(High,Medium,Low)` set directly in Application Studio + Check In. (The original had
   no combo for Priority at all — two plain typed fields, `RsCrcvrPriority`/`RsPriorityPriority`
@@ -92,44 +83,34 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — `DefaultFrom="Dept(DeptDescription)"` was **re-added per direct
-  request despite already being confirmed to crash live once** ("internal validation error on
-  c_dept validator Dept... this cache property OfcAddr4 not in cache"). **⚠ per the original
-  form**: Dept in the real original was a **plain typed field with no combo and no auto-fill
-  mechanism at all** (`edit2`, `PropertyClassName="Dept"`, `Type=1`, no `DefaultFrom`) — there
-  was never a working precedent for this cascade anywhere, not on the original, not elsewhere.
-  Re-importing is very likely to reproduce the identical crash. Recommend treating this as
-  settled rather than re-testing again: fall back to plain manual entry for Dept Description,
-  matching what the original form itself actually did.
-- [ ] **Wc** (`wc`) — Same situation as Dept, and the same correction: the original's `Wc`
-  field (`edit12`) was also a plain typed field, no combo, no auto-fill. Same recommendation —
-  accept manual entry rather than keep retrying a mechanism with zero real precedent.
-- [x] **DeptDescription**, **WcDescription** — Correctly placed, read-only-styled display
-  fields. Given the finding above, the realistic remaining task for both is simply: make them
-  plain editable (or accept manual entry) rather than waiting on a `DefaultFrom` that has no
-  working precedent to lean on.
-- [ ] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` retried per direct request.
-  **⚠ per the original form**: Item in the real original was also a **plain typed field, no
-  combo, no auto-fill** (`edit10`, `Type=1`) — unlike Dept, this exact mechanism hasn't crashed
-  for us yet, but it's equally unprecedented; there's no confirmed-working analog anywhere.
-  Needs live verification after import, with the expectation it may fail the same way Dept did.
-- [x] **ItemDescription** (`item_description`) — On the form (hand-added in Application Studio
-  as `edit1_SITE`, not through the generator's naming convention — confirmed present, not a
-  gap). Only open item is Item's `DefaultFrom` above.
+- [ ] **Dept** (`dept`) — Description now auto-fills on selection: `SelectionEvent="DeptChanged"`,
+  a script that looks the code up in `SLDepts` and writes `DeptDescription`. The crashing
+  `DefaultFrom="Dept(DeptDescription)"` and `PropertyClassName="Dept"` are removed. Same
+  SelectionEvent-to-script pattern as the legacy Create Change Request form's own Initial Change
+  combo (`ChangeEdit` → `SetChangeAll`); **not the ResponseType 49 lookup that jams the form**
+  (troubleshooting Rule #1A). Needs a live check: pick a Dept and confirm the description fills
+  and the rest of the form stays editable. If the old OfcAddr4 crash still shows, the removed
+  `DefaultFrom`/Property Class didn't clear on re-import (same class of bug as Rule #1C) - clear
+  them by hand in the Form Designer.
+- [ ] **Wc** (`wc`) — Same as Dept: `SelectionEvent="WcChanged"` fills `WcDescription` from
+  `SLWcs`. Same live check.
+- [ ] **DeptDescription**, **WcDescription** — Read-only on the form, filled by the scripts above.
+  Their properties' Read Only flag has to be cleared in Application Studio so the script can
+  write them (`docs/deploy-checklist.md`).
+- [ ] **Item** (`item`) — Same as Dept: `SelectionEvent="ItemChanged"` fills `ItemDescription`
+  from `SLItems`; `DefaultFrom`/`PropertyClassName` removed. Same live check.
+- [ ] **ItemDescription** (`item_description`) — On the form as `edit1_SITE` (hand-added in
+  Application Studio; the generator now emits the same name). Filled by ItemChanged; needs its
+  property's Read Only flag cleared like the other descriptions.
 - [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
 - [ ] **InitialChange** (`initial_change`) — Combo, fixed value list not wired (`Inline List`
   `ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))`
-  + Check In). Separately, and bigger: the Requirements checkbox cascade this field drives in
-  the original (via `RsChangeCosting`/`RsChangeDocumentation`/etc., a native mechanism tied to
-  the legacy `Change` property class) **has never been built or confirmed on this new IDO** —
-  decide whether an equivalent `DefaultFrom`-based cascade works on brand-new property names
-  here, or build a scripted equivalent. Right now the 5 Req checkboxes don't react to this
-  field at all.
+  + Check In). Now drives the Requirements cascade: `SelectionEvent="InitialChangeChanged"`,
+  a script that sets the 5 Req checkboxes from `docs/field-mapping.md`'s table (and clears the
+  others). Needs a live check once the Inline List is in.
 - [ ] **ReqCosting**, **ReqDocumentation**, **ReqToolMachine**, **ReqProcess**, **ReqMaterial**
-  — Plain, independently-clickable checkboxes on the form (the original's equivalents —
-  `RsChangeCosting` etc. — are likewise plain `ListYesNo` checkboxes, so the control type
-  itself is right). Same open item as InitialChange above: the cascade that's supposed to
-  auto-check these off Initial Change doesn't exist yet. Currently fully manual.
+  — Set by the InitialChangeChanged script, still clickable afterwards. Note: per the mapping table,
+  no Initial Change value ticks **Material**, not even "Material" itself - confirm that's intended.
 - [x] **GeneralNote** — On the form (un-orphaned per direct request), nothing flagged.
 
 ## Additional Fields
@@ -171,6 +152,8 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   equivalent used `SelectionEvent`, confirmed dead — see the Assigned entry above for the same
   correction). Confirm Read Only is actually cleared on `QcReviewerUsername` too (Rule #1B,
   same ambiguity as AssignedUsername above).
+- [ ] **InternalReviewDate** (`internal_review_date`) — Added to Quality's first row, per direct
+  request (`c_internal_review_date`). Confirm live after re-import.
 - [x] **QcRcaNotes** — Plain multiline, nothing flagged.
 
 ## Engineering
@@ -223,12 +206,6 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   not invented schema cruft — so the "purpose vs. CloseDate" question is a genuine legacy
   distinction worth resolving (not confirmed what it was for) before deciding whether to ever
   surface them here.
-- [ ] **InternalReviewDate** (`internal_review_date`) — Not placed on the form, and unlike the
-  fields above, also **not in `ORPHANED_COLUMNS`** — a genuine tracking gap. **⚠ per the
-  original form**: this is a real field there too (`dateCombo2`, plain `Date` type, with its
-  own grid column), not a speculative addition — which strengthens the case for actually adding
-  it here rather than leaving it as an oversight. Decide: place it (Quality or Implementation
-  seem like the likeliest homes) and confirm it, or add it to `ORPHANED_COLUMNS` with a reason.
 
 ## Standing project-level decisions (not field-specific, kept for context)
 
@@ -238,7 +215,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   (field-by-field, no join back, fresh `cmr_num` per migrated row), the *when* isn't.
 - [ ] Retire/hide `Create Change Request`/`Change Request Management`/`QC_CMRs` once Phase D
   above is decided.
-- [ ] Real Notify mechanism — currently a placeholder `MsgBox` (`NotifyEngineering`) that sends
-  nothing. Decide: build a real notification, or remove the button.
+- [ ] **Notify** — Now fires the legacy form's own `ENF_NotifyUser` handler: application event
+  `ENF_NotifyUserWithCMR` (an email), with CmrNum, the Assigned user's email (`AssignedUsername`)
+  and Priority. Confirm the event still exists in this tenant, and that it doesn't look the CMR up
+  in the legacy `rs_cmr` table (eCMRs numbers won't be there).
 - [ ] CAR cross-referencing (`LaunchCAR`) — explicitly out of scope for this standalone build;
   a deliberate future decision if ever wanted, not an oversight.

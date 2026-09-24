@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Generates the eCMRs Form Sync XML export from the field-mapping.md field list.
 
+Keeps the same component NAMES, bindings, events and handlers as exports/eCMRs_v1.XML
+(scripts/validate_schema_consistency.py checks the names), but not its hand-tuned layout -
+see the NOTE below.
+
 NOTE: exports/eCMRs_v1.XML currently reflects manual, hand-tuned adjustments made directly in
 Application Studio on top of what this script last generated - specifically, the multiline
 notes fields (Requested Action/General Note/QC RCA Notes/Eng RCA Notes) were repositioned into
@@ -175,11 +179,9 @@ LAYOUT = [
     # position, since that section is meant to gather everything Create Change Request touches
     # in one place. They keep their ORIGINAL (non-purple) styling there, per "unrelated
     # existing fields should retain their original styling" - they're relocated for
-    # consolidation, not restyled as new. (Item Description/Next Assy Description/Vendor
-    # Name/Internal Review Date were also previously inserted here as extra fields that don't
-    # exist on the real form at all - dropped entirely; their DefaultFrom/PropertyClassName
-    # auto-fill on Item/Next Lvl Assy/Vendor is dropped along with them since it had no other
-    # purpose.)
+    # consolidation, not restyled as new. Next Assy Description and Vendor Name sit beside
+    # their code fields as plain manual-entry boxes, per direct request (the original form
+    # filled them via SelectionEvent/ResponseType 49 lookups, which are dead in this tenant).
     (TOP_ROW,),
     (TRIPLE, f("CMR Num:", "cmr_num", TYPE_EDIT, readonly=True), f("Create Date:", "create_date", TYPE_DATE, readonly=True), f("Created By:", "created_by", TYPE_EDIT, readonly=True)),
     (TRIPLE, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE), f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES)),
@@ -187,12 +189,12 @@ LAYOUT = [
     (TRIPLE, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB), None),
     (TRIPLE, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT), None),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
-    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), None),
+    (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Assy Desc:", "next_assy_description", TYPE_EDIT)),
     # VendNum is directly confirmed as the real Property Class name for a vendor number field -
     # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess. Kept
-    # even without a visible Vendor Name display field, in case some other live mechanism
-    # (e.g. a MaintainFromSpec on the property itself) still depends on it being set.
-    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum"), None),
+    # in case some other live mechanism (e.g. a MaintainFromSpec on the property itself) still
+    # depends on it being set; Vendor Name beside it is typed by hand, nothing fills it.
+    (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum"), f("Vendor Name:", "vendor_name", TYPE_EDIT)),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), None),
 
     # Everything from here down, up to QUALITY, is new-since-the-legacy-form - grouped and
@@ -206,26 +208,12 @@ LAYOUT = [
     # Work Center is a short code, same as Dept - not a long field like Assigned Buyer/POC,
     # which is what the B slot's default width (49) is tuned for - overridden to a compact
     # width matching Dept's own (per direct request: "WC should be compact").
-    # PropertyClassName/DefaultFrom removed from both - confirmed live-breaking: importing
-    # with PropertyClassName="Dept" + DefaultFrom="Dept(DeptDescription)" throws "internal
-    # validation error on c_dept validator Dept... Bad SETPROPERTIES specification in
-    # validator Dept: this cache property OfcAddr4 not in cache" the moment a value is
-    # selected. The "Dept" class name isn't a safe, form-scoped label - it's SyteLine's real,
-    # system-wide Department property class (departments carry an office address in the
-    # standard data model, hence OfcAddr4), and naming it in DefaultFrom's
-    # ClassName(TargetProperty) syntax pulls in that whole class's validators, which expect
-    # properties our ue_ecmrs IDO's cache doesn't have. "Wc" is the exact same extrapolated,
-    # never-independently-confirmed pattern (both were guessed from Item's real DefaultFrom
-    # example, not confirmed individually - see the comment above Item's own row) - removed
-    # pre-emptively rather than waiting to hit the same crash on it live. Dept/WC Description
-    # are still on the form, just no longer auto-filled - they'd need to be typed manually
-    # (or the real, safe mechanism for this - if one exists - found and confirmed live first).
-    # Dept(DeptDescription)/Wc(WcDescription) DefaultFrom RE-ADDED per direct request - this is
-    # the EXACT mechanism that already crashed live once ("internal validation error on c_dept
-    # validator Dept... this cache property OfcAddr4 not in cache", see
-    # docs/troubleshooting.md). Retrying it unchanged is very likely to reproduce the identical
-    # crash, not a new experiment - flagged so it's obvious what happened if it does.
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True, property_class_name="Dept", default_from="Dept(DeptDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25, property_class_name="Wc", default_from="Wc(WcDescription)")),
+    # Descriptions are filled by the DeptChanged/WcChanged scripts (SELECTION_EVENTS below),
+    # not DefaultFrom: DefaultFrom="Dept(DeptDescription)" crashed live ("validator Dept...
+    # this cache property OfcAddr4 not in cache" - see docs/troubleshooting.md), because the
+    # real Dept class drags in validators our IDO can't satisfy. PropertyClassName is dropped
+    # for the same reason.
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, highlight=True, ctrl_w=17.25)),
     # Dept Description widened - a description field, same as WC Description, not a short
     # code like Dept itself (per direct request: "probably too narrow, give more room").
     (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True, ctrl_w=40), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
@@ -234,9 +222,9 @@ LAYOUT = [
     # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
     # B slot's 49-wide default is sized for Assigned Buyer/POC, not this, so narrowed to a
     # medium width.
-    # Item(ItemDescription) DefaultFrom retried per direct request - untested (Item wasn't the
-    # one that crashed; Dept was - see docs/troubleshooting.md Rule #1's Dept/OfcAddr4 entry).
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True, property_class_name="Item", default_from="Item(ItemDescription)"), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
+    # Item Desc is filled by the ItemChanged script, same as Dept/WC above.
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
+    (PAIR, f("Item Desc:", "item_description", TYPE_EDIT, readonly=True, highlight=True), None),
     # Reverted to plain per direct request - Due Date isn't one of the new Change Request
     # fields after all (superseding the earlier confirmation to keep it purple).
     (PAIR, f("Due Date:", "due_date", TYPE_DATE), None),
@@ -271,7 +259,8 @@ LAYOUT = [
     # generate_schema_csv.py instead of deleted outright - see that file's comment on why.
     # SOX Impacted stays in its existing (B/right) slot rather than moving to fill the gap -
     # matches the hand-tuned checked-in XML's actual position, not a fresh regeneration.
-    (PAIR, None, f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
+    # Internal Review Date fills the empty left slot, per direct request.
+    (PAIR, f("Internal Review Date:", "internal_review_date", TYPE_DATE), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
     (PAIR, f("Hold On PO", "hold_on_po", TYPE_CHECKBOX), f("Authorization For Supplier To Ship", "auth_supplier_ship", TYPE_CHECKBOX)),
     # References the same real, existing system Property Classes the live QC_MRRs form's own
     # Reason/Cause combos use (ReasonEdit/CauseEdit - confirmed directly from that form's own
@@ -339,27 +328,45 @@ GRID_COLUMNS = [
 ]
 PANE_ZERO_SIZE = 40.25
 
-# The SelectionEvent/EventHandler(ResponseType 49) companion-lookup mechanism that used to be
-# driven from a LOOKUP_EVENTS list here was removed - confirmed live that triggering any of
-# these (even the ones matching the legacy form's own working patterns byte-for-byte) jams the
-# form's edit/commit pipeline for every other field afterward, combo or plain, forever. The 11
-# description/name fields below are now plain editable fields instead (see LAYOUT).
-#
-# Experimental replacement, test case: EventToGenerate (the same wiring SetCloseInfo already
-# uses safely on the Closed checkbox) pointing at a ResponseType 33 inline VB script that calls
-# Me.IDOClient.LoadCollection(...) directly, instead of the declarative
-# FILTER()/MOV()/SONON()/SETP() response language that jammed the form. Two real, separate
-# pieces of evidence combined here: EventToGenerate on a Type=27 combo is real (JobOrders' and
-# Items' own ItemEdit/CustNumEdit/WhseEdit etc. use it, just for a built-in event name), and
-# Me.IDOClient.LoadCollection(request) is the real IDO-query pattern from cmr-project's
-# QC_CMRs.vb FormScript - used here as a literal copy (Me, not ThisForm) since GlobalScript and
-# FormScript are sibling classes in the same Mongoose.Scripting framework, so IDOClient may be
-# a member of a shared base both inherit. First attempt substituted ThisForm for Me and the
-# script silently did nothing live - confirmed dead either way (also tried Me.IDOClient, same
-# silent no-op). Item Description was removed from the form entirely per direct request, so
-# this mechanism has no remaining target - left empty rather than deleted outright in case a
-# genuinely new lead on the underlying problem turns up later.
-SCRIPT_LOOKUP_EVENTS = []
+# Combo value-change logic: SelectionEvent -> a ResponseType 33 script (never ResponseType 49).
+# The declarative ResponseType 49 lookups (FILTER() MOV() SONON() SETP()) are what jammed the
+# form (docs/troubleshooting.md Rule #1A), and EventToGenerate on a combo never fires on a
+# selection. SelectionEvent -> script is the pattern the legacy QC_CreateChangeRequest form
+# uses on its own Initial Change combo (ChangeEdit -> SetChangeAll), so it has real precedent
+# here. Each script writes through PrimaryIDOCollection, the same call SetChangeAll uses.
+# (column, event name, SL IDO, key property, description property on that IDO, our description column)
+DESCRIPTION_LOOKUPS = [
+    ("dept", "DeptChanged", "SLDepts", "Dept", "Description", "dept_description"),
+    ("wc", "WcChanged", "SLWcs", "Wc", "Description", "wc_description"),
+    ("item", "ItemChanged", "SLItems", "Item", "Description", "item_description"),
+]
+SELECTION_EVENTS = {col: ev for (col, ev, *_rest) in DESCRIPTION_LOOKUPS}
+SELECTION_EVENTS["initial_change"] = "InitialChangeChanged"
+
+# Requirements cascade, from docs/field-mapping.md's table (unchanged from cmr-project):
+# Initial Change value -> which of the 5 Req checkboxes get ticked. Every other box is
+# cleared. "Other" (and a blank value) ticks nothing.
+REQ_CASCADE = {
+    "Documentation": ["req_documentation"],
+    "Machine": ["req_costing", "req_documentation", "req_process", "req_tool_machine"],
+    "Material": ["req_costing", "req_documentation"],
+    "Process": ["req_costing", "req_documentation", "req_process", "req_tool_machine"],
+    "Specification": ["req_costing", "req_documentation", "req_process", "req_tool_machine"],
+    "Tooling": ["req_tool_machine"],
+    "Variance(waiver)": ["req_costing", "req_documentation", "req_process", "req_tool_machine"],
+}
+REQ_COLUMNS = ["req_costing", "req_documentation", "req_material", "req_process", "req_tool_machine"]
+
+# Component names that differ from the default "c_<column>" / "l_<column>". The _v2 controls
+# were renamed so Form Sync creates them fresh with the right Type (docs/troubleshooting.md
+# Rule #1C); Item Desc's names come from it being hand-added in Application Studio first.
+CONTROL_NAMES = {col: f"c_{col}_v2" for col in [
+    "assigned_empnum", "assigned_username", "serial_num", "lot_num",
+    "qc_reviewer_empnum", "qc_reviewer_username", "eng_reviewer_empnum", "eng_reviewer_username",
+    "planning_reviewer_empnum", "planning_reviewer_name", "purchasing_reviewer_empnum",
+    "purchasing_reviewer_name", "cm_reviewer_empnum", "cm_reviewer_name"]}
+CONTROL_NAMES["item_description"] = "edit1_SITE"
+LABEL_NAMES = {"item_description": "l_item1_SITE"}
 
 _tab = [0]
 def next_tab():
@@ -396,7 +403,7 @@ def emit_label(name, caption, x, y, w=CTRL_W - 2, seq=0, highlight=False, h=1, j
 """
 
 def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False):
-    name = "c_" + column
+    name = CONTROL_NAMES.get(column, "c_" + column)
     lines = [f'            <Component Name="{name}">',
              "               <DeviceID>-1</DeviceID>",
              f"               <Type>{ctype}</Type>",
@@ -416,15 +423,10 @@ def emit_control(column, ctype, x, y, list_source, readonly, w=CTRL_W, h=1.4, ma
     lines.append("               <Binding>1</Binding>")
     if ctype == TYPE_CHECKBOX and column == "closed":
         lines.append("               <EventToGenerate>SetCloseInfo</EventToGenerate>")
-    # SelectionEvent -> ResponseType 49 EventHandler (FILTER()  MOV()  SONON()  SETP()) removed:
-    # confirmed live that using ANY combo wired to one of these jams the whole form's edit/commit
-    # pipeline after a single use - every other field can then only be edited once before locking,
-    # even fields with no lookup at all. ComboListSource-only combos (no SelectionEvent) are fine.
-    if column in [e[0] for e in SCRIPT_LOOKUP_EVENTS]:
-        ev = [e[2] for e in SCRIPT_LOOKUP_EVENTS if e[0] == column][0]
-        lines.append(f"               <EventToGenerate>{ev}</EventToGenerate>")
     if list_source:
         lines.append(f"               <ComboListSource>{esc(list_source)}</ComboListSource>")
+    if column in SELECTION_EVENTS:
+        lines.append(f"               <SelectionEvent>{SELECTION_EVENTS[column]}</SelectionEvent>")
     if maintain_from_spec:
         lines.append(f"               <MaintainFromSpec>{esc(maintain_from_spec)}</MaintainFromSpec>")
     if default_from:
@@ -472,7 +474,7 @@ def emit_field(label, column, ctype, list_source, readonly, x_label, x_ctrl, y, 
         return out
     w = label_width(x_label, x_ctrl)
     tall = is_tall(label, w)
-    out += emit_label("l_" + column, label, x_label, y + (0.05 if tall else 0.15), w=w, highlight=highlight, h=1.8 if tall else 1)
+    out += emit_label(LABEL_NAMES.get(column, "l_" + column), label, x_label, y + (0.05 if tall else 0.15), w=w, highlight=highlight, h=1.8 if tall else 1)
     out += emit_control(column, ctype, x_ctrl, y, list_source, readonly, w=ctrl_w, maintain_from_spec=maintain_from_spec, property_class_name=property_class_name, default_from=default_from, highlight=highlight)
     return out
 
@@ -554,7 +556,7 @@ def emit_top_row(y):
     # everywhere else, not the reverse arrangement this had before.
     out += emit_control("assigned_empnum", TYPE_COMBO, 46, y, SL_EMPLOYEES, False, w=10, property_class_name="EmpNum", default_from="EmpNum(AssignedUsername)")
     out += emit_control("assigned_username", TYPE_EDIT, 57, y, None, False, w=28)
-    out += emit_button("btn_notify", "Notify", "NotifyEngineering", 86, y, w=13)
+    out += emit_button("btn_notify", "Notify", "ENF_NotifyUser", 86, y, w=13)
     return out
 
 def emit_header(text, y):
@@ -776,49 +778,25 @@ End Class
 End Namespace
 )</Response>
             </EventHandler>
-            <EventHandler Name="NotifyEngineering" Sequence="0">
-               <ResponseType>33</ResponseType>
-               <Response>SCRIPTTEXT(Option Explicit On
-Option Strict On
-
-Imports System
-Imports Microsoft.VisualBasic
-Imports Mongoose.IDO.Protocol
-Imports Mongoose.Scripting
-
-Namespace Mongoose.GlobalScripts
-Public Class EvHandler_NotifyEngineering_0
-Inherits GlobalScript
-
-        Sub Main()
-            ' Placeholder only: confirms the button/event wiring works via a plain VB.NET
-            ' MsgBox call (Microsoft.VisualBasic, already imported and confirmed safe in this
-            ' GlobalScript context). Real notification (email to Engineering) needs a decided
-            ' mechanism first - no confirmed syntax for that exists anywhere in this project's
-            ' real evidence yet, and guessing at one risks the same kind of silent failures the
-            ' SelectionEvent/IDOClient experiments already hit this session. The message below
-            ' deliberately does NOT claim a notification was sent - nothing is sent yet.
-            MsgBox("Notify clicked for CMR " &amp; ThisForm.Components("c_cmr_num").Text &amp; " - no notification mechanism is wired up yet.")
-            ReturnValue = "0"
-        End Sub
-End Class
-End Namespace
-)</Response>
+            <EventHandler Name="ENF_NotifyUser" Sequence="0">
+               <ResponseType>43</ResponseType>
+               <Response>EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)</Response>
             </EventHandler>
 """
+# Notify: the legacy QC_CMRs form's own ENF_NotifyUser handler, copied as-is. It fires the
+# server-side application event ENF_NotifyUserWithCMR (an email), passing the
+# ehp1_ENF_NotifyUser0 form variable (see Variables below). That variable is the legacy one with
+# our property names swapped in: rs_cmrUf_ENF_CMR_AssignedUser -> AssignedUsername (holds the
+# employee's email address here, see docs/troubleshooting.md) and RsPriorityPriority -> Priority.
+NOTIFY_PARMS = f"CmrNum=P({PROP['cmr_num']}), EAddres=P({PROP['assigned_username']}), Priority = P({PROP['priority']})"
 
-# The 11 companion-lookup EventHandlers (ResponseType 49) that used to live here are removed -
-# confirmed live that triggering any of them jams the form's edit/commit pipeline for every
-# other field afterward, even ones with no lookup at all. See emit_control().
-#
-# Replacement being tested on Item only (SCRIPT_LOOKUP_EVENTS): a ResponseType 33 inline VB
-# script, same mechanism as SetCloseInfo above, using Me.IDOClient.LoadCollection(...) - the
-# real pattern from cmr-project's QC_CMRs.vb FormScript - via ThisForm instead of Me, since
-# ThisForm (not Me) is the confirmed-accessible object inside a GlobalScript (see SetCloseInfo's
-# own ThisForm.Components/.UserName calls above). Imports match that FormScript's exactly,
-# including Mongoose.Core.Common for SqlLiteral.Format.
-for trigger_col, display_col, event_name, sl_table, filter_prop, source_prop in SCRIPT_LOOKUP_EVENTS:
-    _vb = f"""Option Explicit On
+# Application Studio stores a handler's response in ~500-character chunks (Response,
+# Response2, Response3 in every export we have); the longest script known to round-trip is the
+# old ~1150-character Notify placeholder. Keep new scripts under 1500 so none needs a 4th chunk.
+MAX_SCRIPT_CHARS = 1500
+
+def script_handler(event_name, body):
+    vb = f"""Option Explicit On
 Option Strict On
 
 Imports System
@@ -832,30 +810,58 @@ Public Class EvHandler_{event_name}_0
 Inherits GlobalScript
 
         Sub Main()
-            Dim triggerVal As String = ThisForm.Components("c_{trigger_col}").Text
-            If triggerVal <> "" Then
-                Dim request As New LoadCollectionRequestData()
-                request.IDOName = "{sl_table}"
-                request.PropertyList.SetProperties("{filter_prop},{source_prop}")
-                request.Filter = "{filter_prop} = " & SqlLiteral.Format(triggerVal, SqlLiteralFormatFlags.UseQuotes)
-                request.RecordCap = 1
-                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
-                If response.Items.Count > 0 Then
-                    ThisForm.Components("c_{display_col}").Text = response.Items(0).PropertyValues(1).Value.ToString()
-                End If
-            Else
-                ThisForm.Components("c_{display_col}").Text = ""
-            End If
-            ReturnValue = "0"
+{body}            ReturnValue = "0"
         End Sub
 End Class
 End Namespace
 """
-    EVENT_HANDLERS += f"""            <EventHandler Name="{event_name}" Sequence="0">
+    assert len(vb) <= MAX_SCRIPT_CHARS, f"{event_name} script is {len(vb)} chars, over {MAX_SCRIPT_CHARS}"
+    return f"""            <EventHandler Name="{event_name}" Sequence="0">
                <ResponseType>33</ResponseType>
-               <Response>SCRIPTTEXT({esc(_vb)})</Response>
+               <Response>SCRIPTTEXT({esc(vb)})</Response>
             </EventHandler>
 """
+
+# Description lookups: read the picked code off the current object, look its description up
+# with IDOClient.LoadCollection (the same request shape as cmr-project's QC_CMRs.vb
+# GetLoadCollectionResponse), and write it with SetCurrentObjectPropertyPlusModifyRefresh (the
+# same call the legacy SetChangeAll script uses). A cleared or unknown code clears the
+# description instead of leaving a stale one behind.
+for col, event_name, sl_ido, key_prop, desc_prop, desc_col in DESCRIPTION_LOOKUPS:
+    EVENT_HANDLERS += script_handler(event_name, f"""            Dim code As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("{PROP[col]}").ToString().Trim()
+            Dim description As String = ""
+            If code <> "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "{sl_ido}"
+                request.PropertyList.SetProperties("{desc_prop}")
+                request.Filter = "{key_prop} = " & SqlLiteral.Format(code, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
+                If response.Items.Count > 0 Then
+                    description = response.Items(0).PropertyValues(0).Value.ToString()
+                End If
+            End If
+            ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh("{PROP[desc_col]}", description)
+""")
+
+# Requirements cascade: tick exactly the boxes REQ_CASCADE lists for the picked value and clear
+# the rest. The boxes stay editable, so a user can still adjust them after picking. Values with
+# the same set of boxes share one Case line, and the boxes go in as a "0"/"1" string, to keep
+# the script short (see MAX_SCRIPT_CHARS).
+_by_flags = {}
+for value, cols in REQ_CASCADE.items():
+    _by_flags.setdefault("".join("1" if c in cols else "0" for c in REQ_COLUMNS), []).append(value)
+_cases = "".join(f'                Case {", ".join(chr(34) + v + chr(34) for v in values)}\n                    flags = "{flags}"\n'
+                 for flags, values in _by_flags.items())
+EVENT_HANDLERS += script_handler("InitialChangeChanged", f"""            Dim change As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("{PROP['initial_change']}").ToString().Trim()
+            Dim flags As String = "{'0' * len(REQ_COLUMNS)}"
+            Select Case change
+{_cases}            End Select
+            Dim props() As String = {{{", ".join(chr(34) + PROP[c] + chr(34) for c in REQ_COLUMNS)}}}
+            For i As Integer = 0 To props.Length - 1
+                ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh(props(i), flags.Substring(i, 1))
+            Next
+""")
 
 FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <FormsAndObjectsExport Version="010000">
@@ -885,6 +891,12 @@ FORM_XML = f"""<?xml version="1.0" encoding="utf-8"?>
          <EventHandlers>
 {EVENT_HANDLERS}         </EventHandlers>
          <Variables>
+            <Variable Name="ehp1_ENF_NotifyUser0">
+               <Value>{esc(NOTIFY_PARMS)}</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
             <Variable Name="fds_DataSource">
                <!-- Closed asc puts open CMRs first, closed ones last - restored now that the
                     Closed checkbox and its SetCloseInfo handler are back (see the Implementation

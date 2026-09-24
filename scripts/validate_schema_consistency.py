@@ -5,14 +5,20 @@ docs/troubleshooting.md) gets caught here instead of live. This can only catch a
 OUR OWN design files - it cannot see the live IDO's actual Read Only flag in Application
 Studio, which is why docs/deploy-checklist.md (a separate, manual step) still exists.
 
-Run after generate_form.py, before committing:
-    python3 scripts/generate_form.py exports/eCMRs_v1.XML && python3 scripts/validate_schema_consistency.py
+It also checks that generate_form.py still produces the same component names, event handlers
+and form variables as the checked-in export. The export's layout is hand-tuned in Application
+Studio, so the generator's output isn't committed over it - but a component renamed or an event
+added in only one of the two would be silently lost on the next regeneration.
+
+Run before committing:
+    python3 scripts/validate_schema_consistency.py
 """
 import re
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 from generate_schema_csv import FIELDS
+from generate_form import FORM_XML
 
 # FIELDS tuples are (col, pname, dtype, length, decimal, coldtype, labelid, required, readonly, desc)
 READONLY_BY_COL = {f[0]: (f[8] == "1") for f in FIELDS}
@@ -45,12 +51,25 @@ def main():
                 f"companion - see docs/troubleshooting.md Rule #1B)."
             )
 
+    def names(pattern, xml):
+        return set(re.findall(pattern, xml))
+    for what, pattern in [("component", r'<Component Name="(\w+)">'),
+                          ("event handler", r'<EventHandler Name="(\w+)"'),
+                          ("form variable", r'<Variable Name="(\w+)">'),
+                          ("SelectionEvent/EventToGenerate", r"<(?:SelectionEvent|EventToGenerate)>(\w+)<")]:
+        in_export, in_generator = names(pattern, text), names(pattern, FORM_XML)
+        for n in sorted(in_export - in_generator):
+            errors.append(f"{what} {n} is in exports/eCMRs_v1.XML but generate_form.py doesn't produce it.")
+        for n in sorted(in_generator - in_export):
+            errors.append(f"{what} {n} is produced by generate_form.py but missing from exports/eCMRs_v1.XML.")
+
     if errors:
         print(f"FAILED: {len(errors)} schema/form mismatch(es) found:\n")
         for e in errors:
             print(f"  - {e}")
         sys.exit(1)
-    print(f"OK: checked {len(PNAME_BY_COL)} known properties against the form's object.* bindings, no mismatches.")
+    print(f"OK: checked {len(PNAME_BY_COL)} known properties against the form's object.* bindings, "
+          f"and the generator's component/event/variable names against the export - no mismatches.")
 
 if __name__ == "__main__":
     main()

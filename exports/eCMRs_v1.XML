@@ -29,7 +29,7 @@
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
                <Binding>0</Binding>
-               <EventToGenerate>NotifyEngineering</EventToGenerate>
+               <EventToGenerate>ENF_NotifyUser</EventToGenerate>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -352,8 +352,7 @@
                <DataSource>object.Dept</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLDepts( PROPERTIES(Dept, Description) )</ComboListSource>
-               <DefaultFrom>Dept(DeptDescription)</DefaultFrom>
-               <PropertyClassName>Dept</PropertyClassName>
+               <SelectionEvent>DeptChanged</SelectionEvent>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -565,6 +564,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.InitialChange</DataSource>
                <Binding>1</Binding>
+               <SelectionEvent>InitialChangeChanged</SelectionEvent>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -586,8 +586,7 @@
                <DataSource>object.Item</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLItems(  PROPERTIES(Item,Description) DISPLAY(1,2))</ComboListSource>
-               <DefaultFrom>Item(ItemDescription)</DefaultFrom>
-               <PropertyClassName>Item</PropertyClassName>
+               <SelectionEvent>ItemChanged</SelectionEvent>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1372,8 +1371,7 @@
                <DataSource>object.Wc</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLWcs( PROPERTIES(Wc, Description) )</ComboListSource>
-               <DefaultFrom>Wc(WcDescription)</DefaultFrom>
-               <PropertyClassName>Wc</PropertyClassName>
+               <SelectionEvent>WcChanged</SelectionEvent>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -2945,39 +2943,134 @@
                <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>WC Description:</EffectiveCaption>
             </Component>
+            <Component Name="l_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>19.35</TopPos>
+               <LeftPos>30</LeftPos>
+               <Height>1.8</Height>
+               <ListHeight>0</ListHeight>
+               <Width>6.5</Width>
+               <Caption>Assy Desc:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Assy Desc:</EffectiveCaption>
+            </Component>
+            <Component Name="c_next_assy_description">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>67</TabOrder>
+               <TopPos>19.3</TopPos>
+               <LeftPos>37</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>15</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.NextAssyDescription</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>21.4</TopPos>
+               <LeftPos>30</LeftPos>
+               <Height>1.8</Height>
+               <ListHeight>0</ListHeight>
+               <Width>6.5</Width>
+               <Caption>Vendor Name:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Vendor Name:</EffectiveCaption>
+            </Component>
+            <Component Name="c_vendor_name">
+               <DeviceID>-1</DeviceID>
+               <Type>1</Type>
+               <TabOrder>68</TabOrder>
+               <TopPos>21.35</TopPos>
+               <LeftPos>37</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>15</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.VendorName</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
+            <Component Name="l_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>52.0</TopPos>
+               <LeftPos>2</LeftPos>
+               <Height>1.8</Height>
+               <ListHeight>0</ListHeight>
+               <Width>8.75</Width>
+               <Caption>Internal Review Date:</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>3</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Format>JUSTIFY(R)</Format>
+               <Post301Format />
+               <EffectiveCaption>Internal Review Date:</EffectiveCaption>
+            </Component>
+            <Component Name="c_internal_review_date">
+               <DeviceID>-1</DeviceID>
+               <Type>26</Type>
+               <TabOrder>69</TabOrder>
+               <TopPos>51.95</TopPos>
+               <LeftPos>11.25</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>17.25</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.InternalReviewDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+            </Component>
          </Components>
          <EventHandlers>
-            <EventHandler Name="NotifyEngineering" Sequence="0">
-               <ResponseType>33</ResponseType>
-               <Response>SCRIPTTEXT(Option Explicit On
-Option Strict On
-
-Imports System
-Imports Microsoft.VisualBasic
-Imports Mongoose.IDO.Protocol
-Imports Mongoose.Scripting
-
-Namespace Mongoose.GlobalScripts
-Public Class EvHandler_NotifyEngineering_0
-Inherits GlobalScript
-
-        Sub Main()
-            ' Placeholder only: confirms the button/event wiring works via a plain VB.NET
-            ' MsgBox call (Microsoft.VisualBasic, already imported and confirmed safe in this
-            ' GlobalScript context). Real notif</Response>
-               <Response2>ication (email to Engineering) needs a decided
-            ' mechanism first - no confirmed syntax for that exists anywhere in this project's
-            ' real evidence yet, and guessing at one risks the same kind of silent failures the
-            ' SelectionEvent/IDOClient experiments already hit this session. The message below
-            ' deliberately does NOT claim a notification was sent - nothing is sent yet.
-            MsgBox("Notify clicked for CMR " &amp; ThisForm.Components("c_cmr_num"</Response2>
-               <Response3>).Text &amp; " - no notification mechanism is wired up yet.")
-            ReturnValue = "0"
-        End Sub
-End Class
-End Namespace
-)</Response3>
-            </EventHandler>
             <EventHandler Name="SetCloseInfo" Sequence="0">
                <ResponseType>33</ResponseType>
                <Response>SCRIPTTEXT(Option Explicit On
@@ -3007,8 +3100,164 @@ End Class
 End Namespace
 )</Response2>
             </EventHandler>
+            <EventHandler Name="ENF_NotifyUser" Sequence="0">
+               <ResponseType>43</ResponseType>
+               <Response>EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)</Response>
+            </EventHandler>
+            <EventHandler Name="DeptChanged" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_DeptChanged_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim code As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("Dept").ToString().Trim()
+            Dim description As String = ""
+            If code &lt;&gt; "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "SLDepts"
+                request.PropertyList.SetProperties("Description")
+                request.Filter = "Dept = " &amp; SqlLiteral.Format(code, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
+                If response.Items.Count &gt; 0 Then
+                    description = response.Items(0).PropertyValues(0).Value.ToString()
+                End If
+            End If
+            ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh("DeptDescription", description)
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="WcChanged" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_WcChanged_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim code As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("Wc").ToString().Trim()
+            Dim description As String = ""
+            If code &lt;&gt; "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "SLWcs"
+                request.PropertyList.SetProperties("Description")
+                request.Filter = "Wc = " &amp; SqlLiteral.Format(code, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
+                If response.Items.Count &gt; 0 Then
+                    description = response.Items(0).PropertyValues(0).Value.ToString()
+                End If
+            End If
+            ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh("WcDescription", description)
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="ItemChanged" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_ItemChanged_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim code As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("Item").ToString().Trim()
+            Dim description As String = ""
+            If code &lt;&gt; "" Then
+                Dim request As New LoadCollectionRequestData()
+                request.IDOName = "SLItems"
+                request.PropertyList.SetProperties("Description")
+                request.Filter = "Item = " &amp; SqlLiteral.Format(code, SqlLiteralFormatFlags.UseQuotes)
+                request.RecordCap = 1
+                Dim response As LoadCollectionResponseData = Me.IDOClient.LoadCollection(request)
+                If response.Items.Count &gt; 0 Then
+                    description = response.Items(0).PropertyValues(0).Value.ToString()
+                End If
+            End If
+            ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh("ItemDescription", description)
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
+            <EventHandler Name="InitialChangeChanged" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+Imports Mongoose.Core.Common
+
+Namespace Mongoose.GlobalScripts
+Public Class EvHandler_InitialChangeChanged_0
+Inherits GlobalScript
+
+        Sub Main()
+            Dim change As String = ThisForm.PrimaryIDOCollection.GetCurrentObjectProperty("InitialChange").ToString().Trim()
+            Dim flags As String = "00000"
+            Select Case change
+                Case "Documentation"
+                    flags = "01000"
+                Case "Machine", "Process", "Specification", "Variance(waiver)"
+                    flags = "11011"
+                Case "Material"
+                    flags = "11000"
+                Case "Tooling"
+                    flags = "00001"
+            End Select
+            Dim props() As String = {"ReqCosting", "ReqDocumentation", "ReqMaterial", "ReqProcess", "ReqToolMachine"}
+            For i As Integer = 0 To props.Length - 1
+                ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh(props(i), flags.Substring(i, 1))
+            Next
+            ReturnValue = "0"
+        End Sub
+End Class
+End Namespace
+)</Response>
+            </EventHandler>
          </EventHandlers>
          <Variables>
+            <Variable Name="ehp1_ENF_NotifyUser0">
+               <Value>CmrNum=P(CmrNum), EAddres=P(AssignedUsername), Priority = P(Priority)</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
             <Variable Name="fds_DataSource">
                <Value>ue_ecmrs( ORDERBY(Closed asc, CmrNum desc) LOCKMODE(Row) )</Value>
                <Value2 />

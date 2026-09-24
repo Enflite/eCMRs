@@ -13,7 +13,7 @@ That approach hit real, structural ceilings along the way:
 
 **eCMRs starts over.** A brand-new custom SQL table, a brand-new IDO, and a brand-new form — no join to `rs_cmr` or `rs_crcvr`, no dependency on `RSQC_CreateCmrSp`, no inherited primary-key constraint. Everything a CMR needs gets its own real column, named and typed the way this project actually wants it, from day one.
 
-`cmr-project`'s docs (especially `docs/field-mapping.md` and the "Requirements checkbox cascade" section) are the requirements reference — every business rule confirmed there (what a CMR needs, how the 5 Requirement checkboxes cascade off Initial Change via the real `DefaultFrom: Change(...)` function, how the Assigned/employee lookup works, etc.) still applies here. What's different is *how* it gets built: original schema, not a legacy extension.
+`cmr-project`'s docs (especially `docs/field-mapping.md` and the "Requirements checkbox cascade" section) are the requirements reference — every business rule confirmed there (what a CMR needs, how the 5 Requirement checkboxes cascade off Initial Change (built here as the `InitialChangeChanged` script), how the Assigned/employee lookup works, etc.) still applies here. What's different is *how* it gets built: original schema, not a legacy extension.
 
 ## Structure
 

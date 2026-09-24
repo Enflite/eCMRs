@@ -189,6 +189,26 @@ this form's Vendor field, `PropertyClassName` only, no `DefaultFrom`) and
 UNTESTED against this same risk - they simply haven't been tried yet,
 not confirmed safe.
 
+## Filling a description on a combo pick: `SelectionEvent` → script (being tested)
+
+Neither mechanism above worked for Dept/WC/Item, so these now use the pattern the legacy
+`QC_CreateChangeRequest` form uses on its own Initial Change combo: `ChangeEdit` carries
+`<SelectionEvent>SetChangeAll</SelectionEvent>`, and `SetChangeAll` is a **ResponseType 33
+script**, not a ResponseType 49 `FILTER()/MOV()/SONON()/SETP()` lookup. Rule #1A's lockup was
+only ever seen with ResponseType 49 handlers; `EventToGenerate` on a combo (the earlier script
+attempt) doesn't fire on a selection at all, which fits it having done "nothing".
+
+`DeptChanged`/`WcChanged`/`ItemChanged` read the picked code with
+`PrimaryIDOCollection.GetCurrentObjectProperty`, look the description up with
+`Me.IDOClient.LoadCollection` (the request shape from `cmr-project`'s `QC_CMRs.vb`), and write it
+with `SetCurrentObjectPropertyPlusModifyRefresh` (what `SetChangeAll` uses).
+`InitialChangeChanged` sets the 5 Req checkboxes the same way. The description properties need
+their Read Only flag cleared (`docs/deploy-checklist.md`) so the write isn't rejected (Rule #1B).
+
+**Unconfirmed live.** If picking a Dept locks the form, remove its `SelectionEvent` first to
+confirm it's the cause. If the description stays blank with no lockup, the script isn't
+reaching `IDOClient` from a GlobalScript. Record the result here either way.
+
 ## Binding a combo directly to return `Username` instead of `EmpNum`
 
 To make a combo return an employee's `Username` (a real email address in
