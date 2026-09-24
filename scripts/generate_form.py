@@ -82,6 +82,17 @@ SL_EMPLOYEES_ASSIGNED = "STDOLE SLEmployees( PROPERTIES(Username,EmpNum,Name) DI
 # Real list sources adapted from the legacy form's own combos (CB_NextAssy, comboBox1_SITE,
 # comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
 SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
+# UNCONFIRMED IDO names - "SLItemSerials"/"SLItemLots" are a best guess following the same
+# SL<Name> naming convention that's confirmed real for SLItems/SLDepts/SLWcs/SLVendors/
+# SLEmployees/SLPoItems/SLMatltrans/SLJobmatls above, NOT independently verified against a
+# real combo the way those were. Same risk class as the SLJobs wrong-guess story (see
+# docs/troubleshooting.md) - a wrong IDO name here won't error, it'll just silently return
+# nothing or unrelated data. Verify live: pick an Item known to have real serial/lot records
+# and confirm the dropdown actually shows THOSE values, not just that it doesn't crash. The
+# FILTER(Item='P(Item)') cascade syntax itself IS the confirmed-safe pattern (same as Next
+# Lvl Assy above) - only the IDO/property names are the unconfirmed part.
+SL_ITEM_SERIALS = "STDOLE SLItemSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
+SL_ITEM_LOTS = "STDOLE SLItemLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 # PO Num deliberately has NO self-referencing FILTER (unlike the legacy form's own combo) -
 # confirmed live that FP(x) is a plain exact-equality match against the raw typed text, no
 # wildcard/padding (the same root cause already found for Job Number's leading-zero bug in
@@ -248,7 +259,10 @@ LAYOUT = [
     (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True, tall=False)),
 
     (GROUPLABEL, "Additional Fields"),
-    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT, highlight=True), f("LOT #:", "lot_num", TYPE_EDIT, highlight=True)),
+    # Combo per direct request, cascading off the selected Item (same confirmed-safe P(Item)
+    # pattern as Next Lvl Assy) - the underlying IDO names themselves are unconfirmed, see
+    # SL_ITEM_SERIALS/SL_ITEM_LOTS above.
+    (PAIR, f("Serial #:", "serial_num", TYPE_COMBO, SL_ITEM_SERIALS, highlight=True), f("LOT #:", "lot_num", TYPE_COMBO, SL_ITEM_LOTS, highlight=True)),
     (PAIR, f("Top Level PN:", "top_level_pn", TYPE_EDIT, highlight=True), f("Sub Assembly:", "sub_assembly", TYPE_EDIT, highlight=True)),
 
     (HEADER, "QUALITY"),

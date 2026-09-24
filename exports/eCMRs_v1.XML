@@ -639,7 +639,7 @@
             </Component>
             <Component Name="c_lot_num">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>36</TabOrder>
                <TopPos>46.25</TopPos>
                <LeftPos>65</LeftPos>
@@ -651,6 +651,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.LotNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLItemLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1233,7 +1234,7 @@
             </Component>
             <Component Name="c_serial_num">
                <DeviceID>-1</DeviceID>
-               <Type>1</Type>
+               <Type>27</Type>
                <TabOrder>35</TabOrder>
                <TopPos>46.25</TopPos>
                <LeftPos>11.25</LeftPos>
@@ -1245,6 +1246,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.SerialNum</DataSource>
                <Binding>1</Binding>
+               <ComboListSource>STDOLE SLItemSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
