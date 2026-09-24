@@ -113,7 +113,7 @@ LAYOUT = [
     (PAIR, f("Assigned ID:", "assigned_empnum", TYPE_EDIT), None),
     (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
-    (PAIR, f("Priority:", "priority", TYPE_COMBO, highlight=True), f("Initial Change:", "initial_change", TYPE_COMBO)),
+    (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     # DefaultFrom + PropertyClassName on the code field auto-fill the read-only description
     # field next to it - confirmed real mechanism (not SelectionEvent, not EventToGenerate),

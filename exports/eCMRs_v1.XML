@@ -651,7 +651,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format />
                <EffectiveCaption>Priority:</EffectiveCaption>
             </Component>
             <Component Name="c_priority">
@@ -672,7 +672,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
+               <Post301Format />
             </Component>
             <Component Name="l_initial_change">
                <DeviceID>-1</DeviceID>
