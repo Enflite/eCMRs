@@ -84,6 +84,7 @@ FIELD = "field"
 PAIR = "pair"          # (fieldA, fieldB) sharing one row
 SPAN = "span"          # full-width field (multiline)
 HEADER = "header"
+GROUPLABEL = "grouplabel"  # a plain bold text label (not a full colored banner) marking a sub-group
 IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementation's Planning/Purchasing/CM)
 BUTTON_ROW = "button_row"  # a single Button on its own row
 PAIR_BUTTON = "pair_button"  # a field on the left, a Button on the right, sharing one row
@@ -113,6 +114,12 @@ LAYOUT = [
     (PAIR, f("Assigned ID:", "assigned_empnum", TYPE_EDIT), None),
     (PAIR_BUTTON, f("Assigned:", "assigned_username", TYPE_COMBO, SL_EMPLOYEES_ASSIGNED), "btn_notify", "Notify", "NotifyEngineering"),
     (PAIR, f("Assigned Buyer:", "assigned_buyer", TYPE_COMBO, SL_EMPLOYEES), None),
+    # PO/RFQ moved up here to match the real legacy form's own order (confirmed directly from
+    # cmr-project's QC_CMRs_Original.XML - PO/PO Line/Assigned Buyer/Qty/POC/RFQ/Job Num all
+    # sit in this same header area, well before Item) - these were previously stranded much
+    # further down, past the new Additional Fields group, which didn't match anything real.
+    (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
+    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), f("Initial Change:", "initial_change", TYPE_COMBO)),
     (SPAN, f("Requested Action:", "requested_action", TYPE_MULTILINE)),
     # DefaultFrom + PropertyClassName on the code field auto-fill the read-only description
@@ -122,30 +129,35 @@ LAYOUT = [
     # class names below (Item/Wc/Dept) are an extrapolation from that same real pattern, not
     # independently confirmed - verify live after import; VendNum below IS directly confirmed
     # (see the Vendor row).
-    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, property_class_name="Item", default_from="Item(ItemDescription)"), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True)),
-    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
-    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), None),
-    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True), None),
+    (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, property_class_name="Item", default_from="Item(ItemDescription)"), None),
+    (PAIR, f("Item Description:", "item_description", TYPE_EDIT, readonly=True), None),
     (PAIR, f("Drawing Revision:", "revision", TYPE_EDIT), f("Latest Revision:", "latest_revision", TYPE_EDIT)),
     (PAIR, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY, property_class_name="Item", default_from="Item(NextAssyDescription)"), f("Qty:", "qty", TYPE_EDIT)),
     (PAIR, f("Next Assy Description:", "next_assy_description", TYPE_EDIT, readonly=True), None),
     # VendNum is directly confirmed as the real Property Class name for a vendor number field -
     # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess.
     (PAIR, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum", default_from="VendNum(VendorName)"), f("Job Num:", "job_num", TYPE_COMBO, SL_MATLTRANS_JOB)),
-    (PAIR, f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True), None),
-    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT, highlight=True), f("LOT #:", "lot_num", TYPE_EDIT, highlight=True)),
-    (PAIR, f("Top Level PN:", "top_level_pn", TYPE_EDIT, highlight=True), f("Sub Assembly:", "sub_assembly", TYPE_EDIT, highlight=True)),
-    (PAIR, f("PO Num:", "po_num", TYPE_COMBO, SL_POITEMS_NUM), f("PO Line:", "po_line", TYPE_COMBO, SL_POITEMS_LINE)),
-    (PAIR, f("RFQ Num:", "rfq_num", TYPE_EDIT), f("POC:", "poc", TYPE_EDIT)),
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
-    (PAIR, f("Reported By:", "reported_by", TYPE_EDIT, highlight=True), None),
-    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True)),
+    (PAIR, f("Vendor Name:", "vendor_name", TYPE_EDIT, readonly=True), f("Internal Review Date:", "internal_review_date", TYPE_DATE)),
+
+    # Everything from here down, up to QUALITY, is new-since-the-legacy-form - grouped and
+    # labeled to match the design mockup (Change Request carryover, then the BRD's brand-new
+    # Additional Fields), instead of being scattered piecemeal among the base identity fields
+    # above wherever there happened to be room.
+    (GROUPLABEL, "Change Request Fields"),
+    (PAIR, f("Dept:", "dept", TYPE_COMBO, SL_DEPTS, property_class_name="Dept", default_from="Dept(DeptDescription)", highlight=True), f("Work Center:", "wc", TYPE_COMBO, SL_WCS, property_class_name="Wc", default_from="Wc(WcDescription)", highlight=True)),
+    (PAIR, f("Dept Description:", "dept_description", TYPE_EDIT, readonly=True, highlight=True), f("WC Description:", "wc_description", TYPE_EDIT, readonly=True, highlight=True)),
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True)),
     # Moved up from inside QUALITY (per the plan deck's Design slide - these are part of the
     # Create Change Request carryover, not Quality-specific) - still cascade off Initial Change
     # above, just visually grouped with the rest of the Change Request fields now.
     (PAIR, f("Req: Costing", "req_costing", TYPE_CHECKBOX, highlight=True), f("Req: Documentation", "req_documentation", TYPE_CHECKBOX, highlight=True)),
     (PAIR, f("Req: Tool/Machine", "req_tool_machine", TYPE_CHECKBOX, highlight=True), f("Req: Process", "req_process", TYPE_CHECKBOX, highlight=True)),
     (PAIR, f("Req: Material", "req_material", TYPE_CHECKBOX, highlight=True), None),
+    (SPAN, f("General Note:", "general_note", TYPE_MULTILINE, highlight=True)),
+
+    (GROUPLABEL, "Additional Fields"),
+    (PAIR, f("Serial #:", "serial_num", TYPE_EDIT, highlight=True), f("LOT #:", "lot_num", TYPE_EDIT, highlight=True)),
+    (PAIR, f("Top Level PN:", "top_level_pn", TYPE_EDIT, highlight=True), f("Sub Assembly:", "sub_assembly", TYPE_EDIT, highlight=True)),
 
     (HEADER, "QUALITY"),
     (PAIR, f("General Review Complete", "general_review_complete", TYPE_CHECKBOX, readonly=True), f("SOX Impacted", "sox_impacted", TYPE_CHECKBOX)),
@@ -401,6 +413,35 @@ def emit_header(text, y):
             </Component>
 """
 
+def emit_grouplabel(text, y):
+    # A plain bold red text label (no colored banner) - marks a sub-group within the
+    # continuous unlabeled area (e.g. "Change Request Fields", "Additional Fields"),
+    # matching the design mockup's small bold-red ".grouplabel" style. Distinct from
+    # emit_header's full-width black banner, which is reserved for the three section
+    # banners (QUALITY/ENGINEERING/IMPLEMENTATION) that were real on the original form.
+    return f"""            <Component Name="grp_{text.replace(' ', '_').replace('/', '_')}">
+               <DeviceID>-1</DeviceID>
+               <Type>0</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>{y:.3f}</TopPos>
+               <LeftPos>{LABEL_X_A}</LeftPos>
+               <Height>1.2</Height>
+               <ListHeight>0</ListHeight>
+               <Width>60</Width>
+               <Caption>{esc(text)}</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(10,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(207,12,44) JUSTIFY(L)</Post301Format>
+               <EffectiveCaption>{esc(text)}</EffectiveCaption>
+            </Component>
+"""
+
 def emit_title(text, y):
     return f"""            <Component Name="hdr_FormTitle">
                <DeviceID>-1</DeviceID>
@@ -491,6 +532,9 @@ def build_components():
         if kind == HEADER:
             out.append(emit_header(item[1], y))
             y += SECTION_H + 0.3
+        elif kind == GROUPLABEL:
+            out.append(emit_grouplabel(item[1], y))
+            y += 1.6
         elif kind == PAIR:
             a, b = item[1], item[2]
             row_h = 0
