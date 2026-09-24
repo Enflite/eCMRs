@@ -1,55 +1,244 @@
-# eCMRs — Task List
+# eCMRs — Field Completion Task List
 
-A from-scratch build: new table, new IDO, new form. Nothing here extends or joins `RS_QCCmrs`/`RS_QCCRcvrs` — see the README for why.
+One task per field (all 76 columns in `scripts/generate_schema_csv.py`'s `FIELDS`, plus the
+2 system auto-generated ones), stating exactly what — if anything — is still open for that
+field. Replaces the old phase-based task list. Grouped by the section each field actually sits
+in on the live form (`scripts/generate_form.py`'s `LAYOUT`), in form order. `[x]` = nothing left,
+confirmed or safe by design. `[ ]` = something concrete still needs doing or confirming.
 
-## Phase 0 — Carry over confirmed requirements from `cmr-project`
+Sourced from `scripts/generate_schema_csv.py`'s `FIELDS`/`ORPHANED_COLUMNS`,
+`scripts/generate_form.py`'s `LAYOUT`, `docs/troubleshooting.md`, `docs/deploy-checklist.md`,
+and a fresh direct comparison against the real legacy form's own XML
+(`Enflite/cmr-project`'s `exports/QC_CMRs_Original.XML`) — that comparison surfaced several
+corrections to earlier assumptions, flagged inline below with **⚠ per the original form**.
 
-Not re-investigating what's already confirmed there. Pulling forward as fixed requirements, not open questions:
+## Top row
 
-- [x] **Full field list, all of it — not just the editable subset.** Stakeholder direction: eCMRs is a standalone migration, meaning every field the consolidated CMR concept needs (per `cmr-project`'s `docs/field-mapping.md`) gets carried over, but each one becomes its own real, original column on this one standalone table — never a join or reference back to `rs_cmr`/`rs_crcvr`. See `docs/field-mapping.md` for the full list. Done: 76 columns in `scripts/generate_schema_csv.py`'s `FIELDS` (added `top_level_pn`/`sub_assembly`/`reported_by`; `general_note` un-orphaned and placed on the form). 9 remain orphaned (not bound to any form control) - see `ORPHANED_COLUMNS` there. The `*_empnum` and `*_description`/`VendorName` companion columns (21 total) were orphaned earlier but have since been restored to the form per direct request - the description/name group now auto-fills via a real `DefaultFrom` mechanism found on a live PurchaseOrders form (not the dead `SelectionEvent`), see `docs/troubleshooting.md`.
-- [ ] The Requirements checkbox cascade rule (Costing/Documentation/Material/Process/Tool-Machine, keyed off Initial Change) — the business mapping table in `cmr-project`'s `field-mapping.md` is the source of truth. The *mechanism* (`DefaultFrom: Change(RsChangeCosting, ...)`, a native Mongoose function keyed to those exact property names) is tied to the real `Change` property class on the legacy tables — **not yet confirmed whether it's available on entirely new property names on a brand-new IDO.** Still unverified - the 5 Req checkboxes exist on the live form as plain checkboxes, but nothing has confirmed the cascade actually fires from Initial Change.
-- [ ] ~~The Assigned/employee-lookup mechanism (`SLEmployees` list source + a `SelectionEvent` that writes a companion username field) — proven pattern, portable regardless of table.~~ **Superseded**: `SelectionEvent` is confirmed dead in this tenant (jams the whole form's edit/commit pipeline - see `docs/troubleshooting.md` Rule #1A). Assigned and all 5 Reviewer fields now bind their combo directly to a Username-holding property instead (the "Username-first `PROPERTIES()`" pattern, same doc). No companion-field auto-populate mechanism exists or is planned.
-- [ ] Job Number's real bug (leading-zero filter mismatch) — fix applied using the real, confirmed `SLMatltrans`/`RefNum` combo (read directly from the legacy `QC_CMRs` form's own Job Num combo), FILTER dropped same as PO Number's fix. Not yet confirmed live. See `docs/troubleshooting.md`.
+- [ ] **Status** — Combo, but its fixed value list isn't wired yet: needs `Inline List` set
+  directly on the property in Application Studio (`ENTRIES(CM,Complete,Data Input,Eng Review,
+  Planning,Purchasing,QC Approval)`), then the IDO checked in. The real original used a
+  different mechanism entirely (`DefaultFrom="QCStatusListings()"` + `PropertyClassName=
+  "QCOpenClosedStatus"`, a real system class/function) — not applicable here since our value
+  list is a custom 7-state workflow, not the original's open/closed concept. Our own Inline
+  List approach is already confirmed live on this exact property, so no need to chase the
+  original's mechanism.
+- [ ] **AssignedEmpNum** (`assigned_empnum`) — Combo, renamed `c_assigned_empnum_v2` this
+  session to force Form Sync to apply its Combo `Type` (Rule #1C) — unconfirmed live. Also
+  carries an untested `DefaultFrom="EmpNum(AssignedUsername)"` auto-fill experiment. **⚠ per the
+  original form**: the real original never had this mechanism — its equivalent field's
+  companion-name population used `SelectionEvent` (`UpdateAssignedToNameDisp`), confirmed dead
+  in this tenant. So this `DefaultFrom` experiment has no real working precedent anywhere, ours
+  or the original's — it's a genuine unknown, not "same pattern as something proven." Needs a
+  live re-import to confirm both: renders as an actual dropdown, and whether the auto-fill does
+  anything at all.
+- [ ] **AssignedUsername** (`assigned_username`) — Renamed `c_assigned_username_v2` (Rule #1C,
+  same as above). Combo binds here directly per the Username-first pattern; needs its `Read
+  Only` flag confirmed cleared in Application Studio (Rule #1B) — `docs/deploy-checklist.md`'s
+  checkbox for this has never been ticked off, so confirm live rather than assume it's done.
+  **⚠ per the original form**: its equivalent (`rs_cmrUf_ENF_CMR_AssignedUser`) used
+  `DefaultFrom="UserName()"` — a real, simpler mechanism meaning "default to whoever is
+  currently logged in," not a lookup off the selected EmpNum. That's a different semantic (who
+  created the record, not who it's assigned to) but it's an actual confirmed-real mechanism in
+  the original, worth trying here as an alternative if the EmpNum-sync experiment above doesn't
+  pan out — just confirm it's the behavior actually wanted before using it.
 
-## Phase A — Data model (one standalone table + IDO, zero dependencies)
+## CMR Details
 
-**Standing rule for this whole project, per explicit stakeholder direction: no joins, no foreign keys, no dependency on any other table or IDO — including `RS_QCCRcvrs`/`rs_crcvr`.** Not even a plain `RcvrNum` reference column tying back to the receiving transaction. This is a genuinely standalone form: one table, one IDO, self-contained. If a future need for cross-referencing (CAR, receiver traceability, reporting) comes up, that's a deliberate later decision to revisit — not something to build in by default now.
+- [x] **CmrNum** (`cmr_num`) — Key, `AUTONUMBER(STEP(1))`, confirmed working (create/save/reopen
+  exercised repeatedly). Only unconfirmed edge case: no race-condition test under concurrent
+  "New" — low priority, not blocking.
+- [x] **CreateDate** / **CreatedBy** (`create_date`, `created_by`) — System auto-generated by
+  Application Studio on every new table. Nothing to do.
+- [x] **PoNum** (`po_num`) — Fixed (dropped the self-referencing `FP()` exact-match bug that's
+  also in the real original's own combo — confirmed same bug there, not unique to us).
+- [ ] **PoNum** — separate, still-open item: no `RECORDCAP` on `SLPoItems`' unfiltered list
+  source. Fine now, but will get slow as the collection grows — needs a different mitigation
+  (paging, a narrowing property) since re-adding `FILTER()` reproduces the original bug.
+- [x] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(po_num)')`, the exact
+  same working pattern confirmed in the real original's own PO Line combo.
+- [x] **AssignedBuyer** (`assigned_buyer`) — Combo, `SLEmployees`. No open issues flagged.
+- [x] **Qty**, **Poc** — Plain fields, nothing flagged.
+- [x] **RfqNum** — Plain field, nothing flagged.
+- [ ] **JobNum** (`job_num`) — Fixed (real `SLMatltrans`/`RefNum`, `FILTER` dropped, same
+  zero-padding bug confirmed present in the original's own Job Num combo) but **not yet
+  confirmed live** — verify a zero-padded Job Number (e.g. `DK00084716`) actually resolves.
+- [x] **Revision**, **LatestRevision** — Plain fields, nothing flagged.
+- [x] **RequestedAction** — Plain multiline, nothing flagged.
+- [x] **NextAssyItem** (`next_assy_item`) — Combo, `SLJobmatls`/`JobItem`, cascades off Item via
+  the confirmed-safe `'P(Item)'` pattern (the original's own filter used the same idea, just
+  against its own field name). No open issues flagged for this field itself.
+- [ ] **NextAssyDescription** (`next_assy_description`) — Not on the form at all — absent from
+  both `generate_form.py` and the checked-in XML, and not in `ORPHANED_COLUMNS` either (a real
+  tracking gap, not a deliberate exclusion). **⚠ per the original form**: its real equivalent
+  (`rs_cmrUf_ENF_CMR_NextAssyDescription`) was populated via `SelectionEvent`
+  (`UpdateDescriptionNextAssy`) — confirmed dead in this tenant — **not** a `DefaultFrom`. So
+  there is no known-working mechanism to auto-fill this even if added. Decide: add it as a
+  plain manual-entry field (matching what a dead auto-fill would fall back to anyway), or
+  correct `ORPHANED_COLUMNS` to admit it's out of scope.
+- [x] **Vendor** (`vendor`) — Combo, `PropertyClassName="VendNum"` confirmed real (from the live
+  `PurchaseOrders` form). No `DefaultFrom` set on it, deliberately — see VendorName below.
+- [ ] **VendorName** (`vendor_name`) — Not on the form — same tracking gap as
+  NextAssyDescription (implied "restored" by the schema description, but absent from
+  `generate_form.py`, the XML, and `ORPHANED_COLUMNS`). **⚠ per the original form**: same
+  correction as NextAssyDescription — the real `rs_cmrUf_ENF_CMR_VendorName` was populated via
+  `SelectionEvent` (`UpdateVendorDescription`), confirmed dead here, not a `TermsCode`-style
+  `DefaultFrom`. No known-working auto-fill mechanism exists for this pairing in this tenant.
+  Same decision needed as NextAssyDescription.
+- [ ] **Priority** (`priority`) — Combo, fixed value list not wired: needs `Inline List`
+  `ENTRIES(High,Medium,Low)` set directly in Application Studio + Check In. (The original had
+  no combo for Priority at all — two plain typed fields, `RsCrcvrPriority`/`RsPriorityPriority`
+  — so there's no legacy precedent to compare against here; our Inline List plan stands on its
+  own, same mechanism already confirmed live on Status.)
 
-- [x] **Design the new table's schema** — see `docs/field-mapping.md`. Every column gets a real, purpose-built name (no `RsCrcvr*`/`rs_cmrUf_*` legacy naming), real data types, real lengths — not reused generic `Charfld`/`Decifld` columns, and not a join to anything.
-- [x] **Decide the primary key / numbering scheme.** Since this table has no composite key forced on it by a legacy join (unlike `RS_QCCmrs`'s `CmrNum`+`RsCrcvrRcvrNum`+`RsPriorityPriority`), this is a real chance to keep it simple — a single auto-numbering key column. Options to evaluate:
-  - IDO Studio's built-in `Autonumber` property type on a single identity/sequence column — likely sufficient now that there's no composite key requirement, and would let native "New" work directly with no custom Method/stored-procedure workaround at all.
-  - A new stored procedure only if `Autonumber` turns out insufficient (same atomic server-side generation pattern as `RSQC_CreateCmrSp` — **never** compute `MAX+1` client-side, same standing rule as `cmr-project`).
-  - Decide before building the form — this determines whether "New" works natively or needs an event-chain workaround.
-  - Decided: `CmrNum` uses `AUTONUMBER(STEP(1))` directly on the column (kept as `NumSortedString`, not a true int type - see that field's note in `FIELDS`). No stored procedure needed.
-- [x] Create the new table in Application Studio, under project `ue_ENF` (or a new dedicated project — decide naming convention for this repo). Live as `ue_ecmrs`.
-- [x] Create the new IDO on top of it, with the new table as its **only** base table — no secondary collections, no subcollections, no joined properties. Add a `Property` per column, set the real key. Live as IDO `ue_ecmrs`, 71 custom properties plus the 7 auto-generated system ones.
-- [ ] Test the `DefaultFrom: Change(...)` cascade function on the new IDO's own property names — confirm whether it's a generic Mongoose function available to any IDO, or specifically tied to the legacy `Change` property class. If it doesn't work, plan a scripted equivalent instead (a `StdObjectSelectCurrentCompleted`/change-event script setting the 5 checkbox properties directly) — still fully self-contained, no dependency on another table either way. **Still not confirmed either way.**
-- [ ] Check In.
+## Change Request Fields
 
-## Phase B — Form
+- [ ] **Dept** (`dept`) — `DefaultFrom="Dept(DeptDescription)"` was **re-added per direct
+  request despite already being confirmed to crash live once** ("internal validation error on
+  c_dept validator Dept... this cache property OfcAddr4 not in cache"). **⚠ per the original
+  form**: Dept in the real original was a **plain typed field with no combo and no auto-fill
+  mechanism at all** (`edit2`, `PropertyClassName="Dept"`, `Type=1`, no `DefaultFrom`) — there
+  was never a working precedent for this cascade anywhere, not on the original, not elsewhere.
+  Re-importing is very likely to reproduce the identical crash. Recommend treating this as
+  settled rather than re-testing again: fall back to plain manual entry for Dept Description,
+  matching what the original form itself actually did.
+- [ ] **Wc** (`wc`) — Same situation as Dept, and the same correction: the original's `Wc`
+  field (`edit12`) was also a plain typed field, no combo, no auto-fill. Same recommendation —
+  accept manual entry rather than keep retrying a mechanism with zero real precedent.
+- [x] **DeptDescription**, **WcDescription** — Correctly placed, read-only-styled display
+  fields. Given the finding above, the realistic remaining task for both is simply: make them
+  plain editable (or accept manual entry) rather than waiting on a `DefaultFrom` that has no
+  working precedent to lean on.
+- [ ] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` retried per direct request.
+  **⚠ per the original form**: Item in the real original was also a **plain typed field, no
+  combo, no auto-fill** (`edit10`, `Type=1`) — unlike Dept, this exact mechanism hasn't crashed
+  for us yet, but it's equally unprecedented; there's no confirmed-working analog anywhere.
+  Needs live verification after import, with the expectation it may fail the same way Dept did.
+- [x] **ItemDescription** (`item_description`) — On the form (hand-added in Application Studio
+  as `edit1_SITE`, not through the generator's naming convention — confirmed present, not a
+  gap). Only open item is Item's `DefaultFrom` above.
+- [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
+- [ ] **InitialChange** (`initial_change`) — Combo, fixed value list not wired (`Inline List`
+  `ENTRIES(Documentation,Machine,Material,Other,Process,Specification,Tooling,Variance(waiver))`
+  + Check In). Separately, and bigger: the Requirements checkbox cascade this field drives in
+  the original (via `RsChangeCosting`/`RsChangeDocumentation`/etc., a native mechanism tied to
+  the legacy `Change` property class) **has never been built or confirmed on this new IDO** —
+  decide whether an equivalent `DefaultFrom`-based cascade works on brand-new property names
+  here, or build a scripted equivalent. Right now the 5 Req checkboxes don't react to this
+  field at all.
+- [ ] **ReqCosting**, **ReqDocumentation**, **ReqToolMachine**, **ReqProcess**, **ReqMaterial**
+  — Plain, independently-clickable checkboxes on the form (the original's equivalents —
+  `RsChangeCosting` etc. — are likewise plain `ListYesNo` checkboxes, so the control type
+  itself is right). Same open item as InitialChange above: the cascade that's supposed to
+  auto-check these off Initial Change doesn't exist yet. Currently fully manual.
+- [x] **GeneralNote** — On the form (un-orphaned per direct request), nothing flagged.
 
-- [x] Build the `eCMRs` form from scratch — not copied from `QC_CMRs` this time, since there's no legacy layout constraint to inherit. Use `cmr-project`'s hard-won layout lessons (group Initial Change with its Requirement checkboxes, group Item/Reported By/the Create button together, keep the 5 Launch buttons/QC-review actions visually separate from the create flow) as the starting design, not a legacy shape to preserve. Live as `exports/eCMRs_v1.XML`, generated by `scripts/generate_form.py`.
-- [x] Wire New/Create using whatever Phase A's numbering decision requires. `StandardOperations=1019` (New enabled, matching the real single-screen `JobOrders` form).
-- [x] Wire Save/Update — should be plain native CRUD if Phase A's key design avoids `RS_QCCmrs`'s composite-key trap; confirm directly rather than assuming. Confirmed live: plain CRUD, no composite-key workaround needed.
-- [ ] Requirements checkboxes — build per Phase A's cascade-mechanism finding (native `DefaultFrom` if it works, scripted otherwise). The 5 checkboxes exist on the form as plain, independently-clickable checkboxes; the cascade-off-Initial-Change mechanism itself was never built or confirmed (same open item as Phase 0/Phase A above).
-- [x] Real `List Source`s for every combo (Item, Dept, WC, Assigned, Employee) — same real system lookups already confirmed in `cmr-project` (`SLItems`, `SLDepts`, `SLWcs`, `SLEmployees`). **Not a violation of the "no dependencies" rule**: these are read-only, standard SyteLine reference/picker lookups (the same lists any field on any form draws from), not a join or foreign key into another business table. The rule is about not structurally tying this table to `rs_cmr`/`rs_crcvr`/`RS_QCMrrs` — picking a value from a system list is fine.
-- [ ] **CAR cross-referencing (`LaunchCAR`/`RS_QCMrrs.RSQC_CreateCarSp`) is explicitly out of scope for this standalone build** — it's a dependency on a different table entirely. If CAR integration is ever wanted for eCMRs, that's a deliberate future decision, not part of this migration. (Left unchecked deliberately - this is a standing exclusion, not a completed task.)
+## Additional Fields
 
-## Phase C — Testing
+- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — Combos renamed `c_serial_num_v2`/
+  `c_lot_num_v2` this session (Rule #1C Type-fix experiment, unconfirmed live). List sources use
+  the now-confirmed-correct `SLSerials`/`SLLots` IDOs, cascading off Item via `'P(Item)'`. The
+  underlying `ue_ecmrs.SerialNum`/`LotNum` properties are confirmed to exist live (GitHub issue
+  #1, closed). Brand-new fields, no legacy precedent to compare against. Still open: confirm on
+  re-import that (a) the components now render as combos under the new name, not stuck as the
+  old broken type, and (b) the `SerialNum`/`LotNum` property names *inside* `SLSerials`/`SLLots`
+  are correct — unconfirmed assumption, though a wrong name here should throw a clear error
+  rather than fail silently.
+- [x] **TopLevelPn** — Plain field, nothing flagged. No legacy equivalent (brand-new per BRD).
+- [ ] **SubAssembly** (`sub_assembly`) — Plain field, on the form. No legacy equivalent either.
+  Open conceptual question, not a technical bug: still unconfirmed whether this is actually the
+  same concept as `NextAssyItem` (Next Level Assembly) — if so, one of the two is redundant.
+  Needs a business decision, not a code fix.
 
-- [x] Create a new CMR end-to-end — exercised repeatedly during live troubleshooting.
-- [x] Save and reopen — exercised repeatedly during live troubleshooting.
-- [ ] Confirm numbering has no race condition (Phase A's chosen mechanism) — not specifically tested.
-- [ ] Confirm the Requirements checkbox cascade actually fires — still unverified, same open item as above.
-- [ ] ~~Confirm Assigned's employee lookup + companion username field work unchanged~~ **Superseded**: there's no companion username field anymore - Assigned binds and stores Username directly (see Phase 0 note above). Confirmed working live once `AssignedUsername`'s Read Only flag was manually cleared (see `docs/troubleshooting.md`).
+## Quality
 
-## Phase D — Rollout
+- [x] **SoxImpacted**, **HoldOnPo**, **AuthSupplierShip** — Plain checkboxes, matching the
+  original's own plain `ListYesNo` checkboxes for these. Nothing flagged.
+- [ ] **ReasonCode**, **CauseCode** (`reason_code`, `cause_code`) — Reference the real,
+  existing system classes `QCReasonCode`/`QCCauseCode` directly via a component-level
+  `PropertyClassName` (per direct request, sharing QC_MRRs' list for now — a known, deliberate
+  trade-off, not a bug; QC_CMRs itself never had these fields at all, so there's no comparison
+  to make against the original form here). **Unconfirmed**: whether a component's
+  `PropertyClassName` can validly point at a class architecturally unrelated to its own bound
+  property — verify live after import.
+- [ ] **QcDisposition** — Fixed value list not wired: `Inline List`
+  `ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)` + Check In. (The original used
+  `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead — a different, more complex
+  two-step mechanism; our simpler Inline List approach is already confirmed live elsewhere on
+  this form, so there's no reason to chase the original's version.)
+- [ ] **QcReviewerEmpNum**, **QcReviewerUsername** — Renamed `_v2` this session (Rule #1C,
+  unconfirmed live, same as Assigned above). `DefaultFrom="EmpNum(QcReviewerUsername)"` on the
+  ID field is an explicit experiment with **no working precedent in the original** (its
+  equivalent used `SelectionEvent`, confirmed dead — see the Assigned entry above for the same
+  correction). Confirm Read Only is actually cleared on `QcReviewerUsername` too (Rule #1B,
+  same ambiguity as AssignedUsername above).
+- [x] **QcRcaNotes** — Plain multiline, nothing flagged.
 
-- [ ] Decide: does eCMRs replace `cmr-project`'s consolidated form entirely, run alongside it, or is `cmr-project` retired once eCMRs is proven? Not decided yet.
-- [ ] Decide: migrate historical CMR data from `rs_cmr`/`rs_crcvr` into the new table, or start eCMRs fresh going forward with legacy history staying queryable only through the old screens/tables? The "how" for whichever is chosen is no longer an open question — see the plan deck's Migration slide: field-by-field per `field-mapping.md` (no join back to the legacy tables), and `cmr_num` just needs to be a unique auto-generated value, so migrated rows get a fresh one on insert like any new CMR.
-- [ ] Retire or hide `Create Change Request`/`Change Request Management`/`QC_CMRs` once eCMRs is live, per whatever Phase D above decides.
-- [x] All six of the BRD's "additional fields" now have a real column + form control: JOB (`job_num`), Serial# (`serial_num`), Lot# (`lot_num`), Part (`item`) already existed; `top_level_pn` and `sub_assembly` were added, both plain editable fields (no confirmed combo/lookup source for either), placed above the Quality section and highlighted purple on the form to mark them as additions. `sub_assembly` was kept deliberately distinct from the existing `next_assy_item` (Next Level Assembly) rather than reusing it — **still an open question whether the two are actually the same concept**; revisit if that turns out to be true (one of the two columns would then be redundant).
-- [x] Design reviewed against a real screenshot of the live form and reconciled: `wc`/`wc_description`, `dept`/`dept_description`, and `due_date` were already above Quality (just not highlighted); the 5 Requirement checkboxes were moved out of the Quality section (they're Create Change Request carryover, not Quality-specific, per the plan deck's Design slide); `general_note` was un-orphaned and placed on the form; `reported_by` (who requested the change, distinct from `created_by`) was added as a brand-new column. All of the above are highlighted purple on the form, matching Serial#/Lot#/Top Level PN/Sub Assembly.
-- [x] Restore a close workflow for `Closed`/`CloseDate`/`ClosedBy` - done: the original `SetCloseInfo` checkbox mechanism was restored, moved into the Implementation section, and the form's `ORDERBY` sorts on `Closed` again. `GeneralReviewComplete` remains unwired - not part of this restore, still an open item if it's ever needed. See `docs/troubleshooting.md`.
-- [ ] Decide on a real Notify mechanism (currently a placeholder `MsgBox` that does not send anything - see `generate_form.py`'s `NotifyEngineering` handler) or remove the button.
-- [ ] Add a `RECORDCAP` to the PO Number combo's list source (`SL_POITEMS_NUM` in `generate_form.py`) before `SLPoItems` grows large enough to make the unfiltered list slow - no filter could be made to work (see `docs/troubleshooting.md`), so this needs a different mitigation (paging, a different narrowing property, etc.), not just re-adding the broken `FILTER()`.
+## Engineering
+
+- [x] **EoNum**, **Mdl** — Plain fields, nothing flagged.
+- [ ] **EngDisposition** — Fixed value list not wired: `Inline List`
+  `ENTRIES(NFF,NRS,Other,Rework,Scrap)` + Check In. Same original-vs-ours mechanism difference
+  as QcDisposition above (original used `UserDefinedType(Cmr_EngDispositionStatus)`) — no
+  action needed beyond our own already-confirmed Inline List approach.
+- [ ] **EngReviewerEmpNum**, **EngReviewerUsername** — Same open items as QcReviewerEmpNum/
+  QcReviewerUsername above (rename unconfirmed, DefaultFrom experiment has no real precedent,
+  Read Only clearance unconfirmed).
+- [x] **EngRcaNotes** — Plain multiline, nothing flagged.
+
+## Implementation
+
+- [ ] **PlanningReviewerEmpNum**, **PlanningReviewerName** — Same open items as the Quality/
+  Engineering reviewer pairs. **⚠ per the original form**: worth noting the original's Planning
+  reviewer combo used `SLEmployees(PROPERTIES(EmpNum,Name))` while Purchasing/CM used a
+  completely different table, `ue_employee_msts(PROPERTIES(emp_num,name))` — a legacy
+  inconsistency we deliberately didn't carry forward (we use `SLEmployees` uniformly). Not an
+  action item, just context for why our version doesn't match the original 1:1 here.
+- [x] **PlanningComplete** — Plain checkbox, not gated by anything, nothing flagged.
+- [ ] **PurchasingReviewerEmpNum**, **PurchasingReviewerName** — Same open items as above.
+- [x] **PurchasingComplete** — Plain checkbox, nothing flagged.
+- [ ] **CmReviewerEmpNum**, **CmReviewerName** — Same open items as above.
+- [x] **CmComplete** — Plain checkbox, nothing flagged.
+- [ ] **CloseDate**, **ClosedBy**, **Closed** — The `SetCloseInfo` mechanism (checkbox toggle →
+  auto-sets/clears these two) was restored and moved into this section, matching the original's
+  own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly. Only
+  open item: this *specific* restored/relocated instance hasn't been explicitly re-confirmed
+  live since the move — verify toggling Closed still correctly sets/clears CloseDate/ClosedBy.
+
+## Not on the form (deliberately orphaned — tracked, not forgotten)
+
+- [x] **WorkflowStatus** — Not placed; fixed value list never confirmed for us. The original
+  did have this field, with `DefaultFrom="UserDefinedType(Cmr_CMR_WorkFlowStatus)"` — a lead if
+  this is ever un-orphaned, but not confirmed to exist/work on our IDO. No action needed now.
+- [x] **AdditionalChanges** — Not placed. Column/property already exist live if ever needed.
+- [x] **CostReviewComplete**, **DocumentationReviewComplete**, **MachineryReviewComplete**,
+  **ProcessReviewComplete**, **MaterialReviewComplete** — No cascade UI was ever built for these;
+  deliberately orphaned until/unless the Requirements cascade (see InitialChange above) is ever
+  built and needs them. Matches the original's own plain checkboxes for these — the gap is the
+  missing cascade, not the fields themselves.
+- [x] **GeneralReviewComplete** — Dropped from the form per direct request (nothing ever set it,
+  matches the original's own `GeneralComplete`, which likewise had no `EventToGenerate` and was
+  `Hidden=True`). Deliberately excluded, no action needed.
+- [ ] **GeneralCloseDate**, **GeneralClosedBy** — Not placed. **⚠ per the original form**: these
+  are real legacy fields (`dateCombo5`/`enhancedCombo2`, `PropertyClassName="Date"`/`"EmpNum"`),
+  not invented schema cruft — so the "purpose vs. CloseDate" question is a genuine legacy
+  distinction worth resolving (not confirmed what it was for) before deciding whether to ever
+  surface them here.
+- [ ] **InternalReviewDate** (`internal_review_date`) — Not placed on the form, and unlike the
+  fields above, also **not in `ORPHANED_COLUMNS`** — a genuine tracking gap. **⚠ per the
+  original form**: this is a real field there too (`dateCombo2`, plain `Date` type, with its
+  own grid column), not a speculative addition — which strengthens the case for actually adding
+  it here rather than leaving it as an oversight. Decide: place it (Quality or Implementation
+  seem like the likeliest homes) and confirm it, or add it to `ORPHANED_COLUMNS` with a reason.
+
+## Standing project-level decisions (not field-specific, kept for context)
+
+- [ ] Phase D rollout: does eCMRs replace the `cmr-project` consolidated form entirely, run
+  alongside it, or retire it? Not decided.
+- [ ] Phase D: historical data migration from `rs_cmr`/`rs_crcvr` timing — the *how* is decided
+  (field-by-field, no join back, fresh `cmr_num` per migrated row), the *when* isn't.
+- [ ] Retire/hide `Create Change Request`/`Change Request Management`/`QC_CMRs` once Phase D
+  above is decided.
+- [ ] Real Notify mechanism — currently a placeholder `MsgBox` (`NotifyEngineering`) that sends
+  nothing. Decide: build a real notification, or remove the button.
+- [ ] CAR cross-referencing (`LaunchCAR`) — explicitly out of scope for this standalone build;
+  a deliberate future decision if ever wanted, not an oversight.

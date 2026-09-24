@@ -17,7 +17,7 @@ That approach hit real, structural ceilings along the way:
 
 ## Structure
 
-- `docs/task-list.md` — phased build plan
+- `docs/task-list.md` — per-field completion status: what's left for each field, if anything
 - `docs/field-mapping.md` — the new table's field/column design
 - `exports/` — Form Sync XML exports as the form gets built
 
@@ -27,7 +27,7 @@ Table, IDO, and form are live and in active use (71 custom properties, `exports/
 Combos/comboLists, the Username-binding pattern for Assigned/Reviewer fields, and the fixed-value
 dropdowns are all working - see `docs/troubleshooting.md` for the confirmed gotchas and
 `docs/deploy-checklist.md` for the manual Application Studio steps every re-import still needs.
-Known open gaps: the close workflow (Closed checkbox, `CloseDate`/`ClosedBy`/`Closed`/
-`GeneralReviewComplete`) was removed and never replaced, the Job Number leading-zero lookup bug
-is still deferred, and the Costing one-to-many design question is still open. See
-`docs/task-list.md` for phase-by-phase status.
+Known open gaps, field by field, are tracked in `docs/task-list.md` (e.g. several Reviewer/
+Assigned/Serial#/Lot# fields awaiting live re-confirmation after a Form Sync `Type`-change
+workaround, a handful of fixed-value dropdowns still needing their Inline List configured in
+Application Studio, and a few schema fields that quietly aren't on the form at all).
