@@ -651,7 +651,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
                <EffectiveCaption>Priority:</EffectiveCaption>
             </Component>
             <Component Name="c_priority">
@@ -672,7 +672,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
             </Component>
             <Component Name="l_initial_change">
                <DeviceID>-1</DeviceID>
@@ -2097,7 +2097,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
                <EffectiveCaption>Reason Code:</EffectiveCaption>
             </Component>
             <Component Name="c_reason_code">
@@ -2119,7 +2119,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
             </Component>
             <Component Name="l_cause_code">
                <DeviceID>-1</DeviceID>
@@ -2140,7 +2140,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
                <EffectiveCaption>Cause Code:</EffectiveCaption>
             </Component>
             <Component Name="c_cause_code">
@@ -2162,7 +2162,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,220,255]; )</Post301Format>
             </Component>
             <Component Name="l_qc_disposition">
                <DeviceID>-1</DeviceID>
