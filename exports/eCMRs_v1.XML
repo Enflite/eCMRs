@@ -651,7 +651,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.LotNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLItemLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1246,7 +1246,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.SerialNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLItemSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
