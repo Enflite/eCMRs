@@ -192,14 +192,11 @@ LAYOUT = [
     # Reported By is a person's name, not a long descriptive field - the B slot's 49-wide
     # default is sized for Assigned Buyer/POC, not this, so narrowed to a medium width.
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
-    # PENDING CONFIRMATION: kept here, unhighlighted, per direct request ("Due Date is an
-    # existing/general eCMR field... revert to <Post301Format />") - flagged back to the user
-    # because this contradicts two other sources of truth checked earlier this session: the
-    # design mockup's own new-box styling on Due Date, and the real legacy form
-    # (QC_CMRs_Original.XML), which has no Due Date field at all (it's Create Change
-    # Request-only, same as Dept/WC/Reported By/the Req: checkboxes). Un-highlighting it now
-    # since that's what was explicitly asked; still needs a real answer on where it belongs.
-    (PAIR, f("Due Date:", "due_date", TYPE_DATE), None),
+    # Confirmed purple/new, matching the design mockup's own new-box styling - Due Date isn't
+    # on the real legacy form at all (it's Create Change Request-only, same category as
+    # Dept/WC/Reported By/the Req: checkboxes below), so it belongs with the rest of this
+    # section's genuinely new fields, not treated as pre-existing.
+    (PAIR, f("Due Date:", "due_date", TYPE_DATE, highlight=True), None),
     # Initial Change consolidated here per direct request, same non-purple treatment as Item -
     # relocated, not restyled. Its own row (not paired) since it's the section's main
     # "what changed" field, not the same wide-B-slot 49 default (sized for combos like Job

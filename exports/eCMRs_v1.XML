@@ -1398,7 +1398,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Due Date:</EffectiveCaption>
             </Component>
             <Component Name="c_due_date">
@@ -1419,7 +1419,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format />
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
             </Component>
             <Component Name="l_initial_change">
                <DeviceID>-1</DeviceID>
