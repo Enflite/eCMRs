@@ -2,11 +2,13 @@
 
 This is the standard operating procedure for every Enflite SyteLine customization repo (e.g. `Enflite/eCMRs`, `Enflite/Incidents-`, `Enflite/ServiceOrders`). The same file goes in every repo, unchanged. Anything specific to one repo goes in its `README.md` and `docs/`, not here. `CLAUDE.md` holds a single line, `@AGENTS.md`, so every agent reads the same rules.
 
+**The master copy lives in [Enflite/Form-Project-Templates](https://github.com/Enflite/Form-Project-Templates)** (`project-template/AGENTS.md`), with the project templates, brand assets and shared procedures. Change the SOP there first, then copy it to every project repo (`scripts/sync-sop.sh --write`). Never edit it in a single project repo only.
+
 If this file and a repo's docs disagree, the repo's docs describe what is live. Fix whichever one is wrong in the same change.
 
 ## 1. What these repos are
 
-- The system is **Infor CloudSuite (SyteLine / CSI + FSP)**. **There is no direct SQL access.** Any `sql/` script is reference only; every check you give the team must be doable in the SyteLine UI (Design Mode, Dataviews, Excel exports from UET forms, "does the form open without errors").
+- The system is **Infor CloudSuite (SyteLine / CSI + FSP)**. **There is no direct SQL access.** Any `sql/` script is reference only; every check you give the team must be doable in the SyteLine UI (Design Mode, Dataviews, Excel exports from UET forms, "does the form open without errors"). Step-by-step procedures (UET setup, FormSync, staging checks, launch, rollback, new table + IDO) and a shared troubleshooting list are in the templates repo's `procedures/`.
 - Each repo is one form or one feature. It holds the form export(s), the scripts that build them, the rollback copies, and the plan and runbook.
 - The agent works on files in git only. **It cannot drive SyteLine, Application Studio, FormSync or UET.** Every step in the system is done by a person: write it as numbered steps they can follow, and never claim a system step is done until the user says so (then record it, see §8).
 
@@ -63,7 +65,7 @@ Never commit `node_modules/`, `__pycache__/` or secrets; keep them in `.gitignor
 ## 5. Form change workflow
 
 1. **Export the original** from TRN (and later production) and commit it under `original/` with a README table: file, environment, when exported. Compare the two with SHA-256 and write down whether they are identical (if not, production has local changes: stop and ask).
-2. **Write a build script** in `tools/` that reads the original and writes `<Form>.xml`. Its docstring says what it changes, where the layout comes from, and how to run it (`python3 tools/apply_form_changes.py [--prefix <alias>]`). The script must reproduce the committed `<Form>.xml` exactly; re-run it and check `git diff` is empty before committing.
+2. **Write a build script** in `tools/` that reads the original and writes `<Form>.xml`. Its docstring says what it changes, where the layout comes from, and how to run it (`python3 tools/apply_form_changes.py [--prefix <alias>]`). The script must reproduce the committed `<Form>.xml` exactly; run it with `--check` (or re-run it and check `git diff` is empty) before committing.
 3. **Highlight every new or changed component in purple** so testers can find them: labels `BACKCOLOR(112,48,160) FORECOLOR(255,255,255)`, fields and grid columns `BACKCOLOR(221,204,255)`. Removing the highlight is its own later change (drop the keywords in the script, rebuild, re-import).
 4. Add a grid-view column for every new field. Keep existing components where they are unless the source says to move them; if something must move or resize, say why in the plan.
 5. Relabels are **Caption changes only**: binding, lists and validators stay the same.
@@ -94,9 +96,9 @@ When the plan changes, update the deck in `plan/` to match and rebuild the `.pdf
 
 ## 7. Decks and Word documents
 
-- Follow the Enflite brand style guide: [`Enflite/eCMRs/docs/branding/enflite-style-guide.md`](https://github.com/Enflite/eCMRs/blob/main/docs/branding/enflite-style-guide.md). Enflite Red `#CF0C2C`, Ink `#1A1A1A`, Charcoal `#252525`; black/white/red with red used sparingly; no cards, no shadows; light display type with one bold word; real logo from `docs/branding/assets/`.
+- Follow the Enflite brand style guide: [`branding/enflite-style-guide.md`](https://github.com/Enflite/Form-Project-Templates/blob/main/branding/enflite-style-guide.md) in the templates repo. Enflite Red `#CF0C2C`, Ink `#1A1A1A`, Charcoal `#252525`; black/white/red with red used sparingly; no cards, no shadows; light display type with one bold word; real logo from the templates repo's `branding/assets/` (copied to `plan/brand/`).
 - Deck order: title, Scope, BRD, one Design slide per UET form, Develop, Staging, Launch, Test, Optimize, Rollback.
-- Build decks from a script (`plan/build_*.js` with pptxgenjs) and commit the `.pptx`, `.pdf` and the script. Word copies of Markdown docs are built with `tools/md_to_docx.py` (pandoc), never edited by hand.
+- Build decks from a script (`plan/build_impl_deck.js` with pptxgenjs; project content in `plan/deck.config.js`) and commit the `.pptx`, `.pdf` and the script. Word copies of Markdown docs are built with `tools/md_to_docx.py` (pandoc), never edited by hand.
 
 ## 8. Writing style for docs
 
@@ -116,6 +118,8 @@ When the plan changes, update the deck in `plan/` to match and rebuild the `.pdf
 
 ## 10. Checklist for a new repo
 
+Start from the templates repo: `scripts/new-project.sh <FormName> "<Short title>" ../<FormName>` does the first two items and sets up the rest as templates (see its `procedures/01-start-a-new-form-project.md`).
+
 - [ ] Copy this `AGENTS.md`; add `CLAUDE.md` containing `@AGENTS.md`
 - [ ] `.gitattributes` with `*.xml -text` and `*.XML -text`; `.gitignore`
 - [ ] Team's source files in `docs/` or `plan/mockups/`
@@ -124,3 +128,5 @@ When the plan changes, update the deck in `plan/` to match and rebuild the `.pdf
 - [ ] `docs/Implementation-Plan.md` in the §6 structure
 - [ ] `README.md` with change bullets, Release, Layout
 - [ ] Deck in `plan/` in the brand style
+
+When a project finds something every project should do (a new rule, a confirmed fix, a better script), add it to the templates repo too.
