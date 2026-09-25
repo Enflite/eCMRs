@@ -225,11 +225,60 @@ independently tested, but not worth risking. **Do not reuse a real
 system Property Class name in `DefaultFrom` (or bare `PropertyClassName`)
 on this IDO without testing that exact class live first** - a class
 being real and compiled somewhere does not mean it's compatible with a
-cache that doesn't carry its expected properties. `VendNum` (still on
-this form's Vendor field, `PropertyClassName` only, no `DefaultFrom`) and
-`QCReasonCode`/`QCCauseCode` (Reason Code/Cause Code, same) are
-UNTESTED against this same risk - they simply haven't been tried yet,
-not confirmed safe.
+cache that doesn't carry its expected properties.
+
+**Update: `Item(ItemDescription)` and `VendNum(VendorName)` both confirmed
+live-working.** Neither is a real system class the way `Dept` is (Item's
+combo names `Item` as its `PropertyClassName`; `VendNum` is the real,
+confirmed class from the live `PurchaseOrders` form) - narrower classes
+without an address-style sub-structure, so they didn't hit Dept's
+`OfcAddr4` crash. But `Item(ItemDescription)` still locked the whole form
+on first try, for a **different** reason than Dept - see the next section.
+`QCReasonCode`/`QCCauseCode` (Reason Code/Cause Code, referenced via bare
+`PropertyClassName`, no `DefaultFrom`) remain untested against any of
+this - they simply haven't been tried yet, not confirmed safe.
+
+## A `DefaultFrom` target locking the form isn't always the Read Only flag (Rule #1B) - check for a stray `ComboListSource` too
+
+`Item(ItemDescription)` locked the whole form the moment an Item was
+selected - the exact same symptom as Rule #1B (a `DefaultFrom` target
+whose Read Only flag is still set). Clearing `ItemDescription`'s Read
+Only flag (both the form component's and, per Rule #1B, its IDO-level
+flag) was necessary but **not sufficient** - the lock persisted.
+
+**Real second cause, found by diffing a live-working auto-fill pair
+against the locking one**: `ItemDescription`'s form component
+(`edit1_SITE`, hand-added directly in Application Studio, not through
+the generator) carried its own leftover `ComboListSource` - a
+self-referential `STDOLE SLItems( PROPERTIES(Description,Item)
+DISPLAY(1)RECORDCAP(0))` lookup - left over from however it was
+originally copied into place. None of the six already-working auto-fill
+targets (`AssignedUsername`, `QcReviewerUsername`, `EngReviewerUsername`,
+`PlanningReviewerName`, `PurchasingReviewerName`, `CmReviewerName`) carry
+a `ComboListSource` at all, even the ones that are plain `Type=1` Edit
+fields exactly like this one. With `Item`'s own `DefaultFrom` trying to
+write into `ItemDescription` while `ItemDescription`'s own component
+*also* runs a self-referential lookup against the same `SLItems`
+collection, the write collides with that list-source validation - a
+different flavor of "something extra fights the `DefaultFrom` write,"
+not a missing-combo problem (the intuitive guess would be the opposite -
+that the target needs to *become* a combo - but every working target is
+deliberately a bare `Type=1` Edit with nothing else attached).
+
+**Fix**: remove the stray `ComboListSource` entirely, so the target
+component is bare - just `DataSource`/`Binding`/`ReadOnly`/`Hidden`,
+nothing else. Confirmed live working after this fix, alongside the Read
+Only clear.
+
+**Checklist for a `DefaultFrom` target that locks the form:**
+1. Clear the target's Read Only flag, both the form component's own
+   `ReadOnly` attribute and its IDO-level flag in Application Studio
+   (Rule #1B) - the more common cause.
+2. If it still locks after that, check whether the target component
+   carries any leftover `ComboListSource`/other list-source attribute it
+   shouldn't have (especially likely on hand-added components, not ones
+   built through the generator) - remove it. The target should be a
+   bare, plain field.
 
 ## Binding a combo directly to return `Username` instead of `EmpNum`
 

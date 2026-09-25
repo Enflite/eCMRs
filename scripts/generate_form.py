@@ -255,12 +255,18 @@ LAYOUT = [
     # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
     # B slot's 49-wide default is sized for Assigned Buyer/POC, not this, so narrowed to a
     # medium width.
-    # Item(ItemDescription) DefaultFrom retried per direct request. CONFIRMED LIVE: it works -
-    # but only after fixing the exact Rule #1B symptom it hit first (whole form locked
-    # selecting Item). Root cause: edit1_SITE (ItemDescription's hand-added display component)
-    # was ReadOnly=True at the form level, blocking the DefaultFrom write - same class of bug
-    # as AssignedUsername/QcReviewerUsername etc. Fixed by flipping that ReadOnly to False;
-    # ItemDescription's IDO-level Read Only flag also needs clearing in Application Studio.
+    # Item(ItemDescription) DefaultFrom retried per direct request. Locked the whole form
+    # selecting Item, for TWO stacked reasons (fixing only the first wasn't enough):
+    # 1. edit1_SITE (ItemDescription's hand-added display component) was ReadOnly=True at the
+    #    form level, blocking the DefaultFrom write - same class of bug as
+    #    AssignedUsername/QcReviewerUsername etc. (Rule #1B). Fixed: flipped to ReadOnly=False.
+    # 2. Even after that, edit1_SITE ALSO carried its own leftover ComboListSource (a
+    #    self-referential STDOLE SLItems(...) lookup) - a vestige of however it was originally
+    #    hand-copied in Application Studio. None of the six working auto-fill targets
+    #    (AssignedUsername, QcReviewerUsername, EngReviewerUsername, Planning/Purchasing/
+    #    CmReviewerName) carry a ComboListSource, even the Type=1 plain-Edit ones - found by
+    #    directly diffing a live-working pair against this locking one. Fixed: removed it.
+    # ItemDescription's IDO-level Read Only flag still needs clearing in Application Studio.
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True, property_class_name="Item", default_from="Item(ItemDescription)"), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
     # Reverted to plain per direct request - Due Date isn't one of the new Change Request
     # fields after all (superseding the earlier confirmation to keep it purple).

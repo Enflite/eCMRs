@@ -1477,7 +1477,6 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.ItemDescription</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLItems(  PROPERTIES(Description,Item) DISPLAY(1)RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>

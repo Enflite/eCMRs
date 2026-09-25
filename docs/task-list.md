@@ -79,10 +79,10 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   locally, but not yet confirmed live).
 - [x] **Vendor** (`vendor`) — Combo, `PropertyClassName="VendNum"` confirmed real (from the live
   `PurchaseOrders` form). No `DefaultFrom` set on it, deliberately — see VendorName below.
-- [ ] **VendorName** (`vendor_name`) — **Implemented** (commit `991677c`): added as a plain
-  manually-typed field next to Vendor, same A2-slot treatment as NextAssyDescription, same
-  reasoning (its real auto-fill was `SelectionEvent`, confirmed dead here). Only remaining step:
-  confirm live on next re-import.
+- [x] **VendorName** (`vendor_name`) — **Confirmed live working**: `DefaultFrom=
+  "VendNum(VendorName)"` added to Vendor (commit `4aff9b1`) auto-fills VendorName correctly,
+  no lock, no issues. Confirms `VendNum` behaves like `EmpNum`/`Item` (safe, narrow classes),
+  not like `Dept` (real system class with incompatible cache dependencies).
 - [x] **Priority** (`priority`) — **Confirmed live**: latest screenshot shows the combo with
   `Low` selected, a valid value from the intended list — the `Inline List`
   `ENTRIES(High,Medium,Low)` is wired and working. (The original had no combo for Priority at
@@ -104,19 +104,20 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   `docs/deploy-checklist.md` now tracks clearing their live Read Only flag too (Rule #1B) —
   that manual Application Studio step is still outstanding, same as the other 6 entries in that
   list.
-- [ ] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` retried per direct request.
-  **⚠ per the original form**: Item in the real original was also a **plain typed field, no
-  combo, no auto-fill** (`edit10`, `Type=1`) — unlike Dept, this exact mechanism hasn't crashed
-  for us yet, but it's equally unprecedented; there's no confirmed-working analog anywhere.
-  Needs live verification after import, with the expectation it may fail the same way Dept did.
-- [ ] **ItemDescription** (`item_description`) — On the form (hand-added in Application Studio
-  as `edit1_SITE`, not through the generator's naming convention — confirmed present, not a
-  gap). **Still can't verify**: with Item = `00000-42560` selected, Item Desc also shows
-  `00000-42560` — identical to Item's own value, not an actual text description. Checked both
-  repos for any live Item Master export to verify this test item's real description against —
-  none exists (`docs/reference/` only has IDO Properties/SQL Columns exports, nothing
-  Item-related). Genuinely blocked on live access: needs someone to check the real item
-  master, or re-test with a different item and see if its description also mirrors its number.
+- [x] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` confirmed live working (commit
+  `e340521`'s follow-up fix). Locked the form on first try - not because `Item` is an unsafe
+  class like `Dept` (it isn't), but because the *target* (`ItemDescription`) had a stray
+  leftover `ComboListSource` fighting the write - see `docs/troubleshooting.md`'s new section
+  on this. Once that was removed, it works exactly like Vendor/VendorName and the Reviewer
+  pairs.
+- [x] **ItemDescription** (`item_description`) — **Fixed and confirmed live**: `edit1_SITE`
+  (hand-added in Application Studio, not through the generator) carried a leftover
+  self-referential `ComboListSource` against `SLItems` that none of the six working auto-fill
+  targets have - removed it, matching their bare `Type=1` shape exactly. Combined with clearing
+  its Read Only flag (Rule #1B), Item Description now auto-fills correctly with no lock. The
+  earlier concern (`00000-42560` showing in both Item and Item Desc) was a symptom of the same
+  bug, not a separate DefaultFrom-targeting-the-wrong-property issue - re-check with a real item
+  once this is live to confirm the actual description text populates correctly.
 - [x] **ReportedBy**, **DueDate** — Plain fields, nothing flagged.
 - [ ] **InitialChange** (`initial_change`) — **Inline List confirmed live**: latest screenshot
   shows `Other` selected, a valid value from the intended 8-value list. Bigger item: the
