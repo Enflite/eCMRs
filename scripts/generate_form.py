@@ -90,13 +90,13 @@ SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READM
 # field-mapping.md, which found an actual "Serial Numbers" form in this tenant bound to
 # SL.SLSerials with a SerNumEdit component on object.SerNum - not a guess.
 #
-# SLLots' PROPERTIES() name is STILL WRONG and STILL UNCONFIRMED: LotNum also threw "Invalid
-# property name LotNum for object SLLots" live. No equivalent real "Lot Numbers" form has ever
-# been found/documented in either project (cmr-project's own notes explicitly say this was
-# "not checked"). Don't guess a third time - check SLLots' real Properties list directly in
-# Application Studio's IDO Browser before trying another value here.
+# SLLots' PROPERTIES() name was also wrong - confirmed live: "Invalid property name LotNum
+# for object SLLots". Fixed to Lot, confirmed real via an actual "Lots" form (Lots.XML,
+# bound to SL.SLLots) found directly in this tenant: STDOLE SL.SLLots( PROPERTIES(Lot)
+# DISTINCT() ) - not a guess. Kept our own FILTER(Item='P(Item)')/DISPLAY(1) additions, which
+# never threw an error (only the property name inside PROPERTIES() was wrong).
 SL_ITEM_SERIALS = "STDOLE SLSerials( PROPERTIES(SerNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
-SL_ITEM_LOTS = "STDOLE SLLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
+SL_ITEM_LOTS = "STDOLE SLLots( PROPERTIES(Lot) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 # PO Num deliberately has NO self-referencing FILTER (unlike the legacy form's own combo) -
 # confirmed live that FP(x) is a plain exact-equality match against the raw typed text, no
 # wildcard/padding (the same root cause already found for Job Number's leading-zero bug in

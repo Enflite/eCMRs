@@ -147,15 +147,15 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Additional Fields
 
-- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — **Confirmed broken live, post-
-  `_v2`-rename**: latest screenshot shows both as plain boxes with no dropdown arrow — still
-  not rendering as combos despite the rename (same failure as the Reviewer/Assigned fields, see
-  `docs/troubleshooting.md` Rule #1C). List sources use the confirmed-correct `SLSerials`/
-  `SLLots` IDOs, cascading off Item via `'P(Item)'`, and the underlying `ue_ecmrs.SerialNum`/
-  `LotNum` properties are confirmed to exist live (GitHub issue #1, closed) — so once the Type
-  is fixed manually in Application Studio, the combo itself should work. Still can't test
-  whether the `SerialNum`/`LotNum` property names *inside* `SLSerials`/`SLLots` are correct
-  until the Type is fixed.
+- [x] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — The `Type` rendering bug (Rule #1C)
+  turned out to be a duplicate-Form-scope issue, not a Form Sync limitation — resolved once the
+  stale `jsmith1@enflite.com` User-scoped copy of the form was deleted. That surfaced the real
+  remaining bug: the `PROPERTIES()` name *inside* both list sources was wrong. **Both now
+  fixed and confirmed real, not guessed**: `SLSerials` uses `SerNum` (found via a real "Serial
+  Numbers" form documented in `cmr-project`'s field-mapping.md) and `SLLots` uses `Lot` (found
+  directly in a real "Lots" form, `Lots.XML`, bound to `SL.SLLots`). Our own
+  `FILTER(Item='P(Item)')`/`DISPLAY(1)` additions were never the problem — only the property
+  name was wrong in each case. Needs a live re-import to confirm both combos now populate.
 - [x] **TopLevelPn** — Plain field, nothing flagged. No legacy equivalent (brand-new per BRD).
 - [ ] **SubAssembly** (`sub_assembly`) — Plain field, on the form. No legacy equivalent either.
   Open conceptual question, not a technical bug: still unconfirmed whether this is actually the
