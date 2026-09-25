@@ -31,7 +31,7 @@ FIELDS = [
     ("workflow_status", "WorkflowStatus", "String", "40", "", "char", "", "", "", "Workflow status. Fixed value list not yet confirmed."),
     ("priority", "Priority", "String", "12", "", "", "sPriority", "", "", "Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."),
     ("item", "Item", "String", "30", "", "ItemType", "sItem", "", "", SL_ITEMS),
-    ("item_description", "ItemDescription", "String", "40", "", "DescriptionType", "sDescription", "", "1", "Read-only, restored to the form next to Item. Auto-populate now via DefaultFrom on Item's own component (Item(ItemDescription)), not SelectionEvent (confirmed dead - see docs/troubleshooting.md) - copied directly from the real PurchaseOrders form's TermsCode/ShipCode fields, which use this exact pattern with no SelectionEvent at all. Item as the real Property Class name is an extrapolation from that same live form, not independently confirmed for this class name - verify after import."),
+    ("item_description", "ItemDescription", "String", "40", "", "DescriptionType", "sDescription", "", "", "Auto-populated via DefaultFrom on Item's own component (Item(ItemDescription)) - confirmed live-working once this property's Read Only flag was cleared (Rule #1B; see REPURPOSED_WRITABLE). Item as the real Property Class name is an extrapolation from the live PurchaseOrders form's TermsCode/ShipCode pattern, not independently confirmed for this exact class name."),
     ("wc", "Wc", "String", "6", "", "WcType", "sWC", "", "", SL_WCS),
     ("wc_description", "WcDescription", "String", "40", "", "DescriptionType", "sDescription", "", "", "Plain manually-typed field next to Wc - the DefaultFrom auto-fill attempt (Wc(WcDescription)) is permanently abandoned, confirmed live-breaking twice (OfcAddr4 validator crash) and with no working precedent on the real original form either (Wc was a plain typed field there too, no combo, no auto-fill). See docs/troubleshooting.md."),
     ("dept", "Dept", "String", "6", "", "DeptType", "sDepartment", "", "", SL_DEPTS),
@@ -171,6 +171,9 @@ REPURPOSED_WRITABLE = {
     "cm_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
     "dept_description": "Now a plain manually-typed field - the DefaultFrom auto-fill it was designed for is permanently abandoned (confirmed live-breaking). Was a read-only auto-populated companion.",
     "wc_description": "Now a plain manually-typed field - the DefaultFrom auto-fill it was designed for is permanently abandoned (confirmed live-breaking). Was a read-only auto-populated companion.",
+    "item_description": "DefaultFrom=\"Item(ItemDescription)\" on Item confirmed live-working once this property's Read Only flag is cleared - locked the whole form (Rule #1B) until fixed. Was a read-only auto-populated companion.",
+    "vendor_name": "DefaultFrom=\"VendNum(VendorName)\" added to Vendor, extending the confirmed-working Item/EmpNum pattern - needs this property's Read Only flag cleared the same way. Was designed as a read-only auto-populated companion.",
+    "next_assy_description": "DefaultFrom=\"Item(NextAssyDescription)\" added to NextAssyItem, same pattern as VendorName above - needs this property's Read Only flag cleared. Was designed as a read-only auto-populated companion.",
 }
 
 def main():

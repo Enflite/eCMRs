@@ -712,6 +712,8 @@
                <DataSource>object.NextAssyItem</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
+               <DefaultFrom>Item(NextAssyDescription)</DefaultFrom>
+               <PropertyClassName>Item</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1285,7 +1287,7 @@
                <ContainerSequence>0</ContainerSequence>
                <DataSource>object.SerialNum</DataSource>
                <Binding>1</Binding>
-               <ComboListSource>STDOLE SLSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
+               <ComboListSource>STDOLE SLSerials( PROPERTIES(SerNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1390,6 +1392,8 @@
                <DataSource>object.Vendor</DataSource>
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLVendors( PROPERTIES(VendNum, Name) )</ComboListSource>
+               <DefaultFrom>VendNum(VendorName)</DefaultFrom>
+               <PropertyClassName>VendNum</PropertyClassName>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
@@ -1475,7 +1479,7 @@
                <Binding>1</Binding>
                <ComboListSource>STDOLE SLItems(  PROPERTIES(Description,Item) DISPLAY(1)RECORDCAP(0))</ComboListSource>
                <Flags>1</Flags>
-               <ReadOnly>True</ReadOnly>
+               <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format />

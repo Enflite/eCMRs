@@ -83,14 +83,19 @@ SL_EMPLOYEES_ASSIGNED = "STDOLE SLEmployees( PROPERTIES(Username,EmpNum,Name) DI
 # comboBox2_SITE, comboBox4_SITE), just swapped to our own property names.
 SL_JOBMATLS_NEXT_ASSY = "STDOLE SLJobmatls( PROPERTIES(JobItem) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 # IDO names confirmed directly per direct request: SLSerials for serial numbers, SLLots for
-# lot numbers (not the SLItemSerials/SLItemLots guess this had before). The property names
-# inside each PROPERTIES() list (SerialNum/LotNum) are still our own assumption, not
-# independently confirmed the way the IDO names themselves now are - verify live that these
-# are the right property names within SLSerials/SLLots (if wrong, the combo will likely throw
-# a clear "property not in collection" error rather than fail silently, unlike a wrong IDO
-# name). FILTER(Item='P(Item)') cascade syntax is the same confirmed-safe pattern as Next Lvl
-# Assy above.
-SL_ITEM_SERIALS = "STDOLE SLSerials( PROPERTIES(SerialNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
+# lot numbers (not the SLItemSerials/SLItemLots guess this had before).
+#
+# The PROPERTIES() name inside SLSerials was wrong - confirmed live: "Invalid property name
+# SerialNum for object SLSerials". Fixed to SerNum, confirmed real via cmr-project's own
+# field-mapping.md, which found an actual "Serial Numbers" form in this tenant bound to
+# SL.SLSerials with a SerNumEdit component on object.SerNum - not a guess.
+#
+# SLLots' PROPERTIES() name is STILL WRONG and STILL UNCONFIRMED: LotNum also threw "Invalid
+# property name LotNum for object SLLots" live. No equivalent real "Lot Numbers" form has ever
+# been found/documented in either project (cmr-project's own notes explicitly say this was
+# "not checked"). Don't guess a third time - check SLLots' real Properties list directly in
+# Application Studio's IDO Browser before trying another value here.
+SL_ITEM_SERIALS = "STDOLE SLSerials( PROPERTIES(SerNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 SL_ITEM_LOTS = "STDOLE SLLots( PROPERTIES(LotNum) DISPLAY(1) READMODE(UNCOMMITTED) DISTINCT() FILTER(Item='P(Item)') RECORDCAP(0))"
 # PO Num deliberately has NO self-referencing FILTER (unlike the legacy form's own combo) -
 # confirmed live that FP(x) is a plain exact-equality match against the raw typed text, no
@@ -195,10 +200,19 @@ LAYOUT = [
     # spanning several rows), confirmed by a geometry collision check against the checked-in
     # XML. ctrl_w=15 is cramped for a description field but it's what fits without touching
     # that sidebar box's own hand-tuned dimensions.
-    (TRIPLE, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY), f("Next Assy Description:", "next_assy_description", TYPE_EDIT, ctrl_w=15), None),
+    #
+    # DefaultFrom="Item(NextAssyDescription)" added per direct request, extending the now-
+    # CONFIRMED LIVE WORKING pattern (Item(ItemDescription) on Item itself, and the
+    # EmpNum(...) Reviewer auto-fills) to this pair. Same "Item" class already proven safe.
+    # Requires NextAssyDescription's IDO-level Read Only flag cleared in Application Studio
+    # (Rule #1B) - same manual step as every other field in this pattern.
+    (TRIPLE, f("Next Lvl Assy:", "next_assy_item", TYPE_COMBO, SL_JOBMATLS_NEXT_ASSY, property_class_name="Item", default_from="Item(NextAssyDescription)"), f("Next Assy Description:", "next_assy_description", TYPE_EDIT, ctrl_w=15), None),
     # VendNum is directly confirmed as the real Property Class name for a vendor number field -
     # taken from the live PurchaseOrders form's own VendNumEdit component, not a guess.
-    (TRIPLE, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum"), f("Vendor Name:", "vendor_name", TYPE_EDIT, ctrl_w=15), None),
+    # DefaultFrom="VendNum(VendorName)" added per direct request, same reasoning as
+    # NextAssyDescription above - extending the confirmed-working Item/EmpNum pattern. Requires
+    # VendorName's IDO-level Read Only flag cleared in Application Studio (Rule #1B).
+    (TRIPLE, f("Vendor:", "vendor", TYPE_COMBO, SL_VENDORS, property_class_name="VendNum", default_from="VendNum(VendorName)"), f("Vendor Name:", "vendor_name", TYPE_EDIT, ctrl_w=15), None),
     (PAIR, f("Priority:", "priority", TYPE_COMBO), None),
 
     # Everything from here down, up to QUALITY, is new-since-the-legacy-form - grouped and
@@ -241,8 +255,12 @@ LAYOUT = [
     # non-purple treatment. Reported By is a person's name, not a long descriptive field - the
     # B slot's 49-wide default is sized for Assigned Buyer/POC, not this, so narrowed to a
     # medium width.
-    # Item(ItemDescription) DefaultFrom retried per direct request - untested (Item wasn't the
-    # one that crashed; Dept was - see docs/troubleshooting.md Rule #1's Dept/OfcAddr4 entry).
+    # Item(ItemDescription) DefaultFrom retried per direct request. CONFIRMED LIVE: it works -
+    # but only after fixing the exact Rule #1B symptom it hit first (whole form locked
+    # selecting Item). Root cause: edit1_SITE (ItemDescription's hand-added display component)
+    # was ReadOnly=True at the form level, blocking the DefaultFrom write - same class of bug
+    # as AssignedUsername/QcReviewerUsername etc. Fixed by flipping that ReadOnly to False;
+    # ItemDescription's IDO-level Read Only flag also needs clearing in Application Studio.
     (PAIR, f("Item:", "item", TYPE_COMBO, SL_ITEMS, highlight=True, property_class_name="Item", default_from="Item(ItemDescription)"), f("Reported By:", "reported_by", TYPE_EDIT, highlight=True, ctrl_w=30)),
     # Reverted to plain per direct request - Due Date isn't one of the new Change Request
     # fields after all (superseding the earlier confirmation to keep it purple).

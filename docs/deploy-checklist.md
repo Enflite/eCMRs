@@ -24,6 +24,9 @@ Form Sync re-import never touches an existing property's Read Only flag.
 - [ ] `CmReviewerName` (cm_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
 - [ ] `DeptDescription` (dept_description) - Now a plain manually-typed field - the DefaultFrom auto-fill it was designed for is permanently abandoned (confirmed live-breaking). Was a read-only auto-populated companion.
 - [ ] `WcDescription` (wc_description) - Now a plain manually-typed field - the DefaultFrom auto-fill it was designed for is permanently abandoned (confirmed live-breaking). Was a read-only auto-populated companion.
+- [ ] `ItemDescription` (item_description) - DefaultFrom="Item(ItemDescription)" on Item confirmed live-working once this property's Read Only flag is cleared - locked the whole form (Rule #1B) until fixed. Was a read-only auto-populated companion.
+- [ ] `VendorName` (vendor_name) - DefaultFrom="VendNum(VendorName)" added to Vendor, extending the confirmed-working Item/EmpNum pattern - needs this property's Read Only flag cleared the same way. Was designed as a read-only auto-populated companion.
+- [ ] `NextAssyDescription` (next_assy_description) - DefaultFrom="Item(NextAssyDescription)" added to NextAssyItem, same pattern as VendorName above - needs this property's Read Only flag cleared. Was designed as a read-only auto-populated companion.
 
 ## Inline List must be manually configured
 
