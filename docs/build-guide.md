@@ -12,7 +12,7 @@ the two-mechanism split below), not as a build reference. For current, accurate 
 Two separate mechanisms, don't conflate them:
 
 1. **The table + IDO cannot be imported.** Form Sync only creates/updates **forms** — it has no mechanism for defining a new SQL table or an IDO's property list. This part has to be done by hand in Application Studio, once, following the steps below.
-2. **The form CAN be imported via Form Sync**, once the IDO exists. `exports/eCMRs_v1.XML` (see below) is a complete, ready-to-import Form Sync export — the same mechanism used throughout `cmr-project` all session. Import order matters: table/IDO first, form second, because the form's XML binds every field by the exact property names chosen in step 1.
+2. **The form CAN be imported via Form Sync**, once the IDO exists. `exports/eCMRs_v2.XML` (see below) is a complete, ready-to-import Form Sync export — the same mechanism used throughout `cmr-project` all session. Import order matters: table/IDO first, form second, because the form's XML binds every field by the exact property names chosen in step 1.
 
 ## Schema as CSV
 
@@ -112,6 +112,6 @@ These need a Property Class with an Inline List defined in Application Studio �
 
 ## Step 2 — Import the form via Form Sync
 
-Once Step 1 is checked in, import `exports/eCMRs_v1.XML` through Form Sync as usual. It's bound entirely to `object.<property>` on `ue_ecmrs`'s primary collection — no secondary collections, no Variables, no read/write bridge scripts, because every field is a **native, directly-writable property** on this standalone IDO. That's the real payoff of not extending `RS_QCCmrs`: none of `cmr-project`'s Variable+script workaround pattern is needed here.
+Once Step 1 is checked in, import `exports/eCMRs_v2.XML` through Form Sync as usual. It's bound entirely to `object.<property>` on `ue_ecmrs`'s primary collection — no secondary collections, no Variables, no read/write bridge scripts, because every field is a **native, directly-writable property** on this standalone IDO. That's the real payoff of not extending `RS_QCCmrs`: none of `cmr-project`'s Variable+script workaround pattern is needed here.
 
 **If any property name in Step 1 doesn't match `field-mapping.md`/the XML exactly**, the import will fail to bind those fields — reconcile names first, or tell me what you actually named things and I'll regenerate the XML.

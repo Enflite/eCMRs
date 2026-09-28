@@ -15,15 +15,26 @@ That approach hit real, structural ceilings along the way:
 
 `cmr-project`'s docs (especially `docs/field-mapping.md` and the "Requirements checkbox cascade" section) are the requirements reference — every business rule confirmed there (what a CMR needs, how the 5 Requirement checkboxes cascade off Initial Change via the real `DefaultFrom: Change(...)` function, how the Assigned/employee lookup works, etc.) still applies here. What's different is *how* it gets built: original schema, not a legacy extension.
 
-## Structure
+## Layout
 
-- `docs/task-list.md` — per-field completion status: what's left for each field, if anything
-- `docs/field-mapping.md` — the new table's field/column design
-- `exports/` — Form Sync XML exports as the form gets built
+| Path | What |
+|---|---|
+| [`exports/eCMRs_v2.XML`](exports/eCMRs_v2.XML) | **The form to import** (FormSync, Site scope). Built by `tools/apply_form_changes.py`. |
+| [`original/eCMRs.trn.original.xml`](original/eCMRs.trn.original.xml) | Form v1 as on TRN - input to the build script and the rollback copy ([README](original/README.md)) |
+| [`tools/apply_form_changes.py`](tools/apply_form_changes.py) | Builds v2 from v1 by editing the XML text in place; `--check` verifies the committed file |
+| [`scripts/`](scripts/) | Schema master list (`generate_schema_csv.py`) and the CSV / deploy-checklist generators; `generate_form.py` is retired (built v1) |
+| `exports/*.csv` | Generated table / IDO property import files |
+| [`docs/field-review.md`](docs/field-review.md) | Field-by-field review against the original QC_CMRs / Create Change Request forms |
+| [`docs/deploy-checklist.md`](docs/deploy-checklist.md) | Generated: manual Application Studio steps (Read Only flags, Inline Lists) |
+| [`docs/task-list.md`](docs/task-list.md) | Per-field completion status |
+| [`docs/troubleshooting.md`](docs/troubleshooting.md) | Confirmed gotchas: symptom, cause, fix |
+| [`docs/field-mapping.md`](docs/field-mapping.md) / [`docs/build-guide.md`](docs/build-guide.md) | Table design / first-time build steps |
+| `docs/reference/`, `docs/presentations/`, `docs/branding/` | Live exports used as references, plan deck, brand assets |
 
 ## Status
 
-Table, IDO, and form are live and in active use (71 custom properties, `exports/eCMRs_v1.XML`).
+Table, IDO, and form v1 are live on TRN. Form v2 (`exports/eCMRs_v2.XML`) is ready to import - see
+**Release** below.
 Combos/comboLists, the Username-binding pattern for Assigned/Reviewer fields, and the fixed-value
 dropdowns are all working - see `docs/troubleshooting.md` for the confirmed gotchas and
 `docs/deploy-checklist.md` for the manual Application Studio steps every re-import still needs.
@@ -31,3 +42,23 @@ Known open gaps, field by field, are tracked in `docs/task-list.md` (e.g. severa
 Assigned/Serial#/Lot# fields awaiting live re-confirmation after a Form Sync `Type`-change
 workaround, a handful of fixed-value dropdowns still needing their Inline List configured in
 Application Studio, and a few schema fields that quietly aren't on the form at all).
+
+## Release
+
+- **2026-09-28:** Form **v2** built (not yet imported). Fixes from the TRN review
+  ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (validators),
+  Reason/Cause Code get their own code lists (fixes the `'FP'` error), Implementation section
+  re-laid out, Internal Review Date moved back to Engineering.
+
+### Importing v2 on TRN
+
+1. In Application Studio, IDO Properties for `ue_ecmrs`:
+   - `ReasonCode` **Inline List**: `ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)`
+   - `CauseCode` **Inline List**: `ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)`
+   - `DeptDescription` and `WcDescription`: **Read Only** unchecked.
+   - **Check In** the IDO.
+2. Import [`exports/eCMRs_v2.XML`](exports/eCMRs_v2.XML) through **FormSync** at Site scope.
+3. Test: pick a Dept and a Work Center (descriptions fill); open Reason and Cause (codes listed,
+   no error); tick **Closed** (date and name fill); save, reopen. Try Serial #/LOT # with an item
+   that has serials/lots.
+4. Rollback: import [`original/eCMRs.trn.original.xml`](original/eCMRs.trn.original.xml).

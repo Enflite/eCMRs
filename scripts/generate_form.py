@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
-"""Generates the eCMRs Form Sync XML export from the field-mapping.md field list.
+"""RETIRED - do not run to produce an import file.
 
-NOTE: exports/eCMRs_v1.XML currently reflects manual, hand-tuned adjustments made directly in
-Application Studio on top of what this script last generated - specifically, the multiline
-notes fields (Requested Action/General Note/QC RCA Notes/Eng RCA Notes) were repositioned into
-a sidebar layout (a tall box to the right of a whole cluster of rows, matching the design
-mockup's real pattern) rather than this script's simpler "label beside its own row's box"
-layout, and an "Item Desc:" field was manually re-added next to Item. Running this script
-again will NOT reproduce those manual adjustments - it'll regenerate the simpler layout this
-file had before they were made. Treat the checked-in XML as authoritative until this generator
-is updated to match; don't blindly re-run and recommit over it.
+This generated the first version of the eCMRs form. That form was then hand-tuned in
+Application Studio (notes sidebars, Item Desc, the _v2 component names), so this script can no
+longer reproduce what is on TRN. The form is now built by tools/apply_form_changes.py, which
+edits original/eCMRs.trn.original.xml (the v1 export) in place and writes exports/eCMRs_v2.XML.
+Kept for its comments: they record why each list source / binding was chosen.
 """
 import sys
 import os
