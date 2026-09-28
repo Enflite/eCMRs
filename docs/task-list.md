@@ -164,6 +164,8 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [ ] **CauseCode** (`cause_code`) — **Fixed in v2, check on TRN**. v1 threw *"'FP' is not a
   recognized built-in function name.::4"* (the earlier "confirmed live" note was wrong). Own
   Inline List in v2 with the 13 QC_MRRs cause codes (ENF … VOID).
+  2026-09-28: first v2 import still showed the error - the live component kept the class.
+  Components renamed `c_reason_code_v2` / `c_cause_code_v2` so FormSync recreates them.
 - [x] **QcDisposition** — **Confirmed live**: latest screenshot shows `Hold` selected, a valid
   value from the intended list — the `Inline List` is wired and working. (The original used
   `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead, a different mechanism; ours

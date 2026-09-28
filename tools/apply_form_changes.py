@@ -19,7 +19,9 @@ What it changes (v1 -> v2):
      filter on QC_MRRs fields (FP(...)) that ue_ecmrs does not have, which caused the
      "'FP' is not a recognized built-in function name" error and the empty Reason list. The
      lists now come from each property's own Inline List (scripts/generate_ido_import.py
-     INLINE_LISTS, codes taken from the live QC_MRRs dropdowns).
+     INLINE_LISTS, codes taken from the live QC_MRRs dropdowns). Both components are renamed
+     c_reason_code_v2 / c_cause_code_v2 so FormSync creates them fresh - re-importing the old
+     names kept the class on TRN.
   4. Implementation section re-laid out on one grid: checkbox | Reviewer ID | Reviewer, with
      Closed / Close Date / Closed By as the last row of the same grid.
   5. Internal Review Date moved back to Engineering (where the original QC_CMRs form has it,
@@ -111,6 +113,12 @@ class Form:
         if tab is not None:
             self.set(name, "TabOrder", str(tab))
 
+    def rename(self, old, new):
+        a, b = self._span(old)
+        if f'<Component Name="{new}">' in self.text:
+            raise SystemExit(f"component already exists: {new}")
+        self.text = self.text[:a] + self.text[a:b].replace(f'Name="{old}"', f'Name="{new}"', 1) + self.text[b:]
+
     def caption(self, name, text):
         self.set(name, "Caption", text)
         self.set(name, "EffectiveCaption", text)
@@ -125,8 +133,15 @@ def build(text):
     f.insert_after("c_wc", "Width", "Validators", "WcDesc(WcDescription)")
 
     # 3. Reason/Cause: drop the MRR-only property classes; the Inline List drives the list.
-    f.remove("c_reason_code", "PropertyClassName")
-    f.remove("c_cause_code", "PropertyClassName")
+    # Renamed to *_v2 as well: confirmed on TRN (2026-09-28) that importing the same component
+    # name without <PropertyClassName> left the old QCCauseCode class on the live component
+    # (FormSync doesn't clear a setting that is simply missing from the file), so the 'FP'
+    # error stayed. A new name makes FormSync create the component fresh. The class-derived
+    # EffectiveCaption (sCode / sRSQCCause) goes too.
+    for col in ("reason_code", "cause_code"):
+        f.remove(f"c_{col}", "PropertyClassName")
+        f.remove(f"c_{col}", "EffectiveCaption")
+        f.rename(f"c_{col}", f"c_{col}_v2")
 
     # 4. Implementation grid. Tab order: after Internal Review Date (54) and Eng RCA Notes (55).
     tab = 56

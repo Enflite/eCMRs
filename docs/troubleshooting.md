@@ -653,6 +653,14 @@ property gets its own **Inline List** with the same codes as the live QC_MRRs dr
 Set the Inline List on `ReasonCode` and `CauseCode` in the IDO Properties grid and **Check In**
 the IDO before importing form v2. A code added in QCS later has to be added to both places.
 
+**Update 2026-09-28: the first v2 import still showed the error.** Importing `c_cause_code`
+with its `<PropertyClassName>` line removed did not clear the class on TRN - FormSync keeps a
+setting that is simply missing from the file (same family as Rule #1B / #1C). Fix: the
+components are now `c_reason_code_v2` / `c_cause_code_v2`, so FormSync creates them fresh with
+no class. If the error still shows after that, check the **IDO property** itself: in the IDO
+Properties grid, `CauseCode` and `ReasonCode` must have a blank **Property Class** (the class
+may have been set there by hand at some point) - clear it and **Check In**.
+
 **Confirm on TRN**: both dropdowns list their codes, no error, value saves and reloads.
 **Status: assumed until checked on TRN.**
 

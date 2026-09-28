@@ -125,7 +125,7 @@
                <Post301Format />
                <EffectiveCaption>Authorization For Supplier To Ship</EffectiveCaption>
             </Component>
-            <Component Name="c_cause_code">
+            <Component Name="c_cause_code_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>44</TabOrder>
@@ -144,7 +144,6 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
-               <EffectiveCaption>sRSQCCause</EffectiveCaption>
             </Component>
             <Component Name="c_close_date">
                <DeviceID>-1</DeviceID>
@@ -1059,7 +1058,7 @@
                <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
-            <Component Name="c_reason_code">
+            <Component Name="c_reason_code_v2">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
                <TabOrder>43</TabOrder>
@@ -1078,7 +1077,6 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
-               <EffectiveCaption>sCode</EffectiveCaption>
             </Component>
             <Component Name="c_reported_by">
                <DeviceID>-1</DeviceID>

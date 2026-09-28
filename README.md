@@ -56,8 +56,11 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
    - `ReasonCode` **Inline List**: `ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)`
    - `CauseCode` **Inline List**: `ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)`
    - `DeptDescription` and `WcDescription`: **Read Only** unchecked.
+   - `ReasonCode` and `CauseCode`: **Property Class** blank.
    - **Check In** the IDO.
 2. Import [`exports/eCMRs_v2.XML`](exports/eCMRs_v2.XML) through **FormSync** at Site scope.
+   If a **Reason Code** / **Cause Code** box shows twice (old `c_reason_code` / `c_cause_code`
+   left behind), delete the old one in Design Mode.
 3. Test: pick a Dept and a Work Center (descriptions fill); open Reason and Cause (codes listed,
    no error); tick **Closed** (date and name fill); save, reopen. Try Serial #/LOT # with an item
    that has serials/lots.
