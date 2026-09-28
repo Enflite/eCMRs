@@ -91,19 +91,14 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [x] **Dept** (`dept`) — **Fixed** (commit `991677c`): `DefaultFrom="Dept(DeptDescription)"`
-  and its `PropertyClassName="Dept"` permanently removed from the combo — this mechanism was
-  confirmed to crash live once, then confirmed to silently no-op on retry, and the real
-  original form never had any combo or auto-fill for Dept at all (`edit2`, plain `Type=1`, no
-  `DefaultFrom`) — no working precedent existed anywhere for this cascade. Dept is now just a
-  plain combo with no side effects.
-- [x] **Wc** (`wc`) — Same fix, same commit, same reasoning as Dept.
-- [x] **DeptDescription**, **WcDescription** — **Fixed** (commit `991677c`): both changed from
-  `ReadOnly=True` to plain editable fields, since the `DefaultFrom` they were waiting on is
-  permanently abandoned. Added to `REPURPOSED_WRITABLE` in `generate_schema_csv.py` so
-  `docs/deploy-checklist.md` now tracks clearing their live Read Only flag too (Rule #1B) —
-  that manual Application Studio step is still outstanding, same as the other 6 entries in that
-  list.
+- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `Dept(DeptDescription,)` on
+  the combo (copied from the live Service Orders form), no `PropertyClassName`. See
+  `docs/troubleshooting.md` "Description auto-fill for Dept and Work Center".
+- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `WcDesc(WcDescription)` (copied
+  from the original Create Change Request form).
+- [ ] **DeptDescription**, **WcDescription** — Filled by the validators above in v2. Clear both
+  properties' IDO **Read Only** flag before importing v2 (`docs/deploy-checklist.md`). Reported
+  2026-09-28: not filling in v1.
 - [x] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` confirmed live working (commit
   `e340521`'s follow-up fix). Locked the form on first try - not because `Item` is an unsafe
   class like `Dept` (it isn't), but because the *target* (`ItemDescription`) had a stray
@@ -148,15 +143,10 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Additional Fields
 
-- [x] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — The `Type` rendering bug (Rule #1C)
-  turned out to be a duplicate-Form-scope issue, not a Form Sync limitation — resolved once the
-  stale `jsmith1@enflite.com` User-scoped copy of the form was deleted. That surfaced the real
-  remaining bug: the `PROPERTIES()` name *inside* both list sources was wrong. **Both now
-  fixed and confirmed real, not guessed**: `SLSerials` uses `SerNum` (found via a real "Serial
-  Numbers" form documented in `cmr-project`'s field-mapping.md) and `SLLots` uses `Lot` (found
-  directly in a real "Lots" form, `Lots.XML`, bound to `SL.SLLots`). Our own
-  `FILTER(Item='P(Item)')`/`DISPLAY(1)` additions were never the problem — only the property
-  name was wrong in each case. Needs a live re-import to confirm both combos now populate.
+- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — Render as dropdowns on TRN now
+  (2026-09-28 screenshot). Lists were empty for item `00000-42560`; they only show serials/lots
+  of the selected Item, so re-test with a serial/lot-tracked item before changing anything. See
+  `docs/troubleshooting.md` "Serial # / LOT # dropdowns are empty".
 - [x] **TopLevelPn** — Plain field, nothing flagged. No legacy equivalent (brand-new per BRD).
 - [ ] **SubAssembly** (`sub_assembly`) — Plain field, on the form. No legacy equivalent either.
   Open conceptual question, not a technical bug: still unconfirmed whether this is actually the
@@ -167,17 +157,13 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 - [x] **SoxImpacted**, **HoldOnPo**, **AuthSupplierShip** — Plain checkboxes, matching the
   original's own plain `ListYesNo` checkboxes for these. Nothing flagged.
-- [ ] **ReasonCode** (`reason_code`) — References the real system class `QCReasonCode` via a
-  component-level `PropertyClassName` (per direct request, sharing QC_MRRs' list for now — a
-  known, deliberate trade-off, not a bug). Latest screenshot shows the combo present but with
-  no value selected, so the cross-class `PropertyClassName` reference is still unconfirmed for
-  this specific field (CauseCode below did get confirmed) — pick a value live and check it
-  resolves without error. Cosmetic note: the combo's own label rendered as "Reason", not "Reason
-  Code:" as coded — likely the system class's own display label overriding our caption; not a
-  functional issue.
-- [x] **CauseCode** (`cause_code`) — Same mechanism as ReasonCode (`QCCauseCode` class).
-  **Confirmed live**: screenshot shows a real value (`100`) selected — the cross-class
-  `PropertyClassName` reference works.
+- [ ] **ReasonCode** (`reason_code`) — **Fixed in v2, check on TRN**. v1 couldn't select a value:
+  the borrowed `QCReasonCode` class filters on QC_MRRs fields. v2 drops the class; the property
+  gets its own Inline List with the 13 QC_MRRs reason codes (ASMBL … VISUAL). Set the Inline List
+  and Check In before importing.
+- [ ] **CauseCode** (`cause_code`) — **Fixed in v2, check on TRN**. v1 threw *"'FP' is not a
+  recognized built-in function name.::4"* (the earlier "confirmed live" note was wrong). Own
+  Inline List in v2 with the 13 QC_MRRs cause codes (ENF … VOID).
 - [x] **QcDisposition** — **Confirmed live**: latest screenshot shows `Hold` selected, a valid
   value from the intended list — the `Inline List` is wired and working. (The original used
   `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead, a different mechanism; ours
@@ -204,15 +190,13 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Implementation
 
-- [ ] **PlanningReviewerEmpNum**, **PlanningReviewerName** — **Confirmed broken live**: latest
-  screenshot shows all three Implementation rows (Planning/Purchasing/CM) as "ID: [textbox],
-  Reviewer: [dropdown]", the same reversed arrangement as Quality/Engineering. Same
-  manual-fix-only conclusion (delete/retype `c_planning_reviewer_empnum_v2`/
-  `c_planning_reviewer_name_v2` in Application Studio). **⚠ per the original form**: worth
-  noting the original's Planning reviewer combo used `SLEmployees(PROPERTIES(EmpNum,Name))`
-  while Purchasing/CM used a completely different table, `ue_employee_msts(PROPERTIES(emp_num,
-  name))` — a legacy inconsistency we deliberately didn't carry forward (we use `SLEmployees`
-  uniformly). Not an action item, just context for why our version doesn't match 1:1.
+v2 layout: checkbox | Reviewer ID | Reviewer on each row, then Closed | Close Date | Closed By
+on the last row, all in the same columns (was: Closed below Close Date, Internal Review Date
+hanging off the bottom). See `docs/field-review.md`.
+
+- [x] **PlanningReviewerEmpNum**, **PlanningReviewerName** — **Working on TRN** (2026-09-28
+  screenshot: ID combo `7` filled Reviewer `Baker, Matt R.`). The reversed-type problem is gone
+  on this row. v2 relabels **ID:** → **Reviewer ID:** and lines the three rows up on one grid.
 - [x] **PlanningComplete** — Plain checkbox, not gated by anything. **Confirmed live**:
   unchecked, as expected, nothing flagged.
 - [ ] **PurchasingReviewerEmpNum**, **PurchasingReviewerName** — Same confirmed-broken pairing
@@ -230,13 +214,8 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
   legacy pattern byte-for-byte) — nothing to fix in code. **Needs a human to actually check the
   Closed box live and confirm CloseDate/ClosedBy populate, then uncheck and confirm they
   clear** — this session has no way to drive the running form itself.
-- [ ] **InternalReviewDate** (`internal_review_date`) — **Implemented** (commit `991677c`):
-  added as a real Date field after Closed, since Quality's own layout had no free space for it
-  (the QC RCA Notes sidebar occupies the right side of every row that could otherwise hold it —
-  confirmed by a geometry collision check). This is a real field the original form had
-  (`dateCombo2`) that was missing here entirely, and unlike the other orphaned fields below,
-  wasn't even tracked in `ORPHANED_COLUMNS` — a plain oversight, now fixed. Only remaining step:
-  confirm live on next re-import.
+- [ ] **InternalReviewDate** (`internal_review_date`) — Moved to **Engineering** in v2 (under
+  Reviewer), where the original form has it. Check it renders and saves on TRN.
 
 ## Not on the form (deliberately orphaned — tracked, not forgotten)
 

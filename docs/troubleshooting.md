@@ -129,7 +129,7 @@ dropdown arrow, in the same live screenshot).
 
 **Re-verified directly against the checked-in XML** (not just recycled from
 memory): every one of these components' `Type`/`DataSource` pairing in
-`exports/eCMRs_v1.XML` is already exactly correct - e.g.
+`exports/eCMRs_v1.XML` (now `original/eCMRs.trn.original.xml`) is already exactly correct - e.g.
 `c_qc_reviewer_empnum_v2` is `Type=27`/`DataSource=object.QcReviewerEmpNum`,
 `c_qc_reviewer_username_v2` is `Type=1`/`DataSource=object.QcReviewerUsername`.
 There is no further XML edit that changes this - the file already says the
@@ -207,7 +207,8 @@ from the same PurchaseOrders form's own `VendNumEdit` component, `Item`/
 `DeptDescription`/`NextAssyDescription`/`VendorName` - **verify live
 after import**.
 
-**Update, live-tested on `Dept`: it broke.** Importing
+**Update, live-tested on `Dept`: it broke.** (Fixed another way in form v2 - see "Description
+auto-fill for Dept and Work Center" below.) Importing
 `DefaultFrom="Dept(DeptDescription)"` (paired with `PropertyClassName="Dept"`)
 threw, live, the moment a Dept value was selected: *"internal validation
 error on c_dept validator Dept... Bad SETPROPERTIES specification in
@@ -495,6 +496,9 @@ Confirmed real value lists:
 
 ## Reason Code / Cause Code: reference the real QCReasonCode/QCCauseCode classes directly
 
+> **Superseded 2026-09-28 (form v2).** This did not work on `ue_ecmrs` - see "`'FP' is not a
+> recognized built-in function name`" below. Kept for the history.
+
 The signed CMR Development SOW (`Enflite - 00004 - CMR Development`) documents that SyteLine
 already has real, existing Reason Codes and Cause Codes master data, categorized by a `Ref Type`
 (`E`=Enterprise, `J`=In Process, `O`=Customer, `P`=Supplier, `R`=Customer RMA), with a signed
@@ -601,6 +605,70 @@ prefixes each one's description with `[ORPHANED - ...]` in every export (table c
 properties, deploy checklist) so nobody mistakes "not on the form" for "not real," and so a
 future contributor doesn't have to re-derive why each one is dead. If a column here gets
 reused for something later, take it back out of `ORPHANED_COLUMNS`.
+
+## Description auto-fill for Dept and Work Center: use `Validators`, not `DefaultFrom`
+
+**Symptom**: picking a **Dept** or **Work Center** leaves **Dept Description** / **WC
+Description** blank (form v1). An earlier try with `DefaultFrom="Dept(DeptDescription)"` +
+`PropertyClassName="Dept"` threw *"Bad SETPROPERTIES specification in validator Dept: this cache
+property OfcAddr4 not in cache"*.
+
+**Cause**: `PropertyClassName="Dept"` brings in the `Dept` class's default validator, whose
+default settings write `OfcAddr4` too - a property `ue_ecmrs` doesn't have. The description
+fields had no other way to be filled.
+
+**Fix (form v2, `tools/apply_form_changes.py`)**: set the validator on the component directly,
+with arguments naming our own properties, and no `PropertyClassName`:
+
+| Component | Validators | Copied from (live in this tenant) |
+|---|---|---|
+| `c_dept` | `Dept(DeptDescription,)` | Service Orders form, `DeptEdit` (`ServiceOrders` repo). The empty 2nd argument skips the extra property. |
+| `c_wc` | `WcDesc(WcDescription)` | Original **Create Change Request** form, `WCEdit` (`cmr-project/exports`) |
+
+The target properties (`DeptDescription`, `WcDescription`) must have their IDO **Read Only**
+flag cleared (Rule #1B, `docs/deploy-checklist.md`), and their form components stay bare Edit
+boxes (no list source, see the ItemDescription section above).
+
+**Confirm on TRN**: pick a Dept, the description fills; pick a Work Center, WC Description
+fills; save, reopen, both still there. **Status: assumed until checked on TRN.** Environments:
+TRN, then production.
+
+## `'FP' is not a recognized built-in function name.::4` on Cause Code (and an empty Reason list)
+
+**Symptom**: opening the **Cause Code** dropdown shows *"'FP' is not a recognized built-in
+function name.::4"*. **Reason Code** opens but nothing can be selected (form v1).
+
+**Cause**: both dropdowns had no list of their own - only `PropertyClassName="QCReasonCode"` /
+`"QCCauseCode"`, borrowed from the QC_MRRs form. Those classes' lists filter on QC_MRRs fields
+with `FP(<field>)`. `ue_ecmrs` has no such field, so `FP(...)` isn't replaced and reaches SQL as
+literal text. Pointing at these classes can't work on this IDO.
+
+**Fix (form v2)**: `PropertyClassName` removed from `c_reason_code` / `c_cause_code`. Each
+property gets its own **Inline List** with the same codes as the live QC_MRRs dropdowns
+(`scripts/generate_ido_import.py` `INLINE_LISTS`, listed in `docs/deploy-checklist.md`):
+
+- Reason: `ASMBL, DAMAGED, DELIVERY, DOCUMENT, FEATURE, FUNCTION, INTERNAL, MATERIAL, MEASURE, PURCHASE, REVISION, SUPDAM, VISUAL`
+- Cause: `ENF, ENG, EXC, FUNC, HANDLE, NFF, QCM, SHIP, SHORTAGE, SUP, TOOL, UNK, VOID`
+
+Set the Inline List on `ReasonCode` and `CauseCode` in the IDO Properties grid and **Check In**
+the IDO before importing form v2. A code added in QCS later has to be added to both places.
+
+**Confirm on TRN**: both dropdowns list their codes, no error, value saves and reloads.
+**Status: assumed until checked on TRN.**
+
+## Serial # / LOT # dropdowns are empty
+
+**Symptom**: no values in **Serial #** or **LOT #** after picking an Item.
+
+**Cause (most likely)**: the lists only show serials/lots **for the selected Item**
+(`FILTER(Item='P(Item)')` on `SLSerials` / `SLLots`). An item that isn't serial- or
+lot-tracked, or has no serials/lots yet, gives an empty list. That is expected, and you can
+still type a value.
+
+**Check**: pick an Item you know has serials (or lots) - e.g. one from a recent receipt - and open
+the dropdown. To see what exists for an item, open a throw-away Dataview on `SLSerials` (or
+`SLLots`) filtered on `Item = <item>`. If the Dataview has rows and the dropdown is still empty,
+that's a real bug - write it up here.
 
 ## General debugging order for "it's not working" reports
 
