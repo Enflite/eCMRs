@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""Builds exports/eCMRs_v2.XML from the form currently on TRN (original/eCMRs.trn.original.xml).
+
+Why a patch script and not scripts/generate_form.py: the form on TRN carries hand edits made in
+Application Studio (the notes sidebars, Item Desc, the _v2 component names) that the old
+generator can no longer reproduce. This script edits that export's text in place (AGENTS.md
+rule 6: no XML re-serializing), so everything already working on TRN stays exactly as it is and
+only the changes below are applied.
+
+What it changes (v1 -> v2):
+  1. Dept -> Dept Description auto-fill: Validators "Dept(DeptDescription,)" on c_dept. Copied
+     from the live Service Orders form in this tenant (DeptEdit), which binds the same property
+     names. The earlier crash (OfcAddr4 not in cache) came from PropertyClassName="Dept" pulling
+     in the class's default validator; the explicit Validators with the empty second argument
+     is how Infor's own form avoids that, so no PropertyClassName is added.
+  2. Work Center -> WC Description auto-fill: Validators "WcDesc(WcDescription)" on c_wc. Copied
+     from the original Create Change Request form (WCEdit), same target property name.
+  3. Reason Code / Cause Code: PropertyClassName QCReasonCode/QCCauseCode removed. Those classes
+     filter on QC_MRRs fields (FP(...)) that ue_ecmrs does not have, which caused the
+     "'FP' is not a recognized built-in function name" error and the empty Reason list. The
+     lists now come from each property's own Inline List (scripts/generate_ido_import.py
+     INLINE_LISTS, codes taken from the live QC_MRRs dropdowns).
+  4. Implementation section re-laid out on one grid: checkbox | Reviewer ID | Reviewer, with
+     Closed / Close Date / Closed By as the last row of the same grid.
+  5. Internal Review Date moved back to Engineering (where the original QC_CMRs form has it,
+     next to Disposition) instead of hanging off the bottom of Implementation.
+  Tab order is renumbered for the moved components so tabbing follows the screen.
+
+Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
+Check: python3 tools/apply_form_changes.py --check  (fails if the committed file differs)
+"""
+import os
+import re
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, "original", "eCMRs.trn.original.xml")
+OUT = os.path.join(ROOT, "exports", "eCMRs_v2.XML")
+IND = "               "  # indentation of a Component's child tags in the export
+
+# Implementation grid (form units). Rows share these columns so the IDs, names, dates and
+# Closed By all line up under each other.
+IMPL_Y = {"planning": 83.3, "purchasing": 85.1, "cm": 86.9}
+CLOSE_Y = 89.1
+X_CHECK, W_CHECK = 2, 16.5
+X_LBL1, W_LBL1 = 19, 9.5      # "Reviewer ID:" / "Close Date:"
+X_CTL1, W_CTL1 = 29, 12       # ID combo / Close Date
+X_LBL2, W_LBL2 = 42, 9.5      # "Reviewer:" / "Closed By:"
+X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
+
+# Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
+IRD_Y = 78.2
+
+
+def fmt(v):
+    return f"{v:g}"
+
+
+class Form:
+    def __init__(self, text):
+        self.text = text
+
+    def _span(self, name):
+        m = re.search(rf'<Component Name="{re.escape(name)}">.*?</Component>', self.text, re.S)
+        if not m:
+            raise SystemExit(f"component not found: {name}")
+        return m.start(), m.end()
+
+    def _edit(self, name, fn):
+        a, b = self._span(name)
+        block = self.text[a:b]
+        new = fn(block)
+        self.text = self.text[:a] + new + self.text[b:]
+
+    def set(self, name, tag, value):
+        def fn(block):
+            new, n = re.subn(rf"<{tag}>[^<]*</{tag}>", f"<{tag}>{value}</{tag}>", block, count=1)
+            if n != 1:
+                raise SystemExit(f"{name}: no <{tag}>")
+            return new
+        self._edit(name, fn)
+
+    def remove(self, name, tag):
+        def fn(block):
+            new, n = re.subn(rf"\r\n *<{tag}>[^<]*</{tag}>", "", block, count=1)
+            if n != 1:
+                raise SystemExit(f"{name}: no <{tag}> to remove")
+            return new
+        self._edit(name, fn)
+
+    def insert_after(self, name, after_tag, tag, value):
+        def fn(block):
+            if f"<{tag}>" in block:
+                raise SystemExit(f"{name}: already has <{tag}>")
+            new, n = re.subn(rf"(<{after_tag}>[^<]*</{after_tag}>)",
+                             rf"\1\r\n{IND}<{tag}>{value}</{tag}>", block, count=1)
+            if n != 1:
+                raise SystemExit(f"{name}: no <{after_tag}>")
+            return new
+        self._edit(name, fn)
+
+    def place(self, name, y=None, x=None, w=None, h=None, tab=None):
+        if y is not None:
+            self.set(name, "TopPos", fmt(y))
+        if x is not None:
+            self.set(name, "LeftPos", fmt(x))
+        if w is not None:
+            self.set(name, "Width", fmt(w))
+        if h is not None:
+            self.set(name, "Height", fmt(h))
+        if tab is not None:
+            self.set(name, "TabOrder", str(tab))
+
+    def caption(self, name, text):
+        self.set(name, "Caption", text)
+        self.set(name, "EffectiveCaption", text)
+
+
+def build(text):
+    f = Form(text)
+
+    # 1-2. Description auto-fill through real validators (Validators sits right after Width
+    # on components without a Caption, same order as Infor's own exports).
+    f.insert_after("c_dept", "Width", "Validators", "Dept(DeptDescription,)")
+    f.insert_after("c_wc", "Width", "Validators", "WcDesc(WcDescription)")
+
+    # 3. Reason/Cause: drop the MRR-only property classes; the Inline List drives the list.
+    f.remove("c_reason_code", "PropertyClassName")
+    f.remove("c_cause_code", "PropertyClassName")
+
+    # 4. Implementation grid. Tab order: after Internal Review Date (54) and Eng RCA Notes (55).
+    tab = 56
+    for key, check, empnum, name in [
+        ("planning", "c_planning_complete", "planning_reviewer_empnum", "planning_reviewer_name"),
+        ("purchasing", "c_purchasing_complete", "purchasing_reviewer_empnum", "purchasing_reviewer_name"),
+        ("cm", "c_cm_complete", "cm_reviewer_empnum", "cm_reviewer_name"),
+    ]:
+        y = IMPL_Y[key]
+        f.place(check, y=y, x=X_CHECK, w=W_CHECK, tab=tab)
+        f.place(f"l_{empnum}", y=y + 0.15, x=X_LBL1, w=W_LBL1)
+        f.caption(f"l_{empnum}", "Reviewer ID:")
+        f.place(f"c_{empnum}_v2", y=y, x=X_CTL1, w=W_CTL1, tab=tab + 1)
+        f.place(f"l_{name}", y=y + 0.15, x=X_LBL2, w=W_LBL2)
+        f.place(f"c_{name}_v2", y=y, x=X_CTL2, w=W_CTL2, tab=tab + 2)
+        tab += 3
+    # Closed / Close Date / Closed By: one row, same columns as the reviewer rows above.
+    f.place("c_closed", y=CLOSE_Y, x=X_CHECK, w=W_CHECK, tab=65)
+    f.place("l_close_date", y=CLOSE_Y + 0.15, x=X_LBL1, w=W_LBL1)
+    f.place("c_close_date", y=CLOSE_Y, x=X_CTL1, w=W_CTL1, h=1.4, tab=66)
+    f.place("l_closed_by", y=CLOSE_Y + 0.15, x=X_LBL2, w=W_LBL2)
+    f.place("c_closed_by", y=CLOSE_Y, x=X_CTL2, w=W_CTL2, h=1.4, tab=67)
+    # Keep the two late-added identity fields after that, unique tab numbers.
+    f.place("c_next_assy_description", tab=68)
+    f.place("c_vendor_name", tab=69)
+
+    # 5. Internal Review Date back in Engineering. Two-line label, like "Drawing Revision:".
+    f.place("l_internal_review_date", y=IRD_Y - 0.1, x=2, w=8.75, h=1.8)
+    f.place("c_internal_review_date", y=IRD_Y, x=11.25, w=17.25, tab=54)
+    f.place("c_eng_rca_notes", tab=55)
+
+    return f.text
+
+
+def main():
+    raw = open(SRC, "rb").read()
+    if not raw.startswith(b"\xef\xbb\xbf") or b"\r\n" not in raw:
+        raise SystemExit("source must be UTF-8 with BOM and CRLF")
+    text = build(raw[3:].decode("utf-8"))
+    data = b"\xef\xbb\xbf" + text.encode("utf-8")
+    if "--check" in sys.argv:
+        if open(OUT, "rb").read() != data:
+            raise SystemExit(f"{OUT} is out of date - re-run without --check")
+        print("OK: exports/eCMRs_v2.XML matches the script")
+        return
+    with open(OUT, "wb") as fh:
+        fh.write(data)
+    print(f"Wrote {os.path.relpath(OUT, ROOT)} ({len(data)} bytes)")
+
+
+if __name__ == "__main__":
+    main()

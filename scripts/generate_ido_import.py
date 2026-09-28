@@ -43,11 +43,12 @@ INLINE_LISTS = {
     # Accept/Hold/Reject.
     "qc_disposition": "ENTRIES(Accept,Hold,NFF,NRS,Other,Reject,Rework,Scrap)",
     "eng_disposition": "ENTRIES(NFF,NRS,Other,Rework,Scrap)",
-    # reason_code/cause_code deliberately NOT here - they don't use our own Inline List at
-    # all anymore. They reference the real, existing QCReasonCode/QCCauseCode system Property
-    # Classes directly (see generate_form.py's Quality section LAYOUT entry and
-    # docs/troubleshooting.md), the same classes the live QC_MRRs form's own Reason/Cause
-    # combos use - no manual Inline List setup needed on our own properties for these two.
+    # Reason/Cause codes: the same codes as the live QC_MRRs Reason/Cause dropdowns (read from
+    # screenshots of both lists open, 2026-09-28). The QCReasonCode/QCCauseCode property classes
+    # can't be used on this IDO - they filter on QC_MRRs fields (FP(...)) ue_ecmrs doesn't have.
+    # A code added in QCS later must be added here too (and to the property's Inline List).
+    "reason_code": "ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)",
+    "cause_code": "ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)",
 }
 
 # Header names/order/count confirmed directly against docs/reference/ToExcel_IdoProperties_4.csv

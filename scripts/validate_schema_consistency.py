@@ -6,7 +6,7 @@ OUR OWN design files - it cannot see the live IDO's actual Read Only flag in App
 Studio, which is why docs/deploy-checklist.md (a separate, manual step) still exists.
 
 Run after generate_form.py, before committing:
-    python3 scripts/generate_form.py exports/eCMRs_v1.XML && python3 scripts/validate_schema_consistency.py
+    python3 scripts/generate_form.py exports/eCMRs_v2.XML && python3 scripts/validate_schema_consistency.py
 """
 import re
 import sys
@@ -20,7 +20,7 @@ PNAME_BY_COL = {f[0]: f[1] for f in FIELDS}
 COL_BY_PNAME = {f[1]: f[0] for f in FIELDS}
 
 def main():
-    with open("exports/eCMRs_v1.XML", encoding="utf-8") as fh:
+    with open("exports/eCMRs_v2.XML", encoding="utf-8") as fh:
         text = fh.read()
 
     errors = []
