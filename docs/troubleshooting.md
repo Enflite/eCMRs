@@ -725,8 +725,8 @@ Rule for every dropdown: the value you want stored must be the first column in `
 the two TRN exports: 22 properties differ. Also `cause_code` was created as `char(1)` with
 Default Value `(100)` - the 100 went into the wrong box.
 
-**Decision 2026-09-29**: the text columns we own become `nvarchar(255)` (they were fixed-width
-`char` of 1 to 160); columns on SyteLine data types keep their type's length. `cause_code`
+**Decision 2026-09-29**: the text columns we own become `char(255)` (they were `char` of 1 to
+160; widened on TRN 2026-09-29); columns on SyteLine data types keep their type's length. `cause_code`
 (`char(1)`) then fails with *"String or binary data would be truncated ... column 'cause_code'.
 Truncated value: '1'"* until it's changed.
 

@@ -58,7 +58,7 @@ def main():
     sql = {r[sh.index("Column Name")]: r for r in sql_rows[1:] if len(r) > 5 and r[0]}
     ido = {r[ih.index("Column Name")]: r for r in ido_rows[1:] if len(r) > 12 and r[1]}
 
-    sql_changes, ido_changes, notes = [], [], []
+    sql_changes, ido_changes, notes, s_type_of = [], [], [], {}
     for (col, pname, dtype, length, _dec, coltype, *_rest) in FIELDS:
         s = sql.get(col)
         if s is None:
@@ -75,8 +75,9 @@ def main():
             notes.append(f"`{col}` ({s_type}({s_len})) - not on the form; left as is.")
             continue
         want_type = coltype if coltype in TEXT_TYPES else s_type
-        if coltype in TEXT_TYPES and (s_type != want_type or s_len != length):
+        if coltype in TEXT_TYPES and s_len != length:
             sql_changes.append((col, f"{s_type}({s_len})", s_def, want_type, length))
+            s_type_of[col] = s_type
         p = ido.get(col)
         if p is None:
             notes.append(f"`{col}` has no IDO property - add one ({pname}, String, {length}).")
@@ -100,25 +101,23 @@ def main():
          "target schema in `scripts/generate_schema_csv.py`. Don't hand-edit: after the changes, "
          "export both grids again, save them here with the date, and re-run. Both tables should "
          "then be empty.", "",
-         "**Target**: every text column we own is `nvarchar(255)` - generous, no space padding, "
-         "and still sortable and filterable in SyteLine grids (`nvarchar(max)` isn't everywhere). "
+         "**Target**: every text column we own is 255 long (`char(255)` on TRN) - generous, and "
+         "still sortable and filterable in SyteLine grids (`nvarchar(max)` isn't everywhere). "
          "Columns using a SyteLine data type (`ItemType`, `DeptType`, `WcType`, `EmpNumType`, "
          "`UsernameType`, `DescriptionType`, `LongDescType`, `RevisionType`, `QCLongCharType`, "
          "`QCPriorityType`) keep that type's length: their values come from SyteLine and always "
          "fit. Every IDO property's **Length** equals its column's.", ""]
     L += ["## 1. SQL Columns (Application Studio → SQL Tables → `ue_ecmrs` → SQL Columns)", ""]
     if sql_changes:
-        L += ["For each row: set **Data Type** `nvarchar`, **Length** 255, and save. If a row has a "
+        L += ["For each row: set **Length** to the value shown and save. If a row has a "
               "**Default Value**, clear it and save *first* - a column default blocks the change "
               "(the same *default-constraint* error `cmr_num` hit).", "",
               "| Column | Now | Default Value now | Set to |", "|---|---|---|---|"]
         for col, now, dflt, want_type, length in sql_changes:
             d = f"`{dflt}` → **clear first**" if dflt.strip() else ""
-            L.append(f"| `{col}` | {now} | {d} | **{want_type}({length})** |")
-        L += ["", f"{len(sql_changes)} columns. Values already stored are kept. Old `char` values "
-              "keep their trailing spaces after the change - on test records, re-pick dropdown "
-              "values (Status, Disposition, ...) if one shows blank. If Application Studio "
-              "refuses a change, stop and send the error.", ""]
+            L.append(f"| `{col}` | {now} | {d} | **{s_type_of[col]}({length})** |")
+        L += ["", f"{len(sql_changes)} column(s). Values already stored are kept. If Application "
+              "Studio refuses a change, stop and send the error.", ""]
     else:
         L += ["Nothing to change.", ""]
     L += ["## 2. IDO Properties (`ue_ecmrs`)", ""]
