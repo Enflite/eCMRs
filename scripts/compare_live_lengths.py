@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Compares the live SQL column lengths with the live IDO property lengths and with this repo's
-schema (generate_schema_csv.py FIELDS), and writes docs/length-fixes.md - the list of fixes to
-make in Application Studio.
+"""Compares the live ue_ecmrs SQL columns and IDO properties with the target schema
+(generate_schema_csv.py FIELDS) and writes docs/length-fixes.md - the changes to make in
+Application Studio so that every column has its target type/length and every IDO property's
+length equals its column's.
 
 Inputs are the two Excel exports from TRN, saved as UTF-16 tab-separated files:
   docs/reference/ToExcel_SqlColumns_<date>.csv     (SQL Columns grid, table ue_ecmrs)
   docs/reference/ToExcel_IdoProperties_<date>.csv  (IDO Properties grid, IDO ue_ecmrs)
-The newest dated pair is used. Rule: the IDO property length must equal the SQL column length.
+The newest dated pair is used. Re-export both after making the changes and re-run: both
+tables in the output should be empty.
 
-Run: python3 scripts/compare_live_lengths.py   (exit 1 if FIELDS disagrees with SQL)
+Run: python3 scripts/compare_live_lengths.py
 """
 import csv
 import glob
@@ -17,25 +19,20 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from generate_schema_csv import FIELDS
+from generate_schema_csv import FIELDS, ORPHANED_COLUMNS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REF = os.path.join(ROOT, "docs", "reference")
 OUT = os.path.join(ROOT, "docs", "length-fixes.md")
 TEXT_TYPES = {"nvarchar", "char", "varchar", "nchar"}
 
-# The SQL column itself is wrong: fix it in the SQL Columns grid to this length (and the IDO
-# property to match). cause_code came out as char(1) with Default Value "(100)" - the 100 was
-# typed into Default Value instead of Length. Cause codes are up to 8 characters; 100 matches
-# reason_code.
-SQL_FIXES = {"cause_code": "100"}
-# Deliberately not matched to SQL - see the note in the generated file.
-IDO_KEEP = {
-    "cmr_num": "SQL says nvarchar(999), left over from the earlier type-change attempt. The key is "
-               "a NumSortedString, which pads to its length for sorting, so the IDO stays at 20 "
-               "(CMR numbers are short). Don't change either side without testing on TRN.",
+# Deliberately left as they are - explained in the generated file.
+KEEP = {
+    "cmr_num": "SQL is nvarchar(999), left over from the earlier type-change attempt; the IDO "
+               "stays at 20. The key is a NumSortedString, which pads to its length for sorting. "
+               "Don't change either side without testing on TRN.",
 }
-SYSTEM = {"CreatedBy", "UpdatedBy", "CreateDate", "RecordDate", "RowPointer", "NoteExistsFlag", "InWorkflow"}
+SYSTEM_IDO = {"CreatedBy": "128"}  # system property whose IDO length differs from SQL
 
 
 def newest(pattern):
@@ -55,70 +52,90 @@ def num(v):
 
 
 def main():
-    sql_path = newest("ToExcel_SqlColumns_20*.csv")
-    ido_path = newest("ToExcel_IdoProperties_20*.csv")
+    sql_path, ido_path = newest("ToExcel_SqlColumns_20*.csv"), newest("ToExcel_IdoProperties_20*.csv")
     sql_rows, ido_rows = load(sql_path), load(ido_path)
     sh, ih = sql_rows[0], ido_rows[0]
     sql = {r[sh.index("Column Name")]: r for r in sql_rows[1:] if len(r) > 5 and r[0]}
     ido = {r[ih.index("Column Name")]: r for r in ido_rows[1:] if len(r) > 12 and r[1]}
-    repo = {f[0]: f for f in FIELDS}
 
-    ido_fixes, sql_fixes, notes, repo_bad = [], [], [], []
-    for col, r in sql.items():
-        stype, slen = r[sh.index("System Data Type")], num(r[sh.index("Length")])
-        if stype not in TEXT_TYPES:
+    sql_changes, ido_changes, notes = [], [], []
+    for (col, pname, dtype, length, _dec, coltype, *_rest) in FIELDS:
+        s = sql.get(col)
+        if s is None:
+            notes.append(f"`{col}` is in the schema but not in the SQL export - check it exists.")
             continue
+        s_type, s_sys = s[sh.index("Data Type")], s[sh.index("System Data Type")]
+        s_len, s_def = num(s[sh.index("Length")]), s[sh.index("Default Value")]
+        if s_sys not in TEXT_TYPES:
+            continue
+        if col in KEEP:
+            notes.append(f"`{pname}` ({col}): {KEEP[col]}")
+            continue
+        if col in ORPHANED_COLUMNS:
+            notes.append(f"`{col}` ({s_type}({s_len})) - not on the form; left as is.")
+            continue
+        want_type = coltype if coltype in TEXT_TYPES else s_type
+        if coltype in TEXT_TYPES and (s_type != want_type or s_len != length):
+            sql_changes.append((col, f"{s_type}({s_len})", s_def, want_type, length))
         p = ido.get(col)
         if p is None:
-            notes.append(f"`{col}` is a SQL column with no IDO property (not on the form). "
-                         f"Leave it; remove it only if nothing uses it.")
+            notes.append(f"`{col}` has no IDO property - add one ({pname}, String, {length}).")
             continue
-        pname, plen = p[ih.index("Property Name")], num(p[ih.index("*Length")])
-        target = SQL_FIXES.get(col, slen)
-        if col in SQL_FIXES:
-            sql_fixes.append((col, stype, slen, r[sh.index("Default Value")], target))
-        if col in IDO_KEEP:
-            notes.append(f"`{pname}` ({col}): IDO {plen}, SQL {slen} - {IDO_KEEP[col]}")
-            continue
-        if plen != target:
-            ido_fixes.append((pname, col, plen, target))
-        if col in repo and col not in SYSTEM and repo[col][3] != target:
-            repo_bad.append((col, repo[col][3], target))
+        p_len = num(p[ih.index("*Length")])
+        if p_len != length:
+            ido_changes.append((pname, col, p_len, length))
+    for col, s in sql.items():
+        if col not in {f[0] for f in FIELDS} and col not in ido and s[sh.index("System Data Type")] in TEXT_TYPES:
+            notes.append(f"`{col}` is a SQL column with no IDO property and not in the schema "
+                         f"(stray duplicate?). Left as is.")
+    for pname, want in SYSTEM_IDO.items():
+        p = next((r for r in ido.values() if r[ih.index("Property Name")] == pname), None)
+        if p and num(p[ih.index("*Length")]) != want:
+            ido_changes.append((pname, pname, num(p[ih.index("*Length")]), want))
 
-    L = ["# eCMRs — IDO property lengths vs SQL columns", "",
+    L = ["# eCMRs — SQL column and IDO property lengths", "",
          "Generated by `scripts/compare_live_lengths.py` from the TRN exports "
          f"[`{os.path.basename(sql_path)}`](reference/{os.path.basename(sql_path)}) and "
-         f"[`{os.path.basename(ido_path)}`](reference/{os.path.basename(ido_path)}). Don't "
-         "hand-edit; re-export both grids after fixing and re-run.", "",
-         "Rule: each IDO property's **Length** must equal its SQL column's **Length**. A longer IDO "
-         "length lets a value through the form that SQL then rejects (*\"String or binary data "
-         "would be truncated\"*); a shorter one rejects valid values (*\"Data length ... is greater "
-         "than effective length\"*).", ""]
-    if sql_fixes:
-        L += ["## 1. Fix the SQL column first (Application Studio → SQL Columns, table `ue_ecmrs`)", "",
-              "| Column | Now | Default Value now | Set Length to | Set Default Value to |",
-              "|---|---|---|---|---|"]
-        for col, stype, slen, dflt, target in sql_fixes:
-            L.append(f"| `{col}` | {stype}({slen}) | `{dflt}` | **{target}** | blank |")
-        L += ["", "Do it in two saves: **1)** clear Default Value and save; **2)** set Length and save. "
-              "A column default blocks the length change (same *default-constraint dependency* error "
-              "`cmr_num` hit - see troubleshooting). Values already stored are at most 1 character, "
-              "so nothing is lost. If Application Studio still refuses, stop and send the error.", ""]
-    L += [f"## {2 if sql_fixes else 1}. Set these IDO property lengths (IDO Properties grid, `ue_ecmrs`)", "",
-          "Then **Check In** the IDO, and reopen the form.", "",
-          "| Property | Column | IDO Length now | Set to |", "|---|---|---|---|"]
-    for pname, col, plen, target in ido_fixes:
-        L.append(f"| `{pname}` | `{col}` | {plen or '(blank)'} | **{target}** |")
-    L += ["", f"{len(ido_fixes)} properties. `CreatedBy` is a system property: if the grid won't "
-          "let you change it, leave it (its SQL column is 128 and the system fills it).", ""]
+         f"[`{os.path.basename(ido_path)}`](reference/{os.path.basename(ido_path)}), against the "
+         "target schema in `scripts/generate_schema_csv.py`. Don't hand-edit: after the changes, "
+         "export both grids again, save them here with the date, and re-run. Both tables should "
+         "then be empty.", "",
+         "**Target**: every text column we own is `nvarchar(255)` - generous, no space padding, "
+         "and still sortable and filterable in SyteLine grids (`nvarchar(max)` isn't everywhere). "
+         "Columns using a SyteLine data type (`ItemType`, `DeptType`, `WcType`, `EmpNumType`, "
+         "`UsernameType`, `DescriptionType`, `LongDescType`, `RevisionType`, `QCLongCharType`, "
+         "`QCPriorityType`) keep that type's length: their values come from SyteLine and always "
+         "fit. Every IDO property's **Length** equals its column's.", ""]
+    L += ["## 1. SQL Columns (Application Studio → SQL Tables → `ue_ecmrs` → SQL Columns)", ""]
+    if sql_changes:
+        L += ["For each row: set **Data Type** `nvarchar`, **Length** 255, and save. If a row has a "
+              "**Default Value**, clear it and save *first* - a column default blocks the change "
+              "(the same *default-constraint* error `cmr_num` hit).", "",
+              "| Column | Now | Default Value now | Set to |", "|---|---|---|---|"]
+        for col, now, dflt, want_type, length in sql_changes:
+            d = f"`{dflt}` → **clear first**" if dflt.strip() else ""
+            L.append(f"| `{col}` | {now} | {d} | **{want_type}({length})** |")
+        L += ["", f"{len(sql_changes)} columns. Values already stored are kept. Old `char` values "
+              "keep their trailing spaces after the change - on test records, re-pick dropdown "
+              "values (Status, Disposition, ...) if one shows blank. If Application Studio "
+              "refuses a change, stop and send the error.", ""]
+    else:
+        L += ["Nothing to change.", ""]
+    L += ["## 2. IDO Properties (`ue_ecmrs`)", ""]
+    if ido_changes:
+        L += ["Set **Length**, then **Check In** the IDO and reopen the form. Do this after step 1.", "",
+              "| Property | Column | Length now | Set to |", "|---|---|---|---|"]
+        for pname, col, now, want in ido_changes:
+            L.append(f"| `{pname}` | `{col}` | {now or '(blank)'} | **{want}** |")
+        L += ["", f"{len(ido_changes)} properties. `CreatedBy` is a system property: if the grid "
+              "won't let you change it, leave it.", ""]
+    else:
+        L += ["Nothing to change.", ""]
     if notes:
         L += ["## Left as is", ""] + [f"- {n}" for n in notes] + [""]
     with open(OUT, "w", newline="\n") as fh:
         fh.write("\n".join(L))
-    print(f"Wrote docs/length-fixes.md: {len(sql_fixes)} SQL fix(es), {len(ido_fixes)} IDO fix(es)")
-    if repo_bad:
-        print("FIELDS disagrees with SQL:", repo_bad)
-        sys.exit(1)
+    print(f"Wrote docs/length-fixes.md: {len(sql_changes)} SQL change(s), {len(ido_changes)} IDO change(s)")
 
 
 if __name__ == "__main__":

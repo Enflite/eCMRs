@@ -52,13 +52,13 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
   re-laid out, Internal Review Date moved back to Engineering.
 - **2026-09-29:** v2 also fixes PO Line (it stored the Item, so saves failed with "Data length for
   Notify (12) ...") and links every field to its label so error messages name the right field.
-  IDO vs SQL length check added: 22 IDO lengths and the `cause_code` SQL column to fix
-  ([`docs/length-fixes.md`](docs/length-fixes.md)).
+  Text columns we own go to `nvarchar(255)` (19 SQL columns, incl. `cause_code` which was
+  `char(1)`), and every IDO length is set to match its column ([`docs/length-fixes.md`](docs/length-fixes.md)).
 
 ### Importing v2 on TRN
 
-0. Fix the lengths in [`docs/length-fixes.md`](docs/length-fixes.md): `cause_code` SQL column
-   first, then the 22 IDO property lengths.
+0. Make the changes in [`docs/length-fixes.md`](docs/length-fixes.md): the 19 SQL columns first,
+   then the IDO property lengths.
 1. In Application Studio, IDO Properties for `ue_ecmrs`:
    - `ReasonCode` **Inline List**: `ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)`
    - `CauseCode` **Inline List**: `ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)`
