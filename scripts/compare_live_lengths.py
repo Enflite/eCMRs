@@ -28,9 +28,12 @@ TEXT_TYPES = {"nvarchar", "char", "varchar", "nchar"}
 
 # Deliberately left as they are - explained in the generated file.
 KEEP = {
-    "cmr_num": "SQL is nvarchar(999), left over from the earlier type-change attempt; the IDO "
-               "stays at 20. The key is a NumSortedString, which pads to its length for sorting. "
-               "Don't change either side without testing on TRN.",
+    "cmr_num": "SQL is nvarchar(999), left over from the earlier type-change attempt - leave the SQL "
+               "column. The IDO length is NOT matched to SQL: CmrNum is a NumSortedString key, "
+               "stored padded with leading spaces to the IDO length, so it must stay at 10 - the "
+               "length every existing record was created with. Changing it (it was 20 on "
+               "2026-09-29) makes AUTONUMBER repeat a number: save fails with \"Error Message does "
+               "not exist. Object:PK_ue_ecmrs, Type:17\".",
 }
 SYSTEM_IDO = {"CreatedBy": "128"}  # system property whose IDO length differs from SQL
 
@@ -70,6 +73,9 @@ def main():
             continue
         if col in KEEP:
             notes.append(f"`{pname}` ({col}): {KEEP[col]}")
+            p = ido.get(col)
+            if p is not None and num(p[ih.index("*Length")]) != length:
+                ido_changes.insert(0, (pname, col, num(p[ih.index("*Length")]), length))
             continue
         if col in ORPHANED_COLUMNS:
             notes.append(f"`{col}` ({s_type}({s_len})) - not on the form; left as is.")

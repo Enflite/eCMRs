@@ -762,6 +762,28 @@ byte-for-byte" from the original was wrong: the original never used `ThisForm.Us
 **Confirm on TRN**: tick **Closed** - no error, Close Date = today, Closed By = your user. Untick -
 both clear. Save and reopen.
 
+## `Error Message does not exist. Object:PK_ue_ecmrs, Type:17` on save
+
+**Symptom**: saving a CMR fails with this message (TRN, 2026-09-29).
+
+**Cause**: `PK_ue_ecmrs` is the table's primary key on `cmr_num` - the save tried to write a
+CMR Num that already exists ("Error Message does not exist" only means no friendly text is set
+up for that constraint). `CmrNum` is a `NumSortedString`, stored padded with leading spaces to
+the IDO **Length**. Its length was changed from **10** (22 Sep export) to **20** (29 Sep). Records
+from before are stored 10 wide, newer ones 20 wide. AUTONUMBER takes the highest value + 1, and
+the 10-wide values always sort above the 20-wide ones (a space sorts before a digit), so it keeps
+producing the same next number - which already exists 20 wide.
+
+**Fix**: set `CmrNum` **Length** back to **10** in IDO Properties (leave the SQL column's 999 alone),
+**Check In**, reopen the form. Never change this length again - `compare_live_lengths.py` now
+flags it.
+
+**Clean-up**: any CMR saved while the length was 20 is stored 20 wide. In the list sorted by CMR
+Num those show out of order (at the bottom), and one may repeat a number used by a 10-wide
+record. On TRN they're test records: delete them from the form.
+
+**Confirm on TRN**: **New**, fill in, save - saves with the next number. Do it twice.
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,

@@ -14,6 +14,7 @@ Set **Length**, then **Check In** the IDO and reopen the form. Do this after ste
 
 | Property | Column | Length now | Set to |
 |---|---|---|---|
+| `CmrNum` | `cmr_num` | 20 | **10** |
 | `Status` | `status` | (blank) | **255** |
 | `InitialChange` | `initial_change` | 40 | **255** |
 | `Vendor` | `vendor` | 15 | **255** |
@@ -34,11 +35,11 @@ Set **Length**, then **Check In** the IDO and reopen the form. Do this after ste
 | `ReasonCode` | `reason_code` | 100 | **255** |
 | `CauseCode` | `cause_code` | 100 | **255** |
 
-19 properties. `CreatedBy` is a system property: if the grid won't let you change it, leave it.
+20 properties. `CreatedBy` is a system property: if the grid won't let you change it, leave it.
 
 ## Left as is
 
-- `CmrNum` (cmr_num): SQL is nvarchar(999), left over from the earlier type-change attempt; the IDO stays at 20. The key is a NumSortedString, which pads to its length for sorting. Don't change either side without testing on TRN.
+- `CmrNum` (cmr_num): SQL is nvarchar(999), left over from the earlier type-change attempt - leave the SQL column. The IDO length is NOT matched to SQL: CmrNum is a NumSortedString key, stored padded with leading spaces to the IDO length, so it must stay at 10 - the length every existing record was created with. Changing it (it was 20 on 2026-09-29) makes AUTONUMBER repeat a number: save fails with "Error Message does not exist. Object:PK_ue_ecmrs, Type:17".
 - `workflow_status` (char(255)) - not on the form; left as is.
 - `additional_changes` (char(1000)) - not on the form; left as is.
 - `general_closed_by` (EmpNumType(7)) - not on the form; left as is.
