@@ -87,7 +87,6 @@ Production has not been done yet - see "Production" at the end.
 
 ## Production
 
-- [ ] Repeat on production, in this order: table + IDO (build guide), the IDO settings in
-  [`deploy-checklist.md`](deploy-checklist.md), then import
-  [`../exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML) through FormSync; smoke test as in the
-  README. Export the production form first if one exists (rollback copy).
+- [ ] Go live in production: [`Implementation-Plan.md`](Implementation-Plan.md) section 5 (22 steps:
+  table and IDO from [`../exports/production/`](../exports/production/), `--verify` against TRN,
+  FormSync import of [`../exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), smoke test, record it).

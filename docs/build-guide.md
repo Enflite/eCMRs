@@ -1,13 +1,11 @@
 # eCMRs — Build Guide
 
-**HISTORICAL / SUPERSEDED.** This was written as pre-build instructions before the table, IDO,
-and form existed. All of it is now live (see `README.md`'s Status section) and several details
-below are stale or wrong as a result - notably the table name (`ue_ecmr` below vs. the real,
-live `ue_ecmrs`) and the column list (lengths/types/presence have all moved on since this was
-written - `scripts/generate_schema_csv.py`'s `FIELDS` is the current source of truth, not the
-table here). Kept for the historical reasoning (why a standalone table, the naming convention,
-the two-mechanism split below), not as a build reference. For current, accurate info see
-`README.md`, `docs/troubleshooting.md`, and `docs/deploy-checklist.md`.
+**HISTORICAL / SUPERSEDED.** Written before the table, IDO and form existed; kept for the
+reasoning (why a standalone table, the naming convention, the two-mechanism split below). Its
+column table is out of date. **To build eCMRs (e.g. in production) use
+[`Implementation-Plan.md`](Implementation-Plan.md) section 5**, with the import files in
+[`../exports/production/`](../exports/production/) and the
+[`production-build-sheet.md`](production-build-sheet.md).
 
 Two separate mechanisms, don't conflate them:
 

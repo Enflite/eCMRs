@@ -1,5 +1,10 @@
 # eCMRs — Field Mapping
 
+> **Design-time document (kept for the reasoning).** What is actually built and working is in
+> [`production-build-sheet.md`](production-build-sheet.md) (every column and property, from the TRN
+> exports), [`field-review.md`](field-review.md) (against the original forms) and
+> [`task-list.md`](task-list.md) (status). The runbook is [`Implementation-Plan.md`](Implementation-Plan.md).
+
 Rebuilt from the **real, complete** `QC_CMRs` Form Sync export (every component the stakeholder pasted directly) — not just the subset `cmr-project` had tracked as its "confirmed editable scope." Every field below gets its own original column on the new standalone table. No `RsCrcvr*`/`rs_cmrUf_*` legacy names, no joins, no dependency on `rs_cmr`/`rs_crcvr`/any other table.
 
 Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Tested**.
