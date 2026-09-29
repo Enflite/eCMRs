@@ -92,11 +92,10 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `Dept(DeptDescription,)` on
-  the combo (copied from the live Service Orders form), no `PropertyClassName`. See
+- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(DeptDescription, Description)` on
+  the combo (the `Dept(...)` validator failed on TRN: DivName not in cache). See
   `docs/troubleshooting.md` "Description auto-fill for Dept and Work Center".
-- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `WcDesc(WcDescription)` (copied
-  from the original Create Change Request form).
+- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(WcDescription, Description)`.
 - [ ] **DeptDescription**, **WcDescription** — Filled by the validators above in v2. Clear both
   properties' IDO **Read Only** flag before importing v2 (`docs/deploy-checklist.md`). Reported
   2026-09-28: not filling in v1.

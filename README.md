@@ -46,7 +46,7 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
 ## Release
 
 - **2026-09-28:** Form **v2** built (not yet imported). Fixes from the TRN review
-  ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (validators),
+  ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (`SetPropertyFromList` validators),
   Reason/Cause Code get their own code lists (fixes the `'FP'` error), Implementation section
   re-laid out, Internal Review Date moved back to Engineering.
 - **2026-09-29:** v2 also fixes PO Line (it stored the Item, so saves failed with "Data length for

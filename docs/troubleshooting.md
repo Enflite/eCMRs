@@ -621,13 +621,24 @@ property OfcAddr4 not in cache"*.
 default settings write `OfcAddr4` too - a property `ue_ecmrs` doesn't have. The description
 fields had no other way to be filled.
 
-**Fix (form v2, `tools/apply_form_changes.py`)**: set the validator on the component directly,
-with arguments naming our own properties, and no `PropertyClassName`:
+**Update 2026-09-29 - the `Dept(...)` validator failed on TRN too**: *"internal validation error
+on c_dept validator Dept, val type In Collection: Bad SETPROPERTIES specification in validator
+Dept: this cache property DivName not in cache"*. The `Dept` validator always writes several
+properties (`DivName`, `OfcAddr4`, ...) that the Service Orders IDO has and `ue_ecmrs` doesn't;
+leaving its second argument empty doesn't stop that. **Don't use a named system validator
+(`Dept`, `WcDesc`, ...) on this IDO.**
 
-| Component | Validators | Copied from (live in this tenant) |
+**Fix (form v2, `tools/apply_form_changes.py`)**: Infor's generic `SetPropertyFromList(<target
+property>, <list column>)` validator. It copies one column of the selected dropdown row into one
+property and writes nothing else. Used on the live Incidents form in this tenant
+(`SetPropertyFromList(FSIncReasons.Duration, Duration)`).
+
+| Component | Validators | List source (already there) |
 |---|---|---|
-| `c_dept` | `Dept(DeptDescription,)` | Service Orders form, `DeptEdit` (`ServiceOrders` repo). The empty 2nd argument skips the extra property. |
-| `c_wc` | `WcDesc(WcDescription)` | Original **Create Change Request** form, `WCEdit` (`cmr-project/exports`) |
+| `c_dept` | `SetPropertyFromList(DeptDescription, Description)` | `SLDepts( PROPERTIES(Dept, Description) )` |
+| `c_wc` | `SetPropertyFromList(WcDescription, Description)` | `SLWcs( PROPERTIES(Wc, Description) )` |
+
+The list column (`Description`) must be in the dropdown's `PROPERTIES()`.
 
 The target properties (`DeptDescription`, `WcDescription`) must have their IDO **Read Only**
 flag cleared (Rule #1B, `docs/deploy-checklist.md`), and their form components stay bare Edit
@@ -692,6 +703,9 @@ DISPLAY(2,1,3) ...)`. A dropdown writes back the **first displayed** column, so 
 Item (12 characters) into `PoLine` (length 10). "Notify" is wrong in the message only because
 the fields had no Caption linking them to their labels, so SyteLine used a nearby component's
 name.
+
+Also seen as *"String or binary data would be truncated in table ...ue_ecmrs, column
+'po_line'. Truncated value: '92185-001-'"* - same bug, reported by SQL instead of the form.
 
 **Fix (form v2)**: `DISPLAY(1,2,3)` again - PoLine first, Item still shown in the list. Every
 bound field now has `Caption = C(<its label>)` (how Infor's forms link a field to its label),

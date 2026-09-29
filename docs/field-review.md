@@ -38,8 +38,8 @@ Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2
 
 | Original label | Original setup | eCMRs field | Status | Note |
 |---|---|---|---|---|
-| Dept + description | combo, validator `RSQCDept` | `Dept` + `DeptDescription` | **Fixed v2** | Description was never filled. v2 adds validator `Dept(DeptDescription,)`. |
-| WC + description | combo, validator `WcDesc(WcDescription)` | `Wc` + `WcDescription` | **Fixed v2** | Same. v2 adds `WcDesc(WcDescription)`. |
+| Dept + description | combo, validator `RSQCDept` | `Dept` + `DeptDescription` | **Fixed v2** | Description was never filled. v2 adds validator `SetPropertyFromList(DeptDescription, Description)`. |
+| WC + description | combo, validator `WcDesc(WcDescription)` | `Wc` + `WcDescription` | **Fixed v2** | Same. v2 adds `SetPropertyFromList(WcDescription, Description)`. |
 | Reported By | `InspId` employee combo | `ReportedBy` (plain text) | Diff | Original was an employee lookup. Ours is free text - say if it should be a lookup. |
 | Due Date | date | `DueDate` | OK | |
 | Change (Initial Change) + 5 Req checkboxes | `Change(...)` cascade | `InitialChange` + `Req*` | OK | Screenshot: **Machine** ticked Costing, Documentation, Tool/Machine, Process - the right four. |

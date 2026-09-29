@@ -8,13 +8,16 @@ rule 6: no XML re-serializing), so everything already working on TRN stays exact
 only the changes below are applied.
 
 What it changes (v1 -> v2):
-  1. Dept -> Dept Description auto-fill: Validators "Dept(DeptDescription,)" on c_dept. Copied
-     from the live Service Orders form in this tenant (DeptEdit), which binds the same property
-     names. The earlier crash (OfcAddr4 not in cache) came from PropertyClassName="Dept" pulling
-     in the class's default validator; the explicit Validators with the empty second argument
-     is how Infor's own form avoids that, so no PropertyClassName is added.
-  2. Work Center -> WC Description auto-fill: Validators "WcDesc(WcDescription)" on c_wc. Copied
-     from the original Create Change Request form (WCEdit), same target property name.
+  1-2. Dept -> Dept Description and Work Center -> WC Description auto-fill: Validators
+     "SetPropertyFromList(DeptDescription, Description)" on c_dept and
+     "SetPropertyFromList(WcDescription, Description)" on c_wc. Infor's generic validator
+     (used on the live Incidents form, reason grid): copies one column of the selected
+     dropdown row (Description, already in the SLDepts/SLWcs list sources) into one property,
+     and writes nothing else. The Dept(...) validator was tried first and failed on TRN
+     2026-09-29 - it also writes DivName/OfcAddr4, which ue_ecmrs doesn't have
+     ("Bad SETPROPERTIES specification in validator Dept: this cache property DivName not in
+     cache"), even with its second argument left empty. WcDesc(...) is the same kind of
+     validator, so it's replaced too.
   3. Reason Code / Cause Code: PropertyClassName QCReasonCode/QCCauseCode removed. Those classes
      filter on QC_MRRs fields (FP(...)) that ue_ecmrs does not have, which caused the
      "'FP' is not a recognized built-in function name" error and the empty Reason list. The
@@ -136,8 +139,8 @@ def build(text):
 
     # 1-2. Description auto-fill through real validators (Validators sits right after Width
     # on components without a Caption, same order as Infor's own exports).
-    f.insert_after("c_dept", "Width", "Validators", "Dept(DeptDescription,)")
-    f.insert_after("c_wc", "Width", "Validators", "WcDesc(WcDescription)")
+    f.insert_after("c_dept", "Width", "Validators", "SetPropertyFromList(DeptDescription, Description)")
+    f.insert_after("c_wc", "Width", "Validators", "SetPropertyFromList(WcDescription, Description)")
 
     # 3. Reason/Cause: drop the MRR-only property classes; the Inline List drives the list.
     # Renamed to *_v2 as well: confirmed on TRN (2026-09-28) that importing the same component

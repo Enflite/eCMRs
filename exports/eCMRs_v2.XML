@@ -377,7 +377,7 @@
                <ListHeight>0</ListHeight>
                <Width>17.25</Width>
                <Caption>C(l_dept)</Caption>
-               <Validators>Dept(DeptDescription,)</Validators>
+               <Validators>SetPropertyFromList(DeptDescription, Description)</Validators>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -1480,7 +1480,7 @@
                <ListHeight>0</ListHeight>
                <Width>17.25</Width>
                <Caption>C(l_wc)</Caption>
-               <Validators>WcDesc(WcDescription)</Validators>
+               <Validators>SetPropertyFromList(WcDescription, Description)</Validators>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
