@@ -103,8 +103,8 @@ FIELDS = [
     dict(key="next_assy_item", section="header", label="Next Lvl Assy", components=["c_next_assy_item"],
          text=["The next-level assembly that uses the item. The list shows the job items that use "
                "the selected Item."],
-         filled="Next Assy Desc is filled in from the assembly.", related=["item", "next_assy_description"]),
-    dict(key="next_assy_description", section="header", label="Next Assy Desc", components=["c_next_assy_description"],
+         filled="Assy Desc is filled in from the assembly.", related=["item", "next_assy_description"]),
+    dict(key="next_assy_description", section="header", label="Assy Desc", components=["c_next_assy_description"],
          text=["The description of the next-level assembly."],
          filled="Filled in when a Next Lvl Assy is selected. You can type over it.", related=["next_assy_item"]),
     dict(key="vendor", section="header", label="Vendor", components=["c_vendor"],

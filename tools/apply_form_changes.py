@@ -57,11 +57,10 @@ What it changes (v1 -> v2):
      HelpContextID as in that export. Fields use the form's help, as on Infor's own forms.
      Right-click Help can only open Infor's help site: SyteLine puts its help address in front of
      any HelpFileName (a file:/// link became docs.infor.com/.../file:///S:/...).
-  12. Help button next to Notify: opens the eCMRs help pages (docs/help/) from the repo copy on
-     the S: drive (HELP_BUTTON_URL) through an OpenEcmrsHelp event, ResponseType 39 URL(...) - the
-     response Infor's forms use for links. Right-click Help stays on the Infor QC_CMRs topic.
+  12. (Removed.) There was a Help button next to Notify; right-click -> Help replaced it (18).
   13. Team feedback (TRN review, 2026-09-29):
      a. Item Desc is wider (to the Dept Description's right edge) so long descriptions show.
+     d. "Next Assy Desc:" -> "Assy Desc:" so the label fits its two lines (it showed "Next _Assy").
      b. Top Level PN is hidden (label and field, Hidden=True). Not deleted: FormSync only applies
         what is in the file, so a component left out of the file would stay on the form. The
         top_level_pn column and TopLevelPn property stay, so existing data is kept.
@@ -85,9 +84,10 @@ What it changes (v1 -> v2):
      form) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HelpFileName stays as the Infor
      topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
      handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
-  18. Help button hidden (Hidden=True): right-click -> Help does the job (team, 2026-09-29). Kept
-     in the file rather than dropped, because FormSync doesn't delete a component that is missing
-     from the file - TRN already has it. HELP_BUTTON_URL is still the help address.
+  18. Help button deleted (team, 2026-09-29: keep right-click -> Help, delete the button): btn_help
+     and its OpenEcmrsHelp handler are no longer in the file, so production never gets them. TRN
+     already has them: if FormSync leaves the button there, delete it once in Design Mode (Implementation
+     Plan 4c). HELP_BUTTON_URL is still the help address used by right-click -> Help.
   17. IDM documents widget: the business-context handlers every Infor form uses (QC_CMRs, Lots,
      Service Orders, Customer Order Lines): StdFormPredisplay loads the form's message template
      (SLFormExtMsgEntities.LoadJSONVar, form name eCMRs) and StdObjectSelectCurrentCompleted
@@ -276,7 +276,6 @@ def build(text):
     f.place("l_reason_code", y=55.95, h=1.8)
     f.place("l_vendor_name", y=21.4, h=1.8)
     f.place("l_next_assy_description", y=19.35, h=1.8)
-    f.caption("l_next_assy_description", "Next Assy Desc:")
     f.place("l_internal_review_date", h=2.7)
 
     # 11. Form-level help (same topic as QC_CMRs).
@@ -287,28 +286,10 @@ def build(text):
                             + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
 
 
-    # 12. Help button (right of Notify) opening the eCMRs help pages at HELP_BUTTON_URL. Raises
-    # OpenEcmrsHelp, a ResponseType 39 "URL(<address>) ( )" handler - the response Infor's
-    # Customer Order Lines (tracking link) and Incidents / Service Orders (mailto) forms use.
-    m = re.search(r'<Component Name="btn_notify">.*?</Component>', f.text, re.S)
-    btn = m.group(0).replace('Name="btn_notify"', 'Name="btn_help"')
-    for tag, val in [("LeftPos", "100"), ("Width", "12"), ("TabOrder", "70"), ("Caption", "Help"),
-                     ("EventToGenerate", "OpenEcmrsHelp"), ("EffectiveCaption", "Help")]:
-        btn, n = re.subn(rf"<{tag}>[^<]*</{tag}>", f"<{tag}>{val}</{tag}>", btn, count=1)
-        if n != 1:
-            raise SystemExit(f"btn_help: no <{tag}>")
-    btn = btn.replace("BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )", "BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )")
-    # 18. Hidden: right-click -> Help replaces it.
-    btn, n = re.subn(r"<Hidden>False</Hidden>", "<Hidden>True</Hidden>", btn, count=1)
-    if n != 1:
-        raise SystemExit("btn_help: no <Hidden>")
-    f.text = f.text[:m.end()] + "\r\n            " + btn + f.text[m.end():]
-    ev_anchor = "         </EventHandlers>"
-    f.text = f.text.replace(ev_anchor,
-        '            <EventHandler Name="OpenEcmrsHelp" Sequence="0">\r\n'
-        '               <ResponseType>39</ResponseType>\r\n'
-        f'               <Response>URL({HELP_BUTTON_URL}) ( )</Response>\r\n'
-        '            </EventHandler>\r\n' + ev_anchor, 1)
+    # 12. (Help button: removed 2026-09-29 - right-click -> Help replaces it, see 16 and 18.)
+    # 13d. "Next Assy Desc:" wrapped to three lines in its narrow column and showed "Next _Assy"
+    # (TRN screenshot 2026-09-29, the "dash under the Next Assy label"): Caption only.
+    f.caption("l_next_assy_description", "Assy Desc:")
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (

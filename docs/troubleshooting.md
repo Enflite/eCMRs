@@ -877,6 +877,17 @@ Infor's topic opens as well, SyteLine still runs its built-in help after ours: w
 If the index page opens for every field, `GetCurrentComponentName` didn't return the clicked
 component: write that down too. If nothing opens: the browser blocks the `file:` link (see above).
 
+## "Dash" under the Next Assy label (shows "Next _Assy")
+
+**Symptom** (TRN, 2026-09-29): the label left of Next Assy's description reads "Next" / "_Assy",
+with "Desc:" missing.
+
+**Cause**: the caption "Next Assy Desc:" needs three lines in its 6.5-wide, two-line-high column
+(1.8), so it wraps and is cut off; the wrap shows as a dash.
+
+**Fix**: caption only, "Assy Desc:" (fits two lines like "Vendor Name:"),
+`tools/apply_form_changes.py` step 13d. Confirm: the label reads **Assy Desc:**. TRN, then production.
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,

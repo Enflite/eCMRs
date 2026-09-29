@@ -59,7 +59,8 @@ legacy forms are the requirements reference.
   Description fill before save (Validate Immediately), Notify sends the email (`ENF_NotifyUserWithCMR`,
   as QC_CMRs), right-click → Help opens the field's eCMRs page, IDM widget business context.
 - **2026-09-29:** Right-click → Help runs the form's own help handler on TRN (confirmed). The
-  Help button is hidden: right-click → Help replaces it.
+  Help button is deleted (right-click → Help replaces it); "Next Assy Desc:" label is now "Assy Desc:"
+  (it wrapped and showed "Next _Assy").
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 

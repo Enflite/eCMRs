@@ -58,7 +58,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Top | Status, Assigned (ID + name), Notify | `Status`, `AssignedEmpNum`, `AssignedUsername` | drop-down, lookup, button | QC_CMRs |
 | Top | CMR Num, Create Date, Created By | `CmrNum`, `CreateDate`, `CreatedBy` | automatic | QC_CMRs |
 | Top | PO Num, PO Line, Assigned Buyer, Qty, POC, RFQ Num, Job Num, Drawing Revision, Latest Revision, Requested Action | `PoNum`, `PoLine`, `AssignedBuyer`, `Qty`, `Poc`, `RfqNum`, `JobNum`, `Revision`, `LatestRevision`, `RequestedAction` | lookups, text | QC_CMRs |
-| Top | Item + Item Desc, Next Lvl Assy + Next Assy Desc, Vendor + Vendor Name, Priority | `Item`, `ItemDescription`, `NextAssyItem`, `NextAssyDescription`, `Vendor`, `VendorName`, `Priority` | lookup + auto-fill | QC_CMRs |
+| Top | Item + Item Desc, Next Lvl Assy + Assy Desc, Vendor + Vendor Name, Priority | `Item`, `ItemDescription`, `NextAssyItem`, `NextAssyDescription`, `Vendor`, `VendorName`, `Priority` | lookup + auto-fill | QC_CMRs |
 | Change Request Fields | Dept + description, Work Center + description, Reported By, Due Date, Initial Change, 5 Req checkboxes, General Note | `Dept`, `DeptDescription`, `Wc`, `WcDescription`, `ReportedBy`, `DueDate`, `InitialChange`, `Req*`, `GeneralNote` | lookup + auto-fill, cascade | Create Change Request |
 | Additional Fields | Serial #, LOT #, Sub Assembly (Top Level PN hidden, team feedback 2026-09-29) | `SerialNum`, `LotNum`, `SubAssembly` (`TopLevelPn` kept, not shown) | lookup, text | SOW |
 | Quality | SOX Impacted, Hold On PO, Authorization For Supplier To Ship, Reason Code, Cause Code, QC Disposition, Reviewer, QC RCA Notes | `SoxImpacted`, `HoldOnPo`, `AuthSupplierShip`, `ReasonCode`, `CauseCode`, `QcDisposition`, `QcReviewer*`, `QcRcaNotes` | checkbox, drop-down, lookup | QC_CMRs, SOW |
@@ -90,11 +90,11 @@ during TRN testing. Field-by-field comparison with the originals:
 5. ~~**Notify** button shows a message only~~ **Answered** (team feedback 2026-09-29: "fix the notify button"): Notify raises Enflite's `ENF_NotifyUserWithCMR` email event, like QC_CMRs. To test on TRN (4c).
 6. **Reported By** is free text; the original was an employee lookup. Keep or change? *Blocks nothing.*
 7. **Assigned Buyer** stores the employee number; the original stored the username. Keep or change? *Blocks nothing.*
-8. **Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one. *Blocks nothing.* Findings (2026-09-29): Sub Assembly is not on any of the three legacy screens; it was added from the SOW as plain text, next to Top Level PN (now hidden). **Next Lvl Assy** already lists the assemblies that use the Item (jobs' materials, `SLJobmatls`) and fills Next Assy Desc. The team to say what Sub Assembly should hold: the same as Next Lvl Assy (then hide it too), or a different level (then say which, and it can get a lookup).
+8. **Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one. *Blocks nothing.* Findings (2026-09-29): Sub Assembly is not on any of the three legacy screens; it was added from the SOW as plain text, next to Top Level PN (now hidden). **Next Lvl Assy** already lists the assemblies that use the Item (jobs' materials, `SLJobmatls`) and fills Assy Desc. The team to say what Sub Assembly should hold: the same as Next Lvl Assy (then hide it too), or a different level (then say which, and it can get a lookup).
 9. **Legacy screens and history**: when production is live, retire Create Change Request / Change Request Management / QC_CMRs? Migrate old CMRs from `rs_cmr`/`rs_crcvr`? *Blocks retiring the old screens, not the launch.*
 10. **Status** IDO length is blank on TRN (works). Optional: set 255 to match the column ([`length-fixes.md`](length-fixes.md)). *Blocks nothing.*
 11. **IDM documents widget**: the form now sends its record to the side-panel widgets the way Infor's forms do (4c). What the widget looks up (the **Item**) is set up in SyteLine for the form name `eCMRs`, following the team's guide `S:\Public\Engineering\Syteline\AddIDM` (not in this repo yet: add it to `docs/`). *Blocks the IDM test in 4c.*
-12. **"Dash under the Next Assy label"** (team feedback 2026-09-29): nothing in the form file draws a line there. Needs a screenshot of it on TRN. *Blocks nothing.*
+12. ~~**"Dash under the Next Assy label"**~~ **Answered** (TRN screenshot 2026-09-29): the label **Next Assy Desc:** wrapped to three lines in its narrow column and showed "Next _Assy". Now **Assy Desc:** (caption only).
 
 ---
 
@@ -127,7 +127,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Item / Next Assy / Vendor → description | `DefaultFrom` `Item(ItemDescription)`, `Item(NextAssyDescription)`, `VendNum(VendorName)` |
 | Dept / Work Center → description | `Validators` `SetPropertyFromList(DeptDescription, Description)` / `(WcDescription, Description)`, with **Validate Immediately** (Flags 33) |
 | Notify → email | `ENF_NotifyUser`: `SLEmployees(... SETV(EcmrsNotifyEmail=Username))`, then `EVENT(ENF_NotifyUserWithCMR)` |
-| Right-click → Help | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp` (Help button hidden) |
+| Right-click → Help | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp` (the Help button is deleted) |
 | IDM / side-panel widgets | `StdFormPredisplay` + `StdObjectSelectCurrentCompleted`: `SLFormExtMsgEntities` and `JSONMSGTYPE(inforBusinessContext)` |
 | Reviewer ID → name (Assigned, QC, Eng, Planning, Purchasing, CM) | `DefaultFrom` `EmpNum(<name property>)` on an `SLEmployees` list |
 | Initial Change → Req checkboxes | `DefaultFrom` `Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)` |
@@ -167,10 +167,10 @@ where they had it.
 | Dept / WC Description only fill after save | **Validate Immediately** on Dept and Work Center (Flags 33, as on Infor's own Dept fields) | Pick a Dept: the description fills straight away. Same for Work Center |
 | Fix the Notify button | Notify raises `ENF_NotifyUserWithCMR` (Enflite's email event from QC_CMRs) with `CmrNum`, the Assigned employee's username (email), `Priority` | **EMAIL SENT!**, and the Assigned person gets it |
 | Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open `docs/help/c/<field>.html` on the S: drive. **Confirmed** the handler runs (TRN 2026-09-29); the browser shows SyteLine's `GetFile.aspx` page for `file:` links until the help has an `https://` address | Right-click a field → **Help**: that field's eCMRs page opens |
-| Remove the extra Help button (2026-09-29) | **Help** button hidden | Not on the form |
+| Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form. If FormSync leaves it on TRN, delete it once in **Design Mode** (TRN only: production never had it) |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Sub Assembly | Findings under open item 8 | Team decides |
-| Dash under Next Assy label | Needs a screenshot (open item 12) | - |
+| Dash under Next Assy label | The label wrapped ("Next _Assy"); now **Assy Desc:** | Label reads **Assy Desc:** on two lines |
 
 Before importing:
 
@@ -178,6 +178,7 @@ Before importing:
 2. **Event Handlers** form: open `ENF_NotifyUserWithCMR` and check its actions only use `CmrNum`, `EAddres` and `Priority` (the eCMRs values: `CMR-...` number, the username, High/Medium/Low), and don't look the CMR up in the old `rs_cmr` table. If they do, write down what they read: they need an eCMRs version.
 3. IDM: do the form set-up from the AddIDM guide for form name **`eCMRs`**, with the **Item** as what to look up. Until this is done, opening eCMRs may show a message from `LoadJSONVar`; if it does, that's the sign the set-up is missing.
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
+5. If the **Help** button is still there (FormSync may keep a component that isn't in the file): **Design Mode** → select **Help** → **Delete** → save. TRN only.
 
 If right-click → Help still opens Infor's topic (or both open): SyteLine runs its own help too. Write it
 down in [`troubleshooting.md`](troubleshooting.md).
@@ -247,7 +248,7 @@ Tick each step as you go.
 On TRN - all passed 2026-09-29 (see [`task-list.md`](task-list.md)):
 
 - [x] **New** gives `CMR-YYMMDD-HHMMSS`; saves work; no duplicate-key error
-- [x] Item → Item Desc, Next Lvl Assy → Next Assy Desc, Vendor → Vendor Name
+- [x] Item → Item Desc, Next Lvl Assy → Assy Desc, Vendor → Vendor Name
 - [x] Dept → Dept Description, Work Center → WC Description
 - [x] PO Num → PO Line (line number, not Item); Job Num list
 - [x] Assigned, QC, Eng, Planning, Purchasing, CM: Reviewer ID fills the name
