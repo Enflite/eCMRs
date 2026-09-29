@@ -46,9 +46,11 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
 ## Release
 
 - **2026-09-28:** Form **v2** built (not yet imported). Fixes from the TRN review
-  ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (validators),
+  ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (`SetPropertyFromList` validators),
   Reason/Cause Code get their own code lists (fixes the `'FP'` error), Implementation section
   re-laid out, Internal Review Date moved back to Engineering.
+- **2026-09-29:** v2 also fixes PO Line (it stored the Item, so saves failed with "Data length for
+  Notify (12) ...") and links every field to its label so error messages name the right field.
 
 ### Importing v2 on TRN
 
@@ -56,8 +58,11 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
    - `ReasonCode` **Inline List**: `ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)`
    - `CauseCode` **Inline List**: `ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)`
    - `DeptDescription` and `WcDescription`: **Read Only** unchecked.
+   - `ReasonCode` and `CauseCode`: **Property Class** blank.
    - **Check In** the IDO.
 2. Import [`exports/eCMRs_v2.XML`](exports/eCMRs_v2.XML) through **FormSync** at Site scope.
+   If a **Reason Code** / **Cause Code** box shows twice (old `c_reason_code` / `c_cause_code`
+   left behind), delete the old one in Design Mode.
 3. Test: pick a Dept and a Work Center (descriptions fill); open Reason and Cause (codes listed,
    no error); tick **Closed** (date and name fill); save, reopen. Try Serial #/LOT # with an item
    that has serials/lots.

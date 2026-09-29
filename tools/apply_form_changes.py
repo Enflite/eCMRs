@@ -8,22 +8,34 @@ rule 6: no XML re-serializing), so everything already working on TRN stays exact
 only the changes below are applied.
 
 What it changes (v1 -> v2):
-  1. Dept -> Dept Description auto-fill: Validators "Dept(DeptDescription,)" on c_dept. Copied
-     from the live Service Orders form in this tenant (DeptEdit), which binds the same property
-     names. The earlier crash (OfcAddr4 not in cache) came from PropertyClassName="Dept" pulling
-     in the class's default validator; the explicit Validators with the empty second argument
-     is how Infor's own form avoids that, so no PropertyClassName is added.
-  2. Work Center -> WC Description auto-fill: Validators "WcDesc(WcDescription)" on c_wc. Copied
-     from the original Create Change Request form (WCEdit), same target property name.
+  1-2. Dept -> Dept Description and Work Center -> WC Description auto-fill: Validators
+     "SetPropertyFromList(DeptDescription, Description)" on c_dept and
+     "SetPropertyFromList(WcDescription, Description)" on c_wc. Infor's generic validator
+     (used on the live Incidents form, reason grid): copies one column of the selected
+     dropdown row (Description, already in the SLDepts/SLWcs list sources) into one property,
+     and writes nothing else. The Dept(...) validator was tried first and failed on TRN
+     2026-09-29 - it also writes DivName/OfcAddr4, which ue_ecmrs doesn't have
+     ("Bad SETPROPERTIES specification in validator Dept: this cache property DivName not in
+     cache"), even with its second argument left empty. WcDesc(...) is the same kind of
+     validator, so it's replaced too.
   3. Reason Code / Cause Code: PropertyClassName QCReasonCode/QCCauseCode removed. Those classes
      filter on QC_MRRs fields (FP(...)) that ue_ecmrs does not have, which caused the
      "'FP' is not a recognized built-in function name" error and the empty Reason list. The
      lists now come from each property's own Inline List (scripts/generate_ido_import.py
-     INLINE_LISTS, codes taken from the live QC_MRRs dropdowns).
+     INLINE_LISTS, codes taken from the live QC_MRRs dropdowns). Both components are renamed
+     c_reason_code_v2 / c_cause_code_v2 so FormSync creates them fresh - re-importing the old
+     names kept the class on TRN.
   4. Implementation section re-laid out on one grid: checkbox | Reviewer ID | Reviewer, with
      Closed / Close Date / Closed By as the last row of the same grid.
   5. Internal Review Date moved back to Engineering (where the original QC_CMRs form has it,
      next to Disposition) instead of hanging off the bottom of Implementation.
+  6. PO Line list back to DISPLAY(1,2,3). DISPLAY(2,1,3) (show Item first) made the combo
+     write the Item into PoLine - confirmed on TRN 2026-09-29: PO Line showed 92185-001-17 and
+     save failed with "Data length for Notify (12) is greater than effective length (10)".
+     The combo writes the first DISPLAYed column, not the first PROPERTIES() entry.
+  7. Every bound field gets Caption C(<its label>), the same way Infor's own forms link a field
+     to its label, so error messages name the right field (the one above said "Notify"
+     because the fields had no caption of their own).
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -111,6 +123,12 @@ class Form:
         if tab is not None:
             self.set(name, "TabOrder", str(tab))
 
+    def rename(self, old, new):
+        a, b = self._span(old)
+        if f'<Component Name="{new}">' in self.text:
+            raise SystemExit(f"component already exists: {new}")
+        self.text = self.text[:a] + self.text[a:b].replace(f'Name="{old}"', f'Name="{new}"', 1) + self.text[b:]
+
     def caption(self, name, text):
         self.set(name, "Caption", text)
         self.set(name, "EffectiveCaption", text)
@@ -121,12 +139,19 @@ def build(text):
 
     # 1-2. Description auto-fill through real validators (Validators sits right after Width
     # on components without a Caption, same order as Infor's own exports).
-    f.insert_after("c_dept", "Width", "Validators", "Dept(DeptDescription,)")
-    f.insert_after("c_wc", "Width", "Validators", "WcDesc(WcDescription)")
+    f.insert_after("c_dept", "Width", "Validators", "SetPropertyFromList(DeptDescription, Description)")
+    f.insert_after("c_wc", "Width", "Validators", "SetPropertyFromList(WcDescription, Description)")
 
     # 3. Reason/Cause: drop the MRR-only property classes; the Inline List drives the list.
-    f.remove("c_reason_code", "PropertyClassName")
-    f.remove("c_cause_code", "PropertyClassName")
+    # Renamed to *_v2 as well: confirmed on TRN (2026-09-28) that importing the same component
+    # name without <PropertyClassName> left the old QCCauseCode class on the live component
+    # (FormSync doesn't clear a setting that is simply missing from the file), so the 'FP'
+    # error stayed. A new name makes FormSync create the component fresh. The class-derived
+    # EffectiveCaption (sCode / sRSQCCause) goes too.
+    for col in ("reason_code", "cause_code"):
+        f.remove(f"c_{col}", "PropertyClassName")
+        f.remove(f"c_{col}", "EffectiveCaption")
+        f.rename(f"c_{col}", f"c_{col}_v2")
 
     # 4. Implementation grid. Tab order: after Internal Review Date (54) and Eng RCA Notes (55).
     tab = 56
@@ -157,6 +182,24 @@ def build(text):
     f.place("l_internal_review_date", y=IRD_Y - 0.1, x=2, w=8.75, h=1.8)
     f.place("c_internal_review_date", y=IRD_Y, x=11.25, w=17.25, tab=54)
     f.place("c_eng_rca_notes", tab=55)
+
+    # 6. PO Line writes PoLine again.
+    f._edit("c_po_line", lambda b: b.replace(
+        "PROPERTIES(PoLine,Item,PoNum) DISPLAY(2,1,3)", "PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3)"))
+
+    # 7. Caption C(label) on every bound, caption-less field that has an l_<column> label.
+    for m in list(re.finditer(r'<Component Name="(c_[a-z_]+?)(_v2)?">(.*?)</Component>', f.text, re.S)):
+        name, col, block = m.group(1) + (m.group(2) or ""), m.group(1)[2:], m.group(3)
+        label = f"l_{col}"
+        if "<Caption>" in block or "<DataSource>object." not in block:
+            continue
+        if f'<Component Name="{label}">' not in f.text:
+            continue
+        f.insert_after(name, "Width", "Caption", f"C({label})")
+    # The two that don't follow the l_<column> naming: Assigned ID shares the "Assigned:"
+    # label with Assigned (username); Item Desc was hand-added in Application Studio.
+    f.insert_after("c_assigned_empnum_v2", "Width", "Caption", "C(l_assigned_username)")
+    f.insert_after("edit1_SITE", "Width", "Caption", "C(l_item1_SITE)")
 
     return f.text
 

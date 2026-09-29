@@ -289,6 +289,10 @@ without any auto-populate script: rebind the combo's own `DataSource` to
 the `Username`-holding property, and reorder the `ComboListSource`'s
 `PROPERTIES()` list so `Username` is listed **first**.
 
+> **Correction 2026-09-29:** it's the first column in `DISPLAY(...)`, not in
+> `PROPERTIES(...)`. With `DISPLAY(1,2,3)` the two are the same, which is why this looked
+> positional on `PROPERTIES`. See "Data length for Notify" below.
+
 STDOLE combos write back whichever property is listed first in
 `PROPERTIES(...)` — confirmed **positional, not name-matched** (Vendor's
 own combo proves this: `DataSource=Vendor`, but the list's first entry is
@@ -617,13 +621,24 @@ property OfcAddr4 not in cache"*.
 default settings write `OfcAddr4` too - a property `ue_ecmrs` doesn't have. The description
 fields had no other way to be filled.
 
-**Fix (form v2, `tools/apply_form_changes.py`)**: set the validator on the component directly,
-with arguments naming our own properties, and no `PropertyClassName`:
+**Update 2026-09-29 - the `Dept(...)` validator failed on TRN too**: *"internal validation error
+on c_dept validator Dept, val type In Collection: Bad SETPROPERTIES specification in validator
+Dept: this cache property DivName not in cache"*. The `Dept` validator always writes several
+properties (`DivName`, `OfcAddr4`, ...) that the Service Orders IDO has and `ue_ecmrs` doesn't;
+leaving its second argument empty doesn't stop that. **Don't use a named system validator
+(`Dept`, `WcDesc`, ...) on this IDO.**
 
-| Component | Validators | Copied from (live in this tenant) |
+**Fix (form v2, `tools/apply_form_changes.py`)**: Infor's generic `SetPropertyFromList(<target
+property>, <list column>)` validator. It copies one column of the selected dropdown row into one
+property and writes nothing else. Used on the live Incidents form in this tenant
+(`SetPropertyFromList(FSIncReasons.Duration, Duration)`).
+
+| Component | Validators | List source (already there) |
 |---|---|---|
-| `c_dept` | `Dept(DeptDescription,)` | Service Orders form, `DeptEdit` (`ServiceOrders` repo). The empty 2nd argument skips the extra property. |
-| `c_wc` | `WcDesc(WcDescription)` | Original **Create Change Request** form, `WCEdit` (`cmr-project/exports`) |
+| `c_dept` | `SetPropertyFromList(DeptDescription, Description)` | `SLDepts( PROPERTIES(Dept, Description) )` |
+| `c_wc` | `SetPropertyFromList(WcDescription, Description)` | `SLWcs( PROPERTIES(Wc, Description) )` |
+
+The list column (`Description`) must be in the dropdown's `PROPERTIES()`.
 
 The target properties (`DeptDescription`, `WcDescription`) must have their IDO **Read Only**
 flag cleared (Rule #1B, `docs/deploy-checklist.md`), and their form components stay bare Edit
@@ -653,6 +668,14 @@ property gets its own **Inline List** with the same codes as the live QC_MRRs dr
 Set the Inline List on `ReasonCode` and `CauseCode` in the IDO Properties grid and **Check In**
 the IDO before importing form v2. A code added in QCS later has to be added to both places.
 
+**Update 2026-09-28: the first v2 import still showed the error.** Importing `c_cause_code`
+with its `<PropertyClassName>` line removed did not clear the class on TRN - FormSync keeps a
+setting that is simply missing from the file (same family as Rule #1B / #1C). Fix: the
+components are now `c_reason_code_v2` / `c_cause_code_v2`, so FormSync creates them fresh with
+no class. If the error still shows after that, check the **IDO property** itself: in the IDO
+Properties grid, `CauseCode` and `ReasonCode` must have a blank **Property Class** (the class
+may have been set there by hand at some point) - clear it and **Check In**.
+
 **Confirm on TRN**: both dropdowns list their codes, no error, value saves and reloads.
 **Status: assumed until checked on TRN.**
 
@@ -669,6 +692,27 @@ still type a value.
 the dropdown. To see what exists for an item, open a throw-away Dataview on `SLSerials` (or
 `SLLots`) filtered on `Item = <item>`. If the Dataview has rows and the dropdown is still empty,
 that's a real bug - write it up here.
+
+## `Data length for Notify (12) is greater than effective length (10).`
+
+**Symptom**: saving a CMR fails with this message. **PO Line** shows an Item number (e.g.
+`92185-001-17`) instead of a line number.
+
+**Cause**: the PO Line dropdown was `STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum)
+DISPLAY(2,1,3) ...)`. A dropdown writes back the **first displayed** column, so it wrote the
+Item (12 characters) into `PoLine` (length 10). "Notify" is wrong in the message only because
+the fields had no Caption linking them to their labels, so SyteLine used a nearby component's
+name.
+
+Also seen as *"String or binary data would be truncated in table ...ue_ecmrs, column
+'po_line'. Truncated value: '92185-001-'"* - same bug, reported by SQL instead of the form.
+
+**Fix (form v2)**: `DISPLAY(1,2,3)` again - PoLine first, Item still shown in the list. Every
+bound field now has `Caption = C(<its label>)` (how Infor's forms link a field to its label),
+so messages name the real field.
+
+**Confirm on TRN**: pick a PO, then a PO Line - the box shows the line number; save works.
+Rule for every dropdown: the value you want stored must be the first column in `DISPLAY()`.
 
 ## General debugging order for "it's not working" reports
 

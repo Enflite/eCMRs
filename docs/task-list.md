@@ -56,8 +56,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [ ] **PoNum** — separate, still-open item: no `RECORDCAP` on `SLPoItems`' unfiltered list
   source. Fine now, but will get slow as the collection grows — needs a different mitigation
   (paging, a narrowing property) since re-adding `FILTER()` reproduces the original bug.
-- [x] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(po_num)')`, the exact
-  same working pattern confirmed in the real original's own PO Line combo.
+- [ ] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(PoNum)')`. **Fixed in v2,
+  check on TRN**: `DISPLAY(2,1,3)` wrote the Item into PoLine and broke save ("Data length for
+  Notify (12) is greater than effective length (10)"). Back to `DISPLAY(1,2,3)`.
 - [x] **AssignedBuyer** (`assigned_buyer`) — Combo, `SLEmployees`. No open issues flagged.
 - [x] **Qty**, **Poc** — Plain fields, nothing flagged.
 - [x] **RfqNum** — Plain field, nothing flagged.
@@ -91,11 +92,10 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `Dept(DeptDescription,)` on
-  the combo (copied from the live Service Orders form), no `PropertyClassName`. See
+- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(DeptDescription, Description)` on
+  the combo (the `Dept(...)` validator failed on TRN: DivName not in cache). See
   `docs/troubleshooting.md` "Description auto-fill for Dept and Work Center".
-- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `WcDesc(WcDescription)` (copied
-  from the original Create Change Request form).
+- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(WcDescription, Description)`.
 - [ ] **DeptDescription**, **WcDescription** — Filled by the validators above in v2. Clear both
   properties' IDO **Read Only** flag before importing v2 (`docs/deploy-checklist.md`). Reported
   2026-09-28: not filling in v1.
@@ -164,6 +164,8 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [ ] **CauseCode** (`cause_code`) — **Fixed in v2, check on TRN**. v1 threw *"'FP' is not a
   recognized built-in function name.::4"* (the earlier "confirmed live" note was wrong). Own
   Inline List in v2 with the 13 QC_MRRs cause codes (ENF … VOID).
+  2026-09-28: first v2 import still showed the error - the live component kept the class.
+  Components renamed `c_reason_code_v2` / `c_cause_code_v2` so FormSync recreates them.
 - [x] **QcDisposition** — **Confirmed live**: latest screenshot shows `Hold` selected, a valid
   value from the intended list — the `Inline List` is wired and working. (The original used
   `DefaultFrom="UserDefinedType(Cmr_QCDispositionStatus)"` instead, a different mechanism; ours

@@ -6,9 +6,9 @@ priority,String,12,,Yes,N,,"Confirmed list: High, Medium, Low. Reusing the syste
 item,String,30,,Yes,N,,"STDOLE SLItems( PROPERTIES(Item, Description) )"
 item_description,String,40,,Yes,N,,"Auto-populated via DefaultFrom on Item's own component (Item(ItemDescription)) - confirmed live-working once this property's Read Only flag was cleared (Rule #1B; see REPURPOSED_WRITABLE). Item as the real Property Class name is an extrapolation from the live PurchaseOrders form's TermsCode/ShipCode pattern, not independently confirmed for this exact class name."
 wc,String,6,,Yes,N,,"STDOLE SLWcs( PROPERTIES(Wc, Description) )"
-wc_description,String,40,,Yes,N,,Auto-filled by the WcDesc validator on Work Center's form component (Validators WcDesc(WcDescription) - the same setting the original Create Change Request form uses). Stays editable. Needs its IDO Read Only flag cleared (REPURPOSED_WRITABLE).
+wc_description,String,40,,Yes,N,,"Auto-filled by the validator SetPropertyFromList(WcDescription, Description) on Work Center's form component. Stays editable. Needs its IDO Read Only flag cleared (REPURPOSED_WRITABLE)."
 dept,String,6,,Yes,N,,"STDOLE SLDepts( PROPERTIES(Dept, Description) )"
-dept_description,String,40,,Yes,N,,"Auto-filled by the Dept validator on Dept's form component (Validators Dept(DeptDescription,) - the same setting the live Service Orders form uses). Stays editable. Needs its IDO Read Only flag cleared (REPURPOSED_WRITABLE)."
+dept_description,String,40,,Yes,N,,"Auto-filled by the validator SetPropertyFromList(DeptDescription, Description) on Dept's form component. Stays editable. Needs its IDO Read Only flag cleared (REPURPOSED_WRITABLE)."
 initial_change,String,40,,Yes,N,,"Confirmed 8-value list: Documentation, Machine, Material, Other, Process, Specification, Tooling, Variance(waiver) - needs its own Property Class + Inline List set up directly in Application Studio, not via this import. Drives the Requirements cascade."
 additional_changes,String,1000,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout] Long/growing note - matches RsCrcvrChangeAll's real Length/type.
 requested_action,String,1000,,Yes,N,,
