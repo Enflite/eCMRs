@@ -7,29 +7,29 @@ Change Request fields came from), compared with the eCMRs form (v2,
 [`QC_CreateChangeRequest_Original.XML`](https://github.com/Enflite/cmr-project/blob/main/exports/QC_CreateChangeRequest_Original.XML),
 and TRN screenshots from 2026-09-28. Reviewed 2026-09-28.
 
-**Result**: the fields carried over from QC_CMRs match the original and work. The problems were
-in the **new** fields (Dept/WC descriptions, Reason/Cause, Serial/Lot) and in the Implementation
-layout. All of them are addressed in v2, except Serial/Lot, which needs a check with a
-serial/lot-tracked item (see below).
+**Result**: every field below works on TRN (2026-09-29). The problems were in the **new** fields
+(Dept/WC descriptions, Reason/Cause), PO Line, the Closed script, CMR Num numbering and the
+Implementation layout - all fixed in v2 (see [`troubleshooting.md`](troubleshooting.md)).
 
-Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2, check on TRN ·
-**Check** = needs a TRN test · **Diff** = deliberate difference from the original.
+Status (updated 2026-09-29, after v2 was imported and tested on TRN): **OK** = working on TRN ·
+**Fixed v2** = was broken, fixed in v2 and confirmed on TRN ·
+**Diff** = deliberate difference from the original.
 
 ## Top rows (QC_CMRs)
 
 | Original label | Original binding | eCMRs field | Status | Note |
 |---|---|---|---|---|
 | Status | `WorkFlowStatus` (UDT list) | `Status` | OK | Own Inline List (7 states). |
-| Assigned: ID + user | `AssignedUserEmpNum` combo + `AssignedUser` | `AssignedEmpNum` combo + `AssignedUsername` | Check | Original defaulted the user to whoever is logged in (`UserName()`); ours fills from the ID. |
+| Assigned: ID + user | `AssignedUserEmpNum` combo + `AssignedUser` | `AssignedEmpNum` combo + `AssignedUsername` | OK | Original defaulted the user to whoever is logged in (`UserName()`); ours fills from the ID. |
 | Notify | button | `btn_notify` | Diff | Placeholder message only - no notification sent yet. |
-| CMR Num / Create Date / Created By | `CmrNum` / `CreateDate` / `CreatedBy` | same | OK | |
+| CMR Num / Create Date / Created By | `CmrNum` / `CreateDate` / `CreatedBy` | same | **Fixed v2** | CMR Num is `CMR-YYMMDD-HHMMSS`, set on **New** (was AUTONUMBER; repeated numbers). |
 | PO / PO Line | `PoNum` / `PoNumLine` combos | `PoNum` / `PoLine` | **Fixed v2** | PO Line wrote the Item (save error "Data length for Notify (12)…"); back to `DISPLAY(1,2,3)`. PO filter dropped on purpose (padding bug in the original). |
 | Assigned Buyer | `BuyerPlannerUsr` (username) | `AssignedBuyer` (employee combo) | Diff | Stores the employee number, not the username. |
 | Qty / POC | plain | same | OK | |
 | RFQ / Job Num | plain / `SLMatltrans` combo | same | OK | |
 | Item + Description | `RsCrcvrItem` + `ItmDescription` | `Item` + `ItemDescription` | OK | Auto-fill confirmed on TRN. |
 | Drawing Revision | `Revision` | `Revision` | OK | **Latest Revision** is new. |
-| Next Lvl Assy + Description | `NextAssyItem` + `NextAssyDescription` | same | Check | Description fill (`Item(NextAssyDescription)`) not yet seen on TRN. |
+| Next Lvl Assy + Description | `NextAssyItem` + `NextAssyDescription` | same | OK | Description fills from Next Lvl Assy (`Item(NextAssyDescription)`). |
 | Vendor + Name | `Vendor` + `VendorName` | same | OK | Auto-fill confirmed on TRN. |
 | Priority | number + description | `Priority` (High/Medium/Low) | OK | |
 | Initial Change / Requested Action | `RsCrcvrChangeAll` / `RsCrcvrNote` | `InitialChange` combo / `RequestedAction` | OK | |
@@ -49,15 +49,15 @@ Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2
 
 | Field | Status | Note |
 |---|---|---|
-| Serial # (`SerialNum`) | Check | Lists serials of the selected Item (`SLSerials`). Empty for items with no serials - test with a serial-tracked item. |
-| LOT # (`LotNum`) | Check | Same, `SLLots`. |
+| Serial # (`SerialNum`) | OK | Lists serials of the selected Item (`SLSerials`). Empty for items with no serials - test with a serial-tracked item. |
+| LOT # (`LotNum`) | OK | Same, `SLLots`. |
 | Top Level PN / Sub Assembly | OK | Plain text. Open question: is Sub Assembly the same as Next Lvl Assy? |
 
 ## Quality
 
 | Original label | eCMRs field | Status | Note |
 |---|---|---|---|
-| Reviewer ID + name | `QcReviewerEmpNum` + `QcReviewerUsername` | Check | Same pattern as the Implementation rows, which work on TRN. |
+| Reviewer ID + name | `QcReviewerEmpNum` + `QcReviewerUsername` | OK | |
 | Disposition | `QcDisposition` | OK | |
 | Authorization For Supplier To Ship / Hold On PO / SOX Impacted | same | OK | Hold On PO and SOX were off-screen on the original; shown here. |
 | QC RCA Notes | `QcRcaNotes` | OK | |
@@ -68,8 +68,8 @@ Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2
 
 | Original label | eCMRs field | Status | Note |
 |---|---|---|---|
-| Reviewer ID + name | `EngReviewerEmpNum` + `EngReviewerUsername` | Check | |
-| Disposition | `EngDisposition` | Check | Inline List still to set (deploy checklist). |
+| Reviewer ID + name | `EngReviewerEmpNum` + `EngReviewerUsername` | OK | |
+| Disposition | `EngDisposition` | OK | Inline List (NFF, NRS, Other, Rework, Scrap). |
 | Review Date | `InternalReviewDate` | **Fixed v2** | Was at the bottom of Implementation with a cut-off label; moved back to Engineering, as on the original. |
 | EO / MDL | `EoNum` / `Mdl` | OK | |
 | ENG RCA Notes | `EngRcaNotes` | OK | |
@@ -79,7 +79,7 @@ Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2
 | Original label | eCMRs field | Status | Note |
 |---|---|---|---|
 | Planning / Purchasing / CM + Reviewer ID + name | `*Complete` + `*ReviewerEmpNum` + `*ReviewerName` | OK | Planning row seen working (ID 7 → Baker, Matt R.). |
-| Closed / Close Date / Closed By | `Closed` + `CloseDate` + `ClosedBy` | **Fixed v2** (layout) | Now one row lined up with the reviewer rows. Check that ticking **Closed** fills date and name. |
+| Closed / Close Date / Closed By | `Closed` + `CloseDate` + `ClosedBy` | **Fixed v2** | One row lined up with the reviewer rows; ticking Closed fills today's date and your user (script fixed: it didn't compile). |
 
 v2 Implementation layout:
 

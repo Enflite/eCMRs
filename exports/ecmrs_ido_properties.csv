@@ -1,5 +1,5 @@
 Bind To,Property Name,Property Class,Data Type,Length,Decimal,Column Data Type,Label String ID,Required,Read Only,Description
-cmr_num,CmrNum,,String,20,,,,,,"CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."
+cmr_num,CmrNum,,String,255,,,,,,"CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters; IDO length 255 on TRN) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."
 status,Status,,String,255,,,sStatus,,,"Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."
 workflow_status,WorkflowStatus,,String,255,,,,,,[ORPHANED - not bound to any form control: not placed on the current form layout; its fixed value list was never confirmed either] Workflow status. Fixed value list not yet confirmed.
 priority,Priority,,String,12,,,sPriority,,,"Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."
@@ -42,7 +42,7 @@ req_process,ReqProcess,,Byte,,,,,0,,Cascades off InitialChange.
 process_review_complete,ProcessReviewComplete,,Byte,,,,,0,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
 req_material,ReqMaterial,,Byte,,,,,0,,Cascades off InitialChange.
 material_review_complete,MaterialReviewComplete,,Byte,,,,,0,,[ORPHANED - not bound to any form control: no cascade UI was ever built for it - no control on the form sets this flag]
-general_review_complete,GeneralReviewComplete,,Byte,,,,,0,1,"[ORPHANED - not bound to any form control: read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule] Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."
+general_review_complete,GeneralReviewComplete,,Byte,,,,,0,,"[ORPHANED - not bound to any form control: read-only checkbox nothing ever set - dropped from the form along with the 5 cascade ReviewComplete flags it doesn't apply without their gating business rule] Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."
 sox_impacted,SoxImpacted,,Byte,,,,sRSQCSarbanesImpact,0,,"Standalone, not part of the 5-category cascade."
 hold_on_po,HoldOnPo,,Byte,,,,,0,,
 auth_supplier_ship,AuthSupplierShip,,Byte,,,,,0,,
@@ -68,8 +68,8 @@ cm_reviewer_name,CmReviewerName,,String,255,,,,,,"Repurposed to hold the reviewe
 cm_complete,CmComplete,,Byte,,,,,0,,
 due_date,DueDate,,Date,,,,sDate,,,
 internal_review_date,InternalReviewDate,,Date,,,,sDate,,,"Real field on the original form (dateCombo2, next to Engineering Disposition). On the form in the Engineering section, under Reviewer."
-close_date,CloseDate,,Date,,,,sDate,,1,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> today's date, unchecked -> cleared). Not user-typed."
-closed_by,ClosedBy,,String,128,,,sRSQCClosedBy,,1,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> current username, unchecked -> cleared). Not user-typed."
+close_date,CloseDate,,Date,,,,sDate,,,"Set by the Closed checkbox script (SetCloseInfo) to today; cleared when unticked. Must not be Read Only at the IDO level (the script writes it) - clear on TRN, 2026-09-29."
+closed_by,ClosedBy,,String,128,,,sRSQCClosedBy,,,"Set by the Closed checkbox script (SetClosedBy: SETPROPVALUES(ClosedBy=USERNAME())); cleared when unticked. Must not be Read Only at the IDO level - clear on TRN, 2026-09-29."
 general_close_date,GeneralCloseDate,,Date,,,,sDate,,,"[ORPHANED - not bound to any form control: confirmed Hidden=True on the real original form too (dateCombo5) - never user-visible there either, not just an unfinished port. Left out deliberately, not an oversight.] Purpose unclear vs. CloseDate - confirm before relying on it."
 general_closed_by,GeneralClosedBy,,NumSortedString,7,,,sEmployee,,,"[ORPHANED - not bound to any form control: confirmed Hidden=True on the real original form too (enhancedCombo2) - same as GeneralCloseDate, never user-visible there either.] Same caveat as GeneralCloseDate."
 qc_rca_notes,QcRcaNotes,,String,1000,,,sNote,,,"Root cause analysis notes, QC."

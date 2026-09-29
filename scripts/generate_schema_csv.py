@@ -33,7 +33,7 @@ AUTO_GENERATED_COLUMNS = {"created_by", "create_date"}
 # 2026-09-29 after cause_code turned out to be char(1). See docs/length-fixes.md.
 # bind_to, property_name, data_type, length, decimal, column_data_type, label_string_id, required, readonly, description
 FIELDS = [
-    ("cmr_num", "CmrNum", "String", "20", "", "", "", "", "", "CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."),
+    ("cmr_num", "CmrNum", "String", "255", "", "", "", "", "", "CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters; IDO length 255 on TRN) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."),
     ("status", "Status", "String", "255", "", "char", "sStatus", "", "", "Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."),
     ("workflow_status", "WorkflowStatus", "String", "255", "", "char", "", "", "", "Workflow status. Fixed value list not yet confirmed."),
     ("priority", "Priority", "String", "12", "", "", "sPriority", "", "", "Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."),
@@ -76,7 +76,7 @@ FIELDS = [
     ("process_review_complete", "ProcessReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("req_material", "ReqMaterial", "Byte", "", "", "ListYesNoType", "", "0", "", "Cascades off InitialChange."),
     ("material_review_complete", "MaterialReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
-    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "1", "Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."),
+    ("general_review_complete", "GeneralReviewComplete", "Byte", "", "", "ListYesNoType", "", "0", "", "Nothing sets it, never has - was Hidden=True even on the real original form. See docs/troubleshooting.md."),
     ("sox_impacted", "SoxImpacted", "Byte", "", "", "ListYesNoType", "sRSQCSarbanesImpact", "0", "", "Standalone, not part of the 5-category cascade."),
     ("hold_on_po", "HoldOnPo", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("auth_supplier_ship", "AuthSupplierShip", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
@@ -102,8 +102,8 @@ FIELDS = [
     ("cm_complete", "CmComplete", "Byte", "", "", "ListYesNoType", "", "0", "", ""),
     ("due_date", "DueDate", "Date", "", "", "DateType", "sDate", "", "", ""),
     ("internal_review_date", "InternalReviewDate", "Date", "", "", "DateType", "sDate", "", "", "Real field on the original form (dateCombo2, next to Engineering Disposition). On the form in the Engineering section, under Reviewer."),
-    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "1", "Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> today's date, unchecked -> cleared). Not user-typed."),
-    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "1", "Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> current username, unchecked -> cleared). Not user-typed."),
+    ("close_date", "CloseDate", "Date", "", "", "DateType", "sDate", "", "", "Set by the Closed checkbox script (SetCloseInfo) to today; cleared when unticked. Must not be Read Only at the IDO level (the script writes it) - clear on TRN, 2026-09-29."),
+    ("closed_by", "ClosedBy", "String", "128", "", "UsernameType", "sRSQCClosedBy", "", "", "Set by the Closed checkbox script (SetClosedBy: SETPROPVALUES(ClosedBy=USERNAME())); cleared when unticked. Must not be Read Only at the IDO level - clear on TRN, 2026-09-29."),
     ("general_close_date", "GeneralCloseDate", "Date", "", "", "DateType", "sDate", "", "", "Purpose unclear vs. CloseDate - confirm before relying on it."),
     ("general_closed_by", "GeneralClosedBy", "NumSortedString", "7", "", "EmpNumType", "sEmployee", "", "", "Same caveat as GeneralCloseDate."),
     ("qc_rca_notes", "QcRcaNotes", "String", "1000", "", "QCLongCharType", "sNote", "", "", "Root cause analysis notes, QC."),
@@ -170,17 +170,19 @@ COLDTYPE_OVERRIDES = {}
 # existing property's Read Only setting. Tracked here (not just in commit messages) so
 # generate_deploy_checklist.py can't miss one on the next field that gets this same treatment.
 REPURPOSED_WRITABLE = {
-    "assigned_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
-    "qc_reviewer_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
-    "eng_reviewer_username": "Combo binds here directly (Username-first list source) - was a read-only companion.",
-    "planning_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
-    "purchasing_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
-    "cm_reviewer_name": "Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.",
-    "dept_description": "Filled by the SetPropertyFromList validator on Dept (form v2) - the validator can't write it while this flag is set. Was a read-only auto-populated companion.",
-    "wc_description": "Filled by the SetPropertyFromList validator on Work Center (form v2) - the validator can't write it while this flag is set. Was a read-only auto-populated companion.",
-    "item_description": "DefaultFrom=\"Item(ItemDescription)\" on Item confirmed live-working once this property's Read Only flag is cleared - locked the whole form (Rule #1B) until fixed. Was a read-only auto-populated companion.",
-    "vendor_name": "DefaultFrom=\"VendNum(VendorName)\" added to Vendor, extending the confirmed-working Item/EmpNum pattern - needs this property's Read Only flag cleared the same way. Was designed as a read-only auto-populated companion.",
-    "next_assy_description": "DefaultFrom=\"Item(NextAssyDescription)\" added to NextAssyItem, same pattern as VendorName above - needs this property's Read Only flag cleared. Was designed as a read-only auto-populated companion.",
+    "assigned_username": "Filled from Assigned ID (DefaultFrom EmpNum(AssignedUsername)).",
+    "qc_reviewer_username": "Filled from QC Reviewer ID (DefaultFrom EmpNum(QcReviewerUsername)).",
+    "eng_reviewer_username": "Filled from Eng Reviewer ID (DefaultFrom EmpNum(EngReviewerUsername)).",
+    "planning_reviewer_name": "Filled from Planning Reviewer ID (DefaultFrom EmpNum(PlanningReviewerName)).",
+    "purchasing_reviewer_name": "Filled from Purchasing Reviewer ID (DefaultFrom EmpNum(PurchasingReviewerName)).",
+    "cm_reviewer_name": "Filled from CM Reviewer ID (DefaultFrom EmpNum(CmReviewerName)).",
+    "dept_description": "Filled from Dept (Validators SetPropertyFromList(DeptDescription, Description)).",
+    "wc_description": "Filled from Work Center (Validators SetPropertyFromList(WcDescription, Description)).",
+    "item_description": "Filled from Item (DefaultFrom Item(ItemDescription)).",
+    "vendor_name": "Filled from Vendor (DefaultFrom VendNum(VendorName)).",
+    "next_assy_description": "Filled from Next Lvl Assy (DefaultFrom Item(NextAssyDescription)).",
+    "close_date": "Set by the Closed checkbox script (SetCloseInfo).",
+    "closed_by": "Set by the Closed checkbox script (SetClosedBy: SETPROPVALUES(ClosedBy=USERNAME())).",
 }
 
 def main():

@@ -34,19 +34,16 @@ That approach hit real, structural ceilings along the way:
 
 ## Status
 
-Table, IDO, and form v1 are live on TRN. Form v2 (`exports/eCMRs_v2.XML`) is ready to import - see
-**Release** below.
-Combos/comboLists, the Username-binding pattern for Assigned/Reviewer fields, and the fixed-value
-dropdowns are all working - see `docs/troubleshooting.md` for the confirmed gotchas and
-`docs/deploy-checklist.md` for the manual Application Studio steps every re-import still needs.
-Known open gaps, field by field, are tracked in `docs/task-list.md` (e.g. several Reviewer/
-Assigned/Serial#/Lot# fields awaiting live re-confirmation after a Form Sync `Type`-change
-workaround, a handful of fixed-value dropdowns still needing their Inline List configured in
-Application Studio, and a few schema fields that quietly aren't on the form at all).
+**Working on TRN (2026-09-29).** Table `ue_ecmrs`, IDO `ue_ecmrs` and form v2
+(`exports/eCMRs_v2.XML`) are live on TRN and every field has been tested - see
+[`docs/task-list.md`](docs/task-list.md). The TRN SQL Columns and IDO Properties exports are in
+`docs/reference/` (`*_2026-09-29d.csv`); `scripts/compare_live_lengths.py` checks them against the
+schema. **Not yet in production.** Open decisions (Notify, Reported By lookup, rollout) are at the
+end of the task list.
 
 ## Release
 
-- **2026-09-28:** Form **v2** built (not yet imported). Fixes from the TRN review
+- **2026-09-28:** Form **v2** built (imported on TRN 2026-09-29). Fixes from the TRN review
   ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (`SetPropertyFromList` validators),
   Reason/Cause Code get their own code lists (fixes the `'FP'` error), Implementation section
   re-laid out, Internal Review Date moved back to Engineering.
@@ -54,22 +51,24 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
   Notify (12) ...") and links every field to its label so error messages name the right field.
   Text columns we own go to 255 (`char(255)`, all done on TRN 2026-09-29; `cause_code`
   was `char(1)`), and every IDO length is set to match its column ([`docs/length-fixes.md`](docs/length-fixes.md)).
+- **2026-09-29:** CMR Num is now `CMR-YYMMDD-HHMMSS`, set by the form on **New** (AUTONUMBER
+  repeated numbers: PK_ue_ecmrs error). Closed checkbox script fixed; cut-off labels fixed.
+- **2026-09-29:** v2 imported and **confirmed working on TRN** end to end: Dept/WC descriptions,
+  Reason/Cause, PO Line, Serial #/LOT #, Requirements cascade, reviewer names, Closed, CMR Num,
+  saves. IDO and SQL lengths match (one optional item: `Status` IDO length).
 
-### Importing v2 on TRN
+### Deploying v2 (done on TRN; use for production)
 
-0. IDO Properties, `CmrNum`: clear **Default Value** (`AUTONUMBER(STEP(1))`), **Data Type** `String`,
-   **Length** 20 - the form now sets CMR Num to `CMR-YYMMDD-HHMMSS` on **New**. Then set the other
-   lengths in [`docs/length-fixes.md`](docs/length-fixes.md).
-1. In Application Studio, IDO Properties for `ue_ecmrs`:
-   - `ReasonCode` **Inline List**: `ENTRIES(ASMBL,DAMAGED,DELIVERY,DOCUMENT,FEATURE,FUNCTION,INTERNAL,MATERIAL,MEASURE,PURCHASE,REVISION,SUPDAM,VISUAL)`
-   - `CauseCode` **Inline List**: `ENTRIES(ENF,ENG,EXC,FUNC,HANDLE,NFF,QCM,SHIP,SHORTAGE,SUP,TOOL,UNK,VOID)`
-   - `DeptDescription` and `WcDescription`: **Read Only** unchecked.
-   - `ReasonCode` and `CauseCode`: **Property Class** blank.
-   - **Check In** the IDO.
+1. Table and IDO: [`docs/build-guide.md`](docs/build-guide.md), then every step in
+   [`docs/deploy-checklist.md`](docs/deploy-checklist.md): `CmrNum` (String, 255, no Default Value),
+   Read Only cleared on the auto-filled fields, the Inline Lists (Status, Priority, Initial Change,
+   Dispositions, Reason Code, Cause Code), Property Class blank on Reason/Cause, lengths matching
+   SQL. **Check In** the IDO.
 2. Import [`exports/eCMRs_v2.XML`](exports/eCMRs_v2.XML) through **FormSync** at Site scope.
    If a **Reason Code** / **Cause Code** box shows twice (old `c_reason_code` / `c_cause_code`
    left behind), delete the old one in Design Mode.
-3. Test: pick a Dept and a Work Center (descriptions fill); open Reason and Cause (codes listed,
-   no error); tick **Closed** (date and name fill); save, reopen. Try Serial #/LOT # with an item
-   that has serials/lots.
+3. Smoke test: **New** (CMR Num = `CMR-YYMMDD-HHMMSS`); pick a Dept and a Work Center
+   (descriptions fill); PO Num then PO Line (line number); Initial Change (Req boxes tick);
+   Reason and Cause (codes, no error); a Reviewer ID (name fills); tick **Closed** (date and user
+   fill); save, reopen. Serial #/LOT # with an item that has serials/lots.
 4. Rollback: import [`original/eCMRs.trn.original.xml`](original/eCMRs.trn.original.xml).

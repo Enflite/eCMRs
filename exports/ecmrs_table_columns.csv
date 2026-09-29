@@ -1,5 +1,5 @@
 Column Name,Data Type,Length,Decimal Places,Nullable,Primary Key,Default Value,Description
-cmr_num,String,20,,No,Y,,"CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."
+cmr_num,String,255,,No,Y,,"CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters; IDO length 255 on TRN) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."
 status,String,255,,Yes,N,,"Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."
 workflow_status,String,255,,Yes,N,,[ORPHANED - not bound to any form control: not placed on the current form layout; its fixed value list was never confirmed either] Workflow status. Fixed value list not yet confirmed.
 priority,String,12,,Yes,N,,"Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."
@@ -68,8 +68,8 @@ cm_reviewer_name,String,255,,Yes,N,,"Repurposed to hold the reviewer's Username,
 cm_complete,Bit,,,Yes,N,,
 due_date,Date,,,Yes,N,,
 internal_review_date,Date,,,Yes,N,,"Real field on the original form (dateCombo2, next to Engineering Disposition). On the form in the Engineering section, under Reviewer."
-close_date,Date,,,Yes,N,,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> today's date, unchecked -> cleared). Not user-typed."
-closed_by,String,128,,Yes,N,,"Read-only; auto-set by the Closed checkbox's SetCloseInfo EventHandler in the Implementation section (checked -> current username, unchecked -> cleared). Not user-typed."
+close_date,Date,,,Yes,N,,"Set by the Closed checkbox script (SetCloseInfo) to today; cleared when unticked. Must not be Read Only at the IDO level (the script writes it) - clear on TRN, 2026-09-29."
+closed_by,String,128,,Yes,N,,"Set by the Closed checkbox script (SetClosedBy: SETPROPVALUES(ClosedBy=USERNAME())); cleared when unticked. Must not be Read Only at the IDO level - clear on TRN, 2026-09-29."
 general_close_date,Date,,,Yes,N,,"[ORPHANED - not bound to any form control: confirmed Hidden=True on the real original form too (dateCombo5) - never user-visible there either, not just an unfinished port. Left out deliberately, not an oversight.] Purpose unclear vs. CloseDate - confirm before relying on it."
 general_closed_by,String,7,,Yes,N,,"[ORPHANED - not bound to any form control: confirmed Hidden=True on the real original form too (enhancedCombo2) - same as GeneralCloseDate, never user-visible there either.] Same caveat as GeneralCloseDate."
 qc_rca_notes,String,1000,,Yes,N,,"Root cause analysis notes, QC."

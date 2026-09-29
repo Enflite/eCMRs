@@ -29,7 +29,7 @@ TEXT_TYPES = {"nvarchar", "char", "varchar", "nchar"}
 # Deliberately left as they are - explained in the generated file.
 KEEP = {
     "cmr_num": "SQL is nvarchar(999), left over from the earlier type-change attempt - leave the SQL "
-               "column; the key's IDO length is 20 (holds CMR-YYMMDD-HHMMSS, 17 characters).",
+               "column. The key is a String set by the form to CMR-YYMMDD-HHMMSS (17 characters); IDO length 255.",
 }
 SYSTEM_IDO = {"CreatedBy": "128"}  # system property whose IDO length differs from SQL
 
@@ -72,6 +72,9 @@ def main():
             p = ido.get(col)
             if p is not None and num(p[ih.index("*Length")]) != length:
                 ido_changes.insert(0, (pname, col, num(p[ih.index("*Length")]), length))
+            if p is not None and (p[ih.index("*Data Type")] != dtype or p[ih.index("Default Value")]):
+                notes.append(f"`{pname}`: expected Data Type {dtype} and no Default Value, found "
+                             f"{p[ih.index('*Data Type')]} / `{p[ih.index('Default Value')]}`.")
             continue
         if col in ORPHANED_COLUMNS:
             notes.append(f"`{col}` ({s_type}({s_len})) - not on the form; left as is.")

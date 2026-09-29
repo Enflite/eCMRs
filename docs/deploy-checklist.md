@@ -1,5 +1,7 @@
 # eCMRs — Deploy Checklist
 
+**All done on TRN and confirmed working, 2026-09-29** (TRN exports in `reference/`). Use this list for production.
+
 Generated from the schema by `scripts/generate_deploy_checklist.py` - re-run it
 after adding a field to either tracking dict below, don't hand-edit this file.
 See `docs/troubleshooting.md` for why each category exists.
@@ -12,21 +14,32 @@ harmless - click OK, the local check-in still applies). Skipping this produced a
 real "Missing property data type" error on form save. See
 `docs/troubleshooting.md`.
 
+## CMR Num key
+
+- [ ] `CmrNum` (cmr_num): **Data Type** `String`, **Length** 255, **Default Value** blank (no `AUTONUMBER`). The form sets it to `CMR-YYMMDD-HHMMSS` on **New**. See `docs/troubleshooting.md` (PK_ue_ecmrs).
+
+## Lengths and Property Class
+
+- [ ] Every IDO property's **Length** equals its SQL column's (`docs/length-fixes.md` lists any difference - run `scripts/compare_live_lengths.py` on fresh exports).
+- [ ] `ReasonCode`, `CauseCode`: **Property Class** blank (the QC_MRRs classes cause the `'FP'` error).
+
 ## Read Only must be manually unchecked
 
-Form Sync re-import never touches an existing property's Read Only flag.
+These are filled automatically by the form, which can't write a Read Only property. Form Sync re-import never touches an existing property's Read Only flag.
 
-- [ ] `AssignedUsername` (assigned_username) - Combo binds here directly (Username-first list source) - was a read-only companion.
-- [ ] `QcReviewerUsername` (qc_reviewer_username) - Combo binds here directly (Username-first list source) - was a read-only companion.
-- [ ] `EngReviewerUsername` (eng_reviewer_username) - Combo binds here directly (Username-first list source) - was a read-only companion.
-- [ ] `PlanningReviewerName` (planning_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
-- [ ] `PurchasingReviewerName` (purchasing_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
-- [ ] `CmReviewerName` (cm_reviewer_name) - Combo binds here directly (Username-first list source), holds a Username despite the property's own name - was a read-only companion.
-- [ ] `DeptDescription` (dept_description) - Filled by the SetPropertyFromList validator on Dept (form v2) - the validator can't write it while this flag is set. Was a read-only auto-populated companion.
-- [ ] `WcDescription` (wc_description) - Filled by the SetPropertyFromList validator on Work Center (form v2) - the validator can't write it while this flag is set. Was a read-only auto-populated companion.
-- [ ] `ItemDescription` (item_description) - DefaultFrom="Item(ItemDescription)" on Item confirmed live-working once this property's Read Only flag is cleared - locked the whole form (Rule #1B) until fixed. Was a read-only auto-populated companion.
-- [ ] `VendorName` (vendor_name) - DefaultFrom="VendNum(VendorName)" added to Vendor, extending the confirmed-working Item/EmpNum pattern - needs this property's Read Only flag cleared the same way. Was designed as a read-only auto-populated companion.
-- [ ] `NextAssyDescription` (next_assy_description) - DefaultFrom="Item(NextAssyDescription)" added to NextAssyItem, same pattern as VendorName above - needs this property's Read Only flag cleared. Was designed as a read-only auto-populated companion.
+- [ ] `AssignedUsername` (assigned_username) - Filled from Assigned ID (DefaultFrom EmpNum(AssignedUsername)).
+- [ ] `QcReviewerUsername` (qc_reviewer_username) - Filled from QC Reviewer ID (DefaultFrom EmpNum(QcReviewerUsername)).
+- [ ] `EngReviewerUsername` (eng_reviewer_username) - Filled from Eng Reviewer ID (DefaultFrom EmpNum(EngReviewerUsername)).
+- [ ] `PlanningReviewerName` (planning_reviewer_name) - Filled from Planning Reviewer ID (DefaultFrom EmpNum(PlanningReviewerName)).
+- [ ] `PurchasingReviewerName` (purchasing_reviewer_name) - Filled from Purchasing Reviewer ID (DefaultFrom EmpNum(PurchasingReviewerName)).
+- [ ] `CmReviewerName` (cm_reviewer_name) - Filled from CM Reviewer ID (DefaultFrom EmpNum(CmReviewerName)).
+- [ ] `DeptDescription` (dept_description) - Filled from Dept (Validators SetPropertyFromList(DeptDescription, Description)).
+- [ ] `WcDescription` (wc_description) - Filled from Work Center (Validators SetPropertyFromList(WcDescription, Description)).
+- [ ] `ItemDescription` (item_description) - Filled from Item (DefaultFrom Item(ItemDescription)).
+- [ ] `VendorName` (vendor_name) - Filled from Vendor (DefaultFrom VendNum(VendorName)).
+- [ ] `NextAssyDescription` (next_assy_description) - Filled from Next Lvl Assy (DefaultFrom Item(NextAssyDescription)).
+- [ ] `CloseDate` (close_date) - Set by the Closed checkbox script (SetCloseInfo).
+- [ ] `ClosedBy` (closed_by) - Set by the Closed checkbox script (SetClosedBy: SETPROPVALUES(ClosedBy=USERNAME())).
 
 ## Inline List must be manually configured
 
