@@ -36,11 +36,21 @@ What it changes (v1 -> v2):
   7. Every bound field gets Caption C(<its label>), the same way Infor's own forms link a field
      to its label, so error messages name the right field (the one above said "Notify"
      because the fields had no caption of their own).
+  8. Closed checkbox script (SetCloseInfo) fixed: it used ThisForm.UserName, which doesn't exist
+     ("Error compiling script EvHandler_SetCloseInfo_0", TRN 2026-09-29). Now the same as the
+     working original QC_CMRs form: the script raises event SetClosedBy, a ResponseType 22
+     handler doing SETPROPVALUES(ClosedBy=USERNAME()), and uses Namespace SyteLine.GlobalScripts
+     like the original.
+  9. Cut-off labels (TRN screenshot 2026-09-29): Reason Code, Vendor Name and Next Assy
+     Description were one line high, Internal Review Date needed three lines. Heights raised
+     (1.8 = two lines, like QC Disposition; 2.7 = three), and "Next Assy Description:" is
+     shortened to "Next Assy Desc:" to fit its narrow column, like "Item Desc:".
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
 Check: python3 tools/apply_form_changes.py --check  (fails if the committed file differs)
 """
+import html
 import os
 import re
 import sys
@@ -200,6 +210,35 @@ def build(text):
     # label with Assigned (username); Item Desc was hand-added in Application Studio.
     f.insert_after("c_assigned_empnum_v2", "Width", "Caption", "C(l_assigned_username)")
     f.insert_after("edit1_SITE", "Width", "Caption", "C(l_item1_SITE)")
+
+    # 9. Cut-off labels.
+    f.place("l_reason_code", y=55.95, h=1.8)
+    f.place("l_vendor_name", y=21.4, h=1.8)
+    f.place("l_next_assy_description", y=19.35, h=1.8)
+    f.caption("l_next_assy_description", "Next Assy Desc:")
+    f.place("l_internal_review_date", h=2.7)
+
+    # 8. SetCloseInfo: copy the original QC_CMRs pattern (see docstring).
+    m = re.search(r'(<EventHandler Name="SetCloseInfo" Sequence="0">.*?<Response>)(.*?)'
+                  r'(</Response>\s*<Response2>)(.*?)(</Response2>\s*</EventHandler>)', f.text, re.S)
+    if not m:
+        raise SystemExit("SetCloseInfo handler not found")
+    script = html.unescape(m.group(2) + m.group(4))
+    for old, new in [
+        ("Namespace Mongoose.GlobalScripts", "Namespace SyteLine.GlobalScripts"),
+        ('ThisForm.Components("c_closed_by").Text = ThisForm.UserName',
+         'ThisForm.GenerateEvent("SetClosedBy")'),
+    ]:
+        if old not in script:
+            raise SystemExit(f"SetCloseInfo: '{old}' not found")
+        script = script.replace(old, new)
+    esc = lambda t: html.escape(t, quote=False)
+    handler = (m.group(1) + esc(script[:500]) + m.group(3) + esc(script[500:]) + m.group(5)
+               + "\r\n            <EventHandler Name=\"SetClosedBy\" Sequence=\"0\">"
+               + "\r\n               <ResponseType>22</ResponseType>"
+               + "\r\n               <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>"
+               + "\r\n            </EventHandler>")
+    f.text = f.text[:m.start()] + handler + f.text[m.end():]
 
     return f.text
 

@@ -56,8 +56,8 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [ ] **PoNum** — separate, still-open item: no `RECORDCAP` on `SLPoItems`' unfiltered list
   source. Fine now, but will get slow as the collection grows — needs a different mitigation
   (paging, a narrowing property) since re-adding `FILTER()` reproduces the original bug.
-- [ ] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(PoNum)')`. **Fixed in v2,
-  check on TRN**: `DISPLAY(2,1,3)` wrote the Item into PoLine and broke save ("Data length for
+- [x] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(PoNum)')`. **Confirmed on TRN
+  2026-09-29** (shows line 1). Fixed in v2: `DISPLAY(2,1,3)` wrote the Item into PoLine and broke save ("Data length for
   Notify (12) is greater than effective length (10)"). Back to `DISPLAY(1,2,3)`.
 - [x] **AssignedBuyer** (`assigned_buyer`) — Combo, `SLEmployees`. No open issues flagged.
 - [x] **Qty**, **Poc** — Plain fields, nothing flagged.
@@ -92,11 +92,11 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(DeptDescription, Description)` on
+- [x] **Dept** (`dept`) — **Confirmed on TRN 2026-09-29** (100 → Operations). Fixed in v2: validator `SetPropertyFromList(DeptDescription, Description)` on
   the combo (the `Dept(...)` validator failed on TRN: DivName not in cache). See
   `docs/troubleshooting.md` "Description auto-fill for Dept and Work Center".
-- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(WcDescription, Description)`.
-- [ ] **DeptDescription**, **WcDescription** — Filled by the validators above in v2. Clear both
+- [x] **Wc** (`wc`) — **Confirmed on TRN 2026-09-29** (BRAZE → Brazing). Fixed in v2: validator `SetPropertyFromList(WcDescription, Description)`.
+- [x] **DeptDescription**, **WcDescription** — Filling on TRN (2026-09-29). Filled by the validators above in v2. Clear both
   properties' IDO **Read Only** flag before importing v2 (`docs/deploy-checklist.md`). Reported
   2026-09-28: not filling in v1.
 - [x] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` confirmed live working (commit
@@ -143,7 +143,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Additional Fields
 
-- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — Render as dropdowns on TRN now
+- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — **2026-09-29**: LOT # confirmed working
+  (item 92185-001-02 → lot 20092024-000002). Serial # opens empty, no error, on that lot-tracked
+  item - needs a test with a serial-tracked item. Render as dropdowns on TRN now
   (2026-09-28 screenshot). Lists were empty for item `00000-42560`; they only show serials/lots
   of the selected Item, so re-test with a serial/lot-tracked item before changing anything. See
   `docs/troubleshooting.md` "Serial # / LOT # dropdowns are empty".
@@ -157,11 +159,11 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 - [x] **SoxImpacted**, **HoldOnPo**, **AuthSupplierShip** — Plain checkboxes, matching the
   original's own plain `ListYesNo` checkboxes for these. Nothing flagged.
-- [ ] **ReasonCode** (`reason_code`) — **Fixed in v2, check on TRN**. v1 couldn't select a value:
+- [x] **ReasonCode** (`reason_code`) — **Confirmed on TRN 2026-09-29** (DAMAGED selected). Fixed in v2. v1 couldn't select a value:
   the borrowed `QCReasonCode` class filters on QC_MRRs fields. v2 drops the class; the property
   gets its own Inline List with the 13 QC_MRRs reason codes (ASMBL … VISUAL). Set the Inline List
   and Check In before importing.
-- [ ] **CauseCode** (`cause_code`) — **Fixed in v2, check on TRN**. v1 threw *"'FP' is not a
+- [x] **CauseCode** (`cause_code`) — **Confirmed on TRN 2026-09-29** (EXC selected, no error). Fixed in v2. v1 threw *"'FP' is not a
   recognized built-in function name.::4"* (the earlier "confirmed live" note was wrong). Own
   Inline List in v2 with the 13 QC_MRRs cause codes (ENF … VOID).
   2026-09-28: first v2 import still showed the error - the live component kept the class.
@@ -207,7 +209,10 @@ hanging off the bottom). See `docs/field-review.md`.
 - [ ] **CmReviewerEmpNum**, **CmReviewerName** — Same confirmed-broken pairing as above, same
   fix.
 - [x] **CmComplete** — Plain checkbox, confirmed live (unchecked, nothing flagged).
-- [ ] **CloseDate**, **ClosedBy**, **Closed** — The `SetCloseInfo` mechanism (checkbox toggle →
+- [ ] **CloseDate**, **ClosedBy**, **Closed** — **2026-09-29: ticking Closed gave "Error compiling
+  script EvHandler_SetCloseInfo_0"** (`ThisForm.UserName` doesn't exist). Fixed in v2 with the
+  original's `GenerateEvent("SetClosedBy")` + `SETPROPVALUES(ClosedBy=USERNAME())`; check on TRN.
+  Earlier note: The `SetCloseInfo` mechanism (checkbox toggle →
   auto-sets/clears these two) was restored and moved into this section, matching the original's
   own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly.
   Latest screenshot shows all three in the expected pre-check state (Close Date/Closed By
@@ -216,7 +221,8 @@ hanging off the bottom). See `docs/field-review.md`.
   legacy pattern byte-for-byte) — nothing to fix in code. **Needs a human to actually check the
   Closed box live and confirm CloseDate/ClosedBy populate, then uncheck and confirm they
   clear** — this session has no way to drive the running form itself.
-- [ ] **InternalReviewDate** (`internal_review_date`) — Moved to **Engineering** in v2 (under
+- [x] **InternalReviewDate** (`internal_review_date`) — **On TRN in Engineering, 2026-09-29.** Label
+  was cut off (fixed: 3-line label). Moved to **Engineering** in v2 (under
   Reviewer), where the original form has it. Check it renders and saves on TRN.
 
 ## Not on the form (deliberately orphaned — tracked, not forgotten)

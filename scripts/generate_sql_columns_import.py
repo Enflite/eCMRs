@@ -34,6 +34,7 @@ SYSTEM_TYPE = {
 # QCPriorityType) all resolve to nvarchar, which is the default below for anything unlisted.
 COLDTYPE_SYSTEM_TYPE = {
     "char": "char",
+    "nvarchar": "nvarchar",
     "decimal": "decimal",
     "DateType": "datetime",
     "CurrentDateType": "datetime",

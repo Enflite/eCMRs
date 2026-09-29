@@ -2031,7 +2031,7 @@
                <TabOrder>0</TabOrder>
                <TopPos>78.1</TopPos>
                <LeftPos>2</LeftPos>
-               <Height>1.8</Height>
+               <Height>2.7</Height>
                <ListHeight>0</ListHeight>
                <Width>8.75</Width>
                <Caption>Internal Review Date:</Caption>
@@ -2535,12 +2535,12 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>19.45</TopPos>
+               <TopPos>19.35</TopPos>
                <LeftPos>30</LeftPos>
-               <Height>1</Height>
+               <Height>1.8</Height>
                <ListHeight>0</ListHeight>
                <Width>6.5</Width>
-               <Caption>Next Assy Description:</Caption>
+               <Caption>Next Assy Desc:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2551,7 +2551,7 @@
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
-               <EffectiveCaption>Next Assy Description:</EffectiveCaption>
+               <EffectiveCaption>Next Assy Desc:</EffectiveCaption>
             </Component>
             <Component Name="l_planning_reviewer_empnum">
                <DeviceID>-1</DeviceID>
@@ -2843,9 +2843,9 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>56.2</TopPos>
+               <TopPos>55.95</TopPos>
                <LeftPos>2</LeftPos>
-               <Height>1</Height>
+               <Height>1.8</Height>
                <ListHeight>0</ListHeight>
                <Width>8.75</Width>
                <Caption>Reason Code:</Caption>
@@ -3063,9 +3063,9 @@
                <DeviceID>-1</DeviceID>
                <Type>0</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>21.5</TopPos>
+               <TopPos>21.4</TopPos>
                <LeftPos>30</LeftPos>
-               <Height>1</Height>
+               <Height>1.8</Height>
                <ListHeight>0</ListHeight>
                <Width>6.5</Width>
                <Caption>Vendor Name:</Caption>
@@ -3168,7 +3168,7 @@ Imports Microsoft.VisualBasic
 Imports Mongoose.IDO.Protocol
 Imports Mongoose.Scripting
 
-Namespace Mongoose.GlobalScripts
+Namespace SyteLine.GlobalScripts
 Public Class EvHandler_SetCloseInfo_0
 Inherits GlobalScript
 
@@ -3177,8 +3177,8 @@ Inherits GlobalScript
                 ThisForm.Components("c_closed_by").Text = ""
                 ThisForm.Components("c_close_date").Text = ""
             Else
-                ThisForm.Compone</Response>
-               <Response2>nts("c_closed_by").Text = ThisForm.UserName
+               </Response>
+               <Response2> ThisForm.GenerateEvent("SetClosedBy")
                 ThisForm.Components("c_close_date").Text = CStr(Today)
             End If
             ReturnValue = "0"
@@ -3186,6 +3186,10 @@ Inherits GlobalScript
 End Class
 End Namespace
 )</Response2>
+            </EventHandler>
+            <EventHandler Name="SetClosedBy" Sequence="0">
+               <ResponseType>22</ResponseType>
+               <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
