@@ -18,7 +18,7 @@ list.
 | **Table / IDO** | New table `ue_ecmrs` (76 columns) and new IDO `ue_ecmrs` (alias `ec`), Application Studio project `ue_ENF` |
 | **Naming** | `ue_` for Enflite tables and IDOs; SQL columns `snake_case`, IDO properties `PascalCase` (`cmr_num` → `CmrNum`) |
 | **CMR number** | `CMR-YYMMDD-HHMMSS` (e.g. `CMR-260929-111742`), set by the form on **New** |
-| **Status** | **Live on TRN, tested end to end (2026-09-29). Production: not started.** |
+| **Status** | **Live on TRN, tested end to end (2026-09-29). Team feedback round 1: changes built, to import and test on TRN (4c). Production: not started.** |
 
 ## The seven phases
 
@@ -60,7 +60,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Top | PO Num, PO Line, Assigned Buyer, Qty, POC, RFQ Num, Job Num, Drawing Revision, Latest Revision, Requested Action | `PoNum`, `PoLine`, `AssignedBuyer`, `Qty`, `Poc`, `RfqNum`, `JobNum`, `Revision`, `LatestRevision`, `RequestedAction` | lookups, text | QC_CMRs |
 | Top | Item + Item Desc, Next Lvl Assy + Next Assy Desc, Vendor + Vendor Name, Priority | `Item`, `ItemDescription`, `NextAssyItem`, `NextAssyDescription`, `Vendor`, `VendorName`, `Priority` | lookup + auto-fill | QC_CMRs |
 | Change Request Fields | Dept + description, Work Center + description, Reported By, Due Date, Initial Change, 5 Req checkboxes, General Note | `Dept`, `DeptDescription`, `Wc`, `WcDescription`, `ReportedBy`, `DueDate`, `InitialChange`, `Req*`, `GeneralNote` | lookup + auto-fill, cascade | Create Change Request |
-| Additional Fields | Serial #, LOT #, Top Level PN, Sub Assembly | `SerialNum`, `LotNum`, `TopLevelPn`, `SubAssembly` | lookup, text | SOW |
+| Additional Fields | Serial #, LOT #, Sub Assembly (Top Level PN hidden, team feedback 2026-09-29) | `SerialNum`, `LotNum`, `SubAssembly` (`TopLevelPn` kept, not shown) | lookup, text | SOW |
 | Quality | SOX Impacted, Hold On PO, Authorization For Supplier To Ship, Reason Code, Cause Code, QC Disposition, Reviewer, QC RCA Notes | `SoxImpacted`, `HoldOnPo`, `AuthSupplierShip`, `ReasonCode`, `CauseCode`, `QcDisposition`, `QcReviewer*`, `QcRcaNotes` | checkbox, drop-down, lookup | QC_CMRs, SOW |
 | Engineering | EO Num, MDL, Engineering Disposition, Reviewer, Internal Review Date, Eng RCA Notes | `EoNum`, `Mdl`, `EngDisposition`, `EngReviewer*`, `InternalReviewDate`, `EngRcaNotes` | text, drop-down, lookup, date | QC_CMRs |
 | Implementation | Planning / Purchasing / CM (done + reviewer), Closed, Close Date, Closed By | `*Complete`, `*ReviewerEmpNum`, `*ReviewerName`, `Closed`, `CloseDate`, `ClosedBy` | checkbox, lookup, automatic | QC_CMRs |
@@ -87,12 +87,14 @@ during TRN testing. Field-by-field comparison with the originals:
 2. ~~Reason / Cause Code lists (`'FP'` error)~~ **Answered**: own Inline Lists with the QC_MRRs codes.
 3. ~~CMR Num repeats (`PK_ue_ecmrs` on save)~~ **Answered**: `CMR-YYMMDD-HHMMSS` set by the form.
 4. ~~IDO lengths vs SQL~~ **Answered**: all match (TRN exports 2026-09-29d).
-5. **Notify** button shows a message only. Decide: real notification (email to Engineering?) or remove. *Blocks nothing; decide before or during Optimize.*
+5. ~~**Notify** button shows a message only~~ **Answered** (team feedback 2026-09-29: "fix the notify button"): Notify raises Enflite's `ENF_NotifyUserWithCMR` email event, like QC_CMRs. To test on TRN (4c).
 6. **Reported By** is free text; the original was an employee lookup. Keep or change? *Blocks nothing.*
 7. **Assigned Buyer** stores the employee number; the original stored the username. Keep or change? *Blocks nothing.*
-8. **Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one. *Blocks nothing.*
+8. **Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one. *Blocks nothing.* Findings (2026-09-29): Sub Assembly is not on any of the three legacy screens; it was added from the SOW as plain text, next to Top Level PN (now hidden). **Next Lvl Assy** already lists the assemblies that use the Item (jobs' materials, `SLJobmatls`) and fills Next Assy Desc. The team to say what Sub Assembly should hold: the same as Next Lvl Assy (then hide it too), or a different level (then say which, and it can get a lookup).
 9. **Legacy screens and history**: when production is live, retire Create Change Request / Change Request Management / QC_CMRs? Migrate old CMRs from `rs_cmr`/`rs_crcvr`? *Blocks retiring the old screens, not the launch.*
 10. **Status** IDO length is blank on TRN (works). Optional: set 255 to match the column ([`length-fixes.md`](length-fixes.md)). *Blocks nothing.*
+11. **IDM documents widget**: the form now sends its record to the side-panel widgets the way Infor's forms do (4c). What the widget looks up (the **Item**) is set up in SyteLine for the form name `eCMRs`, following the team's guide `S:\Public\Engineering\Syteline\AddIDM` (not in this repo yet: add it to `docs/`). *Blocks the IDM test in 4c.*
+12. **"Dash under the Next Assy label"** (team feedback 2026-09-29): nothing in the form file draws a line there. Needs a screenshot of it on TRN. *Blocks nothing.*
 
 ---
 
@@ -123,7 +125,10 @@ during TRN testing. Field-by-field comparison with the originals:
 |---|---|
 | CMR Num on **New** | `StdObjectNewCompleted` script: `"CMR-" & DateTime.Now.ToString("yyMMdd-HHmmss")` |
 | Item / Next Assy / Vendor → description | `DefaultFrom` `Item(ItemDescription)`, `Item(NextAssyDescription)`, `VendNum(VendorName)` |
-| Dept / Work Center → description | `Validators` `SetPropertyFromList(DeptDescription, Description)` / `(WcDescription, Description)` |
+| Dept / Work Center → description | `Validators` `SetPropertyFromList(DeptDescription, Description)` / `(WcDescription, Description)`, with **Validate Immediately** (Flags 33) |
+| Notify → email | `ENF_NotifyUser`: `SLEmployees(... SETV(EcmrsNotifyEmail=Username))`, then `EVENT(ENF_NotifyUserWithCMR)` |
+| Right-click → Help, Help button | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp`, `OpenEcmrsHelp` |
+| IDM / side-panel widgets | `StdFormPredisplay` + `StdObjectSelectCurrentCompleted`: `SLFormExtMsgEntities` and `JSONMSGTYPE(inforBusinessContext)` |
 | Reviewer ID → name (Assigned, QC, Eng, Planning, Purchasing, CM) | `DefaultFrom` `EmpNum(<name property>)` on an `SLEmployees` list |
 | Initial Change → Req checkboxes | `DefaultFrom` `Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)` |
 | PO Line, Serial #, LOT #, Next Lvl Assy | Lists filtered on PO Num / Item (`'P(...)'`) |
@@ -147,6 +152,37 @@ Why each one is built this way (and what failed first): [`troubleshooting.md`](t
 | B. SQL and IDO match the design | Export **SQL Columns** and **IDO Properties** to Excel, save in `docs/reference/`, run `python3 scripts/compare_live_lengths.py` | [`length-fixes.md`](length-fixes.md) lists nothing to change | **Pass** (Status length optional) |
 | C. Production files are current | `python3 scripts/make_production_imports.py --check` | "up to date" | **Pass** |
 
+### 4c. Team feedback round 1 (2026-09-29)
+
+Built by [`tools/apply_form_changes.py`](../tools/apply_form_changes.py) (steps 13-17) into
+[`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML). New and moved things keep the purple highlight
+where they had it.
+
+| Feedback | Change | Check on TRN (pass) |
+|---|---|---|
+| Expand the Item Desc | **Item Desc** as wide as **Dept Description** | A long description shows in full |
+| Remove Top Level PN | **Top Level PN** hidden (label and field). Column and data kept | Not on the form; old CMRs open without errors |
+| Requested Action label placed weird | Label directly above the box, left-aligned; box starts one row lower | Label sits on the box's top-left corner |
+| General Note label placed weird | Label directly above the box, left-aligned | Same |
+| Dept / WC Description only fill after save | **Validate Immediately** on Dept and Work Center (Flags 33, as on Infor's own Dept fields) | Pick a Dept: the description fills straight away. Same for Work Center |
+| Fix the Notify button | Notify raises `ENF_NotifyUserWithCMR` (Enflite's email event from QC_CMRs) with `CmrNum`, the Assigned employee's username (email), `Priority` | **EMAIL SENT!**, and the Assigned person gets it |
+| Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open `docs/help/c/<field>.html` on the S: drive | Right-click a field → **Help**: that field's eCMRs page opens |
+| IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
+| Sub Assembly | Findings under open item 8 | Team decides |
+| Dash under Next Assy label | Needs a screenshot (open item 12) | - |
+
+Before importing:
+
+1. Copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` again (it now has the `c\` folder for right-click Help and the procedures).
+2. **Event Handlers** form: open `ENF_NotifyUserWithCMR` and check its actions only use `CmrNum`, `EAddres` and `Priority` (the eCMRs values: `CMR-...` number, the username, High/Medium/Low), and don't look the CMR up in the old `rs_cmr` table. If they do, write down what they read: they need an eCMRs version.
+3. IDM: do the form set-up from the AddIDM guide for form name **`eCMRs`**, with the **Item** as what to look up. Until this is done, opening eCMRs may show a message from `LoadJSONVar`; if it does, that's the sign the set-up is missing.
+4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
+
+If right-click → Help still opens Infor's topic (or both open): SyteLine runs its own help too. Write it
+down in [`troubleshooting.md`](troubleshooting.md); the **Help** button still opens the eCMRs help.
+If nothing opens: the browser blocks `file:` links from SyteLine - host `docs/help` on an `https://`
+address (SharePoint / intranet) and change `HELP_BUTTON_URL`.
+
 ---
 
 ## 5. Launch (production)
@@ -159,7 +195,8 @@ Tick each step as you go.
 
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
-- [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. The form's **Help** button opens `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`.
+- [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. The form's **Help** button and right-click → **Help** open pages from there.
+- [ ] 2b. IDM: the AddIDM set-up for form name **`eCMRs`** in production, the same as on TRN (4c step 3).
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**
@@ -195,7 +232,9 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
-- [ ] 20a. Click the **Help** button (next to Notify): the eCMRs help opens from the S: drive. Right-click → Help opens Infor's QC CMRs topic.
+- [ ] 20a. Click the **Help** button (next to Notify): the eCMRs help opens from the S: drive. Right-click a field → **Help**: that field's eCMRs page opens.
+- [ ] 20b. On a saved test CMR with **Assigned** filled in, click **Notify**: **EMAIL SENT!** and the email arrives.
+- [ ] 20c. Pick a CMR with an Item: the IDM documents widget shows that Item's documents.
 
 **Record it**
 
@@ -218,13 +257,22 @@ On TRN - all passed 2026-09-29 (see [`task-list.md`](task-list.md)):
 - [x] Existing records open without errors; the list (grid) shows CMR Num, Status, Priority, Item, Dept, WC, Created By/Date, Due Date, Closed
 - [x] Team sign-off on TRN
 
+Team feedback round 1 (4c), on TRN:
+
+- [ ] Item Desc wider; Top Level PN gone; Requested Action and General Note labels on their boxes
+- [ ] Dept → Dept Description and Work Center → WC Description fill as soon as picked (before save)
+- [ ] Notify: **EMAIL SENT!** and the Assigned person receives it
+- [ ] Right-click a field → **Help** opens that field's eCMRs page
+- [ ] IDM widget shows the Item's documents
+- [ ] Existing CMRs still open and save without errors
+
 In production: the smoke test in section 5 (steps 15-20).
 
 ## 7. Optimize (2 weeks after launch)
 
 - Track issues from each team (Quality, Engineering, Planning, Purchasing, CM) using eCMRs
 - Fix bugs through TRN first, then production, same way (new form version in `exports/`, FormSync)
-- Decide the open items (Notify, Reported By, Assigned Buyer, Sub Assembly, legacy screens)
+- Decide the open items (Reported By, Assigned Buyer, Sub Assembly, legacy screens)
 - Update the CMR procedure (QA-300-037, section 5.5) for eCMRs; submit for manager approval
 
 ## Rollback

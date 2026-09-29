@@ -818,6 +818,44 @@ SyteLine web page (Edge/Chrome do by default): put the folder on an internal web
 SharePoint, change `HELP_BUTTON_URL` to its `https://` address, rebuild and re-import. Everyone
 needs `S:` mapped the same way and read access to the folder.
 
+## Dept / WC Description only fill in after **Save**
+
+**Symptom** (team review on TRN, 2026-09-29): pick a Dept or Work Center; **Dept Description** /
+**WC Description** stay empty until the record is saved.
+
+**Cause**: the `SetPropertyFromList` validators on `c_dept` / `c_wc` run when the component is
+validated, and without **Validate Immediately** that only happens on save. In the form XML it is
+bit 32 of the component's `<Flags>`: every Infor component with a validator has it (Service Orders
+`DeptEdit` = `33`, QC_CreateChangeRequest `DeptEdit` = `8225` = 8192 + 32 + 1). Ours had `1`.
+
+**Fix**: `<Flags>33</Flags>` on `c_dept` and `c_wc` (`tools/apply_form_changes.py` step 14),
+re-import through FormSync. In Design Mode it's the component's **Validate Immediately** box.
+
+**Confirm**: pick a Dept: the description fills straight away, before saving. Same for Work Center.
+Environments: TRN (to confirm), then production with the same file.
+
+## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
+
+`HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
+raises the standard event `StdFormComponentHelp` (the form's own Help: `StdFormHelp`) - both are in
+Mongoose's standard event list next to `StdFormPredisplay` etc. The form handles them itself:
+
+1. `StdFormComponentHelp` 0: a script sets variable `EcmrsHelpUrl` to
+   `.../docs/help/c/<component>.html` for the component clicked
+   (`ThisForm.GetCurrentComponentName()`, late-bound in a `Try` so a missing method falls back to
+   `index.html` instead of a compile error).
+2. `StdFormComponentHelp` 1: `URL(V(EcmrsHelpUrl)) ( )` - the same `URL(V(...))` response Customer
+   Order Lines uses for its tracking link.
+3. `StdFormHelp` 0: `URL(<help>/index.html) ( )`.
+
+`scripts/build_help.py` writes one `c/<component>.html` per component in `exports/eCMRs_v2.XML`,
+each redirecting to that field's page (labels to their field, the rest to the form topic).
+
+**Check on TRN** (not confirmed yet): right-click a field → **Help** opens that field's page. If
+Infor's topic opens as well, SyteLine still runs its built-in help after ours: write that down here.
+If the index page opens for every field, `GetCurrentComponentName` didn't return the clicked
+component: write that down too. If nothing opens: the browser blocks the `file:` link (see above).
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,

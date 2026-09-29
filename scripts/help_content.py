@@ -1,7 +1,7 @@
 """Help text for the eCMRs form: one entry per field, in form order, by section.
 
 Single source for the help pages (scripts/build_help.py writes docs/help/). The pages are a
-reference for users, opened by the form's Help button; right-click Help stays on Infor's topic. Describe what the
+reference for users, opened by the form's Help button and by right-click -> Help. Describe what the
 form actually does on TRN - see docs/task-list.md and docs/troubleshooting.md - not plans.
 
 Each field: key (help page name), label (as on the form), components (form component names that
@@ -54,10 +54,13 @@ FIELDS = [
                "second box shows the employee's name."],
          filled=EMP_FILL),
     dict(key="notify", section="header", label="Notify", components=["btn_notify"],
-         text=["Shows a message only. No notification is sent from this button yet."]),
+         text=["Emails the person in Assigned that the CMR needs their attention, with the CMR Num and "
+               "Priority. The email goes to the Assigned employee's SyteLine user (their email address). "
+               "Save the CMR first, and make sure Assigned is filled in."],
+         related=["assigned"]),
     dict(key="help", section="header", label="Help", components=["btn_help"],
-         text=["Opens this eCMRs help: the form overview and a page for every field. Right-click a "
-               "field and choose Help for Infor's QC CMRs help topic."]),
+         text=["Opens this eCMRs help: the form overview, a page for every field and the procedures. "
+               "Right-click a field and choose Help to open that field's page."]),
     dict(key="cmr_num", section="header", label="CMR Num", components=["c_cmr_num"],
          text=["The CMR's unique number, in the form CMR-YYMMDD-HHMMSS: the date and time "
                "New was clicked (for example CMR-260929-111742). It can't be changed."],
@@ -121,13 +124,13 @@ FIELDS = [
          text=["The department where the change is needed."], filled="Dept Description is filled in from the department.",
          related=["dept_description"]),
     dict(key="dept_description", section="change", label="Dept Description", components=["c_dept_description"],
-         text=["The name of the selected department."], filled="Filled in when a Dept is selected.",
+         text=["The name of the selected department."], filled="Filled in as soon as a Dept is selected.",
          related=["dept"]),
     dict(key="wc", section="change", label="Work Center", components=["c_wc"],
          text=["The work center where the change is needed."], filled="WC Description is filled in from the work center.",
          related=["wc_description"]),
     dict(key="wc_description", section="change", label="WC Description", components=["c_wc_description"],
-         text=["The name of the selected work center."], filled="Filled in when a Work Center is selected.",
+         text=["The name of the selected work center."], filled="Filled in as soon as a Work Center is selected.",
          related=["wc"]),
     dict(key="reported_by", section="change", label="Reported By", components=["c_reported_by"],
          text=["Who reported or requested the change (free text)."]),
@@ -165,8 +168,6 @@ FIELDS = [
          text=["The lot of the affected material. The list shows the lots of the selected Item; it is "
                "empty for items that aren't lot-tracked. You can also type a value."],
          related=["item", "serial_num"]),
-    dict(key="top_level_pn", section="additional", label="Top Level PN", components=["c_top_level_pn"],
-         text=["The top-level part number the affected part goes into."]),
     dict(key="sub_assembly", section="additional", label="Sub Assembly", components=["c_sub_assembly"],
          text=["The sub-assembly the affected part belongs to."]),
 

@@ -60,6 +60,36 @@ What it changes (v1 -> v2):
   12. Help button next to Notify: opens the eCMRs help pages (docs/help/) from the repo copy on
      the S: drive (HELP_BUTTON_URL) through an OpenEcmrsHelp event, ResponseType 39 URL(...) - the
      response Infor's forms use for links. Right-click Help stays on the Infor QC_CMRs topic.
+  13. Team feedback (TRN review, 2026-09-29):
+     a. Item Desc is wider (to the Dept Description's right edge) so long descriptions show.
+     b. Top Level PN is hidden (label and field, Hidden=True). Not deleted: FormSync only applies
+        what is in the file, so a component left out of the file would stay on the form. The
+        top_level_pn column and TopLevelPn property stay, so existing data is kept.
+     c. Requested Action: and General Note: labels sit directly above the top-left corner of
+        their text boxes (they floated to the left, away from the boxes). Requested Action's box
+        starts one row lower to make room.
+  14. Dept / WC Description fill in as soon as a Dept / Work Center is picked, not on save:
+     Flags 1 -> 33 on c_dept and c_wc. Bit 32 is Validate Immediately - every Infor component with
+     a validator has it (Service Orders DeptEdit: Flags 33; QC_CreateChangeRequest DeptEdit:
+     8225 = 8192 + 32 + 1). Without it the validator only runs when the record is saved.
+  15. Notify sends the email, the same way the original QC_CMRs form did: raises the Enflite
+     application event ENF_NotifyUserWithCMR (ResponseType 43, same parameters CmrNum, EAddres,
+     Priority). EAddres is the Assigned employee's Username (the e-mail address in this tenant),
+     looked up from SLEmployees by AssignedEmpNum into a form variable first (ResponseType 49,
+     SETV - no SETP, so nothing on the record is changed). Replaces the NotifyEngineering
+     placeholder message.
+  16. Right-click -> Help opens the eCMRs help: handlers for the standard events
+     StdFormComponentHelp (right-click a field -> Help) and StdFormHelp (the form's Help).
+     A script sets the variable EcmrsHelpUrl to the page for the right-clicked component
+     (docs/help/c/<component>.html, built by scripts/build_help.py for every component on the
+     form) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HelpFileName stays as the Infor
+     topic, used if SyteLine still runs its own help after ours.
+  17. IDM documents widget: the business-context handlers every Infor form uses (QC_CMRs, Lots,
+     Service Orders, Customer Order Lines): StdFormPredisplay loads the form's message template
+     (SLFormExtMsgEntities.LoadJSONVar, form name eCMRs) and StdObjectSelectCurrentCompleted
+     fills it for the current record and sends it (JSONMSGTYPE(inforBusinessContext)). What the
+     widget looks up (the Item) is set in SyteLine for the form name eCMRs - see the Implementation
+     Plan.
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -92,6 +122,10 @@ HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_
 # The eCMRs help pages (docs/help/) open from the Help button instead: the repo copied to the shared
 # drive S:/Engineering/Individual Folders/JSmith/eCMRs (spaces as %20).
 HELP_BUTTON_URL = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html"
+
+# Right-click -> Help pages, one per form component (docs/help/c/<component>.html redirects to
+# the field's page), next to HELP_BUTTON_URL.
+HELP_BASE_URL = HELP_BUTTON_URL.rsplit("/", 1)[0] + "/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -314,6 +348,85 @@ def build(text):
                + "\r\n               <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>"
                + "\r\n            </EventHandler>")
     f.text = f.text[:m.start()] + handler + f.text[m.end():]
+
+    # 13a. Item Desc to the Dept Description's right edge (11.25 + 40).
+    f.place("edit1_SITE", w=51.25 - 11.625)
+    # 13b. Top Level PN hidden (see docstring).
+    for name in ("l_top_level_pn", "c_top_level_pn"):
+        f.set(name, "Hidden", "True")
+    # 13c. Labels above their text boxes, left-aligned with the box.
+    f.place("l_requested_action", y=10.35, x=54, w=14, h=1)
+    f.remove("l_requested_action", "Format")
+    f.place("c_requested_action", y=11.6, h=23.6667 - 11.6)
+    f.place("l_general_note", y=36.8, x=31.125, w=12, h=1)
+    f.remove("l_general_note", "Format")
+
+    # 14. Validate Immediately on the two description validators.
+    for name in ("c_dept", "c_wc"):
+        f.set(name, "Flags", "33")
+
+    # 15-17. New event handlers and the variables they use.
+    f.set("btn_notify", "EventToGenerate", "ENF_NotifyUser")
+    m = re.search(r'\r\n            <EventHandler Name="NotifyEngineering" Sequence="0">.*?</EventHandler>', f.text, re.S)
+    if not m:
+        raise SystemExit("NotifyEngineering handler not found")
+    f.text = f.text[:m.start()] + f.text[m.end():]
+    help_script = (
+        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
+        "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
+        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormComponentHelp_0\r\n"
+        "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
+        "            Dim page As String = \"index.html\"\r\n"
+        "            Try\r\n"
+        "                Dim frm As Object = ThisForm\r\n"
+        "                Dim comp As String = CStr(frm.GetCurrentComponentName())\r\n"
+        "                If comp &lt;&gt; \"\" Then page = \"c/\" &amp; comp &amp; \".html\"\r\n"
+        "            Catch\r\n"
+        "            End Try\r\n"
+        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_BASE_URL}\" &amp; page\r\n"
+        "            ReturnValue = \"0\"\r\n"
+        "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
+    handlers = [
+        ("ENF_NotifyUser", 0, 49,
+         "SLEmployees( FILTER(EmpNum=FP(AssignedEmpNum)) SETV(EcmrsNotifyEmail=Username) )"),
+        ("ENF_NotifyUser", 1, 43,
+         "EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! "
+         "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
+        ("StdFormComponentHelp", 0, 33, help_script),
+        ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
+        ("StdFormHelp", 0, 39, f"URL({HELP_BUTTON_URL}) ( )"),
+        ("StdFormPredisplay", 0, 0,
+         "SLFormExtMsgEntities.LoadJSONVar( PARMS(VAR eCMRs, RVAR V(JSONVarNotInterpretWithLIT)) )"),
+        ("StdFormPredisplay", 1, 22, "SETVARVALUES(JSONVarNotInterpret=V(JSONVarNotInterpretWithLIT))"),
+        ("StdObjectSelectCurrentCompleted", 0, 0,
+         "SLFormExtMsgEntities.FormatJSONVar( PARMS(VAR eCMRs, VAR V(JSONVarNotInterpret), "
+         "RVAR V(JSONVarWithLIT)) COLID(object) )"),
+        ("StdObjectSelectCurrentCompleted", 1, 22, "SETVARVALUES(JSONVar=V(JSONVarWithLIT)) COLID(object)"),
+        ("StdObjectSelectCurrentCompleted", 2, 47,
+         "JSONMSGTYPE(inforBusinessContext) JSONPAYLOAD(V(JSONVar)) JSONMSGTOCHLD()  COLID(object)"),
+    ]
+    for name, _, _, _ in handlers:
+        if f'<EventHandler Name="{name}"' in f.text:
+            raise SystemExit(f"handler already there: {name}")
+    anchor = "         </EventHandlers>"
+    f.text = f.text.replace(anchor, "".join(
+        f'            <EventHandler Name="{name}" Sequence="{seq}">\r\n'
+        f'               <ResponseType>{rt}</ResponseType>\r\n'
+        f'               <Response>{resp}</Response>\r\n'
+        '            </EventHandler>\r\n' for name, seq, rt, resp in handlers) + anchor, 1)
+    variables = [
+        ("ehp1_ENF_NotifyUser0", "CmrNum=P(CmrNum), EAddres=V(EcmrsNotifyEmail), Priority = P(Priority)"),
+        ("EcmrsNotifyEmail", ""),
+        ("EcmrsHelpUrl", HELP_BUTTON_URL),
+    ]
+    anchor = "         </Variables>"
+    if f.text.count(anchor) != 1:
+        raise SystemExit("Variables anchor not found")
+    f.text = f.text.replace(anchor, "".join(
+        f'            <Variable Name="{name}">\r\n'
+        + (f'               <Value>{val}</Value>\r\n' if val else '               <Value />\r\n')
+        + '               <Value2 />\r\n               <Value3 />\r\n               <Description />\r\n'
+        '            </Variable>\r\n' for name, val in variables) + anchor, 1)
 
     return f.text
 

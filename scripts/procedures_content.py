@@ -227,13 +227,12 @@ QA_300_037 = dict(
                      "will be released into Drawing Books.", "", "", ""),
         ("5.5.9.4.", "After completion of activity (select check box and select yourself as Reviewer ID), CMR "
                      "will need to be reassigned back to Quality (Status to QC Approval and Assigned to QC team "
-                     "member identified within Quality section).  Once assigned, notify the Assigned person "
-                     "(the eCMRs Notify button does not send an email yet).", "changed",
+                     "member identified within Quality section).  Once assigned, Click Notify to send email to "
+                     "the Assigned.", "changed",
          "After completion of activity (select check box and select yourself as Reviewer), CMR will need to be "
          "reassigned back to Quality (Status to QC Approval and Assigned to QC team member identified within "
          "Quality section).  Once assigned, Click Notify to send email to the Assigned.",
-         "eCMRs has Reviewer ID + name per department. Its Notify button shows a message only - no email is "
-         "sent yet (open item)."),
+         "Names the eCMRs field: Reviewer ID (the name fills in)."),
         ("5.5.9.5.", "If a department is not required, select corresponding check box, indicating implementation "
                      "is complete for that department (in this instance, not required).", "", "", ""),
         ("5.5.10.", "After all reviews are complete, check “Closed” (Close Date and Closed By fill in) and change "
@@ -246,10 +245,11 @@ QA_300_037 = dict(
     ],
     flowchart=True,
     review=[
-        "IDM: steps 5.5.5, 5.5.7 and 5.5.8 attach documents within IDM of the CMR record. Attaching IDM "
-        "documents to an eCMRs record has not been tested yet - confirm on TRN before release.",
-        "Notify: step 5.5.9.4 used the Notify button to email the Assigned person. In eCMRs, Notify shows a "
-        "message only. Decide whether to build the email, or keep the manual step as written.",
+        "IDM: steps 5.5.5, 5.5.7 and 5.5.8 attach documents within IDM of the CMR record. The eCMRs form "
+        "sends its record to the IDM documents widget like Infor's forms do; confirm on TRN which documents "
+        "it shows (the Item's) and how attaching works, before release.",
+        "Notify: step 5.5.9.4 emails the Assigned person with the Notify button. In eCMRs, Notify uses the same "
+        "Enflite email event as QC CMRs - confirm on TRN that the email arrives before release.",
         "Flowchart (section 6): unchanged; the “Create CMR” box is marked “(eCMRs)” in this draft.",
     ],
 )
