@@ -9,10 +9,9 @@ uppercase section labels, square bullets, red outlined step numbers, thin divide
 table headers, one thin red arc; no cards, no shadows. Rules:
 Enflite/Form-Project-Templates branding/enflite-style-guide.md.
 
-Plain static HTML with relative links, so the folder works from anywhere: copy the contents of
-docs/help/ to the shared drive (S:\Engineering\Individual Folders\JSmith\eCMRs). The form's
-Help button opens them (HELP_BASE in tools/apply_form_changes.py). Page addresses never
-change with the styling.
+Plain static HTML with relative links, so the folder works from anywhere (e.g. a copy on the
+shared drive S:/Engineering/Individual Folders/JSmith/eCMRs). Not linked from the form: SyteLine's
+right-click -> Help only opens Infor's help site, so the form's Help stays on Infor's QC CMRs topic.
 
 Run: python3 scripts/build_help.py          (writes docs/help/)
      python3 scripts/build_help.py --check  (fails if docs/help/ is out of date)

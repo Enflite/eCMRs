@@ -797,33 +797,17 @@ QC_CMRs: `default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cm
 fields have none of their own and use the form's.
 
 **Fix (form v2)**: the form's `HelpFileName` points to the same Infor topic as QC_CMRs, the
-closest match for eCMRs. To show an Enflite page instead (e.g. a CMR user guide), put its full URL
-in `HELP_URL` in `tools/apply_form_changes.py`, rebuild and re-import.
+closest match for eCMRs. Right-click → Help on any field opens it.
 
-**Own help pages (2026-09-29)**: `docs/help/` holds eCMRs help like the SyteLine library - a form
-topic and one page per field - generated from `scripts/help_content.py`. Publish the folder where
-all SyteLine users can open it, set `HELP_BASE` (ending in `/`) in `tools/apply_form_changes.py`,
-rebuild and re-import: the form's help and every field's right-click → Help then open their own
-page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
-full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
-
-**Right-click Help can't open our pages (confirmed on TRN 2026-09-29)**: with the fields' HelpFileName
-set to `file:///S:/.../index.html`, Help opened
+**Own help pages can't be linked here (confirmed on TRN 2026-09-29)**: with the fields'
+`HelpFileName` set to `file:///S:/.../index.html`, Help opened
 `https://docs.infor.com/csi/latest/en-u/csbiolh/file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/index.html`.
 SyteLine always puts its Infor help address in front of `HelpFileName`, so right-click Help can
-only open pages on Infor's help site. Right-click Help is back on the Infor QC CMRs topic.
-
-**Fix: a Help button** next to **Notify** raises event `OpenEcmrsHelp`, a ResponseType 39
-`URL(<address>) ( )` handler - the response Infor's own forms use to open links (tracking link on
-Customer Order Lines, `mailto:` on Incidents / Service Orders). It opens `index.html` of the help
-pages at `HELP_BASE` (`tools/apply_form_changes.py`), now
-`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/`. Copy the **contents** of `docs/help/`
-to `S:\Engineering\Individual Folders\JSmith\eCMRs`.
-
-**Check on TRN**: click **Help**. If nothing opens, the browser is blocking a `file:` link from
-the SyteLine web page (Edge/Chrome do by default): put the same folder on an internal web server or
-SharePoint, set `HELP_BASE` to its `https://` address, rebuild and re-import. Everyone needs `S:`
-mapped the same way and read access to the folder.
+only open pages on Infor's help site. Decision: keep Help on the Infor QC CMRs topic; no Help
+button. The eCMRs help pages stay in `docs/help/` as a reference (e.g. copied to the shared drive
+`S:\Engineering\Individual Folders\JSmith\eCMRs` and opened from there). If a link from the form is
+wanted later, the working way is a button raising an event with ResponseType 39
+`URL(<address>) ( )` - how Infor's forms open tracking and `mailto:` links.
 
 ## General debugging order for "it's not working" reports
 
