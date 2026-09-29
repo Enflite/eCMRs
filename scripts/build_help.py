@@ -11,14 +11,15 @@ Enflite/Form-Project-Templates branding/enflite-style-guide.md.
 
 Plain static HTML with relative links, so the folder works from anywhere (e.g. a copy on the
 shared drive S:/Engineering/Individual Folders/JSmith/eCMRs/docs/help). The form's Help button opens
-index.html there (HELP_BUTTON_URL in tools/apply_form_changes.py); right-click -> Help stays on
-Infor's QC CMRs topic, because SyteLine only opens Infor's help site from it.
+index.html there (HELP_BUTTON_URL in tools/apply_form_changes.py); right-click -> Help opens
+c/<component>.html, one small redirect page per form component (built from exports/eCMRs_v2.XML).
 
 Run: python3 scripts/build_help.py          (writes docs/help/)
      python3 scripts/build_help.py --check  (fails if docs/help/ is out of date)
 """
 import html
 import os
+import re
 import shutil
 import sys
 
@@ -316,10 +317,37 @@ def procedures_index():
                 "\n".join(b), "../", "procedures")
 
 
+FORM_XML = os.path.join(ROOT, "exports", "eCMRs_v2.XML")
+
+
+def component_pages():
+    """c/<component>.html for every component on the form: right-click -> Help opens the page for
+    the component clicked (tools/apply_form_changes.py, StdFormComponentHelp). Each redirects to
+    the field's page; a label goes to its field's page, anything else to the form topic."""
+    names = re.findall(r'<Component Name="([^"]+)">', open(FORM_XML, encoding="utf-8-sig").read())
+    by_comp = {c: f["key"] for f in FIELDS for c in f["components"]}
+    out = {}
+    for n in names:
+        key = by_comp.get(n)
+        if not key:  # label l_x / grid column grid_x -> field c_x (or c_x_v2); Item Desc's label
+            base = re.sub(r"^(l|grid)_", "", n)
+            key = by_comp.get(f"c_{base}") or by_comp.get(f"c_{base}_v2") or \
+                {"l_item1_SITE": by_comp.get("edit1_SITE")}.get(n)
+        target = f"../fields/{key}.html" if key else "../index.html"
+        title = BY_KEY[key]["label"] if key else "eCMRs form"
+        out[f"c/{n}.html"] = (f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
+                              f'<meta http-equiv="refresh" content="0; url={target}"><title>{e(title)} | eCMRs Help</title>'
+                              f'<link rel="stylesheet" href="../help.css"></head>\n<body><main><div class="inner">'
+                              f'<p>Opening <a href="{target}">{e(title)}</a>...</p></div></main>'
+                              f'<script>location.replace("{target}")</script></body></html>\n')
+    return out
+
+
 def build():
     files = {"index.html": index_page(), "help.css": CSS}
     for f in FIELDS:
         files[f"fields/{f['key']}.html"] = field_page(f)
+    files.update(component_pages())
     files["procedures/index.html"] = procedures_index()
     for p in PROCEDURES:
         files[f"procedures/{p['key']}.html"] = procedure_page(p)
@@ -337,14 +365,14 @@ def main():
         stale = [k for k, v in files.items()
                  if not os.path.exists(os.path.join(OUT, k)) or open(os.path.join(OUT, k), "rb").read() != v]
         extra = []
-        for d in ("fields", "procedures"):
+        for d in ("fields", "procedures", "c"):
             if os.path.isdir(os.path.join(OUT, d)):
                 extra += [f"{d}/{n}" for n in os.listdir(os.path.join(OUT, d)) if f"{d}/{n}" not in files]
         if stale or extra:
             raise SystemExit(f"docs/help out of date: {', '.join(stale + extra)} - re-run without --check")
         print(f"OK: docs/help is up to date ({len(FIELDS)} field pages, {len(PROCEDURES)} procedures)")
         return
-    for d in ("fields", "procedures"):
+    for d in ("fields", "procedures", "c"):
         if os.path.isdir(os.path.join(OUT, d)):
             shutil.rmtree(os.path.join(OUT, d))
     for k, v in files.items():

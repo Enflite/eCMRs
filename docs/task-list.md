@@ -77,20 +77,25 @@ Production has not been done yet - see "Production" at the end.
 
 ## Open decisions
 
-- [ ] Notify: build a real notification (email to Engineering?) or remove the button.
 - [ ] Reported By: free text now; the original was an employee lookup.
 - [ ] Assigned Buyer: stores the employee number; the original stored the username.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
 - [ ] Procedures: the team reviews the drafts in the help (**Procedures**: QA-300-037 Rev B, QA-300-003 Rev F).
-  Open before release: can documents be attached in **IDM** to an eCMRs record (steps 5.5.5, 5.5.7,
-  5.5.8; SDR 5.6)? Does **Notify** need to send the email (step 5.5.9.4)? Then route the new revisions
-  for approval and replace the drafts with the released text.
+  Open before release: which documents the **IDM** widget shows for an eCMRs record and how
+  attaching works (steps 5.5.5, 5.5.7, 5.5.8; SDR 5.6); Notify's email arrives (step 5.5.9.4). Then
+  route the new revisions for approval and replace the drafts with the released text.
 - [ ] Help: the **Help** button (next to Notify) opens the eCMRs help pages from
-  `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`; right-click → Help opens Infor's QC CMRs topic. To do: copy the repo
+  `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`; right-click → Help opens the field's page (`c\` folder). To do: copy the repo
   (at least `docs\help`) there, re-import the form, click Help. If the browser blocks the `file:`
   link, host the folder on SharePoint / intranet and change `HELP_BUTTON_URL`.
+- [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
+  Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
+  fill before save, Notify email, right-click Help, IDM widget (needs the AddIDM set-up; add the
+  guide from `S:\Public\Engineering\Syteline\AddIDM` to `docs/`).
+- [ ] Sub Assembly: team to say what it should hold (Implementation Plan open item 8).
+- [ ] "Dash under the Next Assy label": get a screenshot (open item 12).
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production

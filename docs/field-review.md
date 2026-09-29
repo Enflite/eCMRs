@@ -21,7 +21,7 @@ Status (updated 2026-09-29, after v2 was imported and tested on TRN): **OK** = w
 |---|---|---|---|---|
 | Status | `WorkFlowStatus` (UDT list) | `Status` | OK | Own Inline List (7 states). |
 | Assigned: ID + user | `AssignedUserEmpNum` combo + `AssignedUser` | `AssignedEmpNum` combo + `AssignedUsername` | OK | Original defaulted the user to whoever is logged in (`UserName()`); ours fills from the ID. |
-| Notify | button | `btn_notify` | Diff | Placeholder message only - no notification sent yet. |
+| Notify | button | `btn_notify` | **Fixed (round 1)** | Raises `ENF_NotifyUserWithCMR` like the original (email to the Assigned user). To test on TRN. |
 | CMR Num / Create Date / Created By | `CmrNum` / `CreateDate` / `CreatedBy` | same | **Fixed v2** | CMR Num is `CMR-YYMMDD-HHMMSS`, set on **New** (was AUTONUMBER; repeated numbers). |
 | PO / PO Line | `PoNum` / `PoNumLine` combos | `PoNum` / `PoLine` | **Fixed v2** | PO Line wrote the Item (save error "Data length for Notify (12)…"); back to `DISPLAY(1,2,3)`. PO filter dropped on purpose (padding bug in the original). |
 | Assigned Buyer | `BuyerPlannerUsr` (username) | `AssignedBuyer` (employee combo) | Diff | Stores the employee number, not the username. |
@@ -51,7 +51,7 @@ Status (updated 2026-09-29, after v2 was imported and tested on TRN): **OK** = w
 |---|---|---|
 | Serial # (`SerialNum`) | OK | Lists serials of the selected Item (`SLSerials`). Empty for items with no serials - test with a serial-tracked item. |
 | LOT # (`LotNum`) | OK | Same, `SLLots`. |
-| Top Level PN / Sub Assembly | OK | Plain text. Open question: is Sub Assembly the same as Next Lvl Assy? |
+| Top Level PN / Sub Assembly | **Changed (round 1)** | Top Level PN hidden (team feedback). Sub Assembly: plain text; open question whether it's the same as Next Lvl Assy. |
 
 ## Quality
 

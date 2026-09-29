@@ -129,7 +129,7 @@ module.exports = {
 
   optimize: [
     "Track issues from each team using eCMRs; fix on TRN first",
-    "Decide: Notify, Reported By lookup, Assigned Buyer, Sub Assembly",
+    "Decide: Reported By lookup, Assigned Buyer, Sub Assembly",
     "Retire the legacy CMR screens; decide on history migration",
     "Update the CMR procedure (QA-300-037); manager approval",
   ],
