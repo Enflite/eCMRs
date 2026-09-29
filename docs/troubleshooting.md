@@ -800,6 +800,13 @@ fields have none of their own and use the form's.
 closest match for eCMRs. To show an Enflite page instead (e.g. a CMR user guide), put its full URL
 in `HELP_URL` in `tools/apply_form_changes.py`, rebuild and re-import.
 
+**Own help pages (2026-09-29)**: `docs/help/` holds eCMRs help like the SyteLine library - a form
+topic and one page per field - generated from `scripts/help_content.py`. Publish the folder where
+all SyteLine users can open it, set `HELP_BASE` (ending in `/`) in `tools/apply_form_changes.py`,
+rebuild and re-import: the form's help and every field's right-click → Help then open their own
+page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
+full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
+
 **Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
 
 ## General debugging order for "it's not working" reports

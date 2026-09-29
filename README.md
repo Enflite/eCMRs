@@ -47,6 +47,10 @@ legacy forms are the requirements reference.
 - **2026-09-29:** Right-click → Help works: the form points to the Infor CMR help topic (was "Invalid
   URL string, or no help is defined").
 
+- **2026-09-29:** eCMRs help pages (`docs/help/`): a form topic and a definition page for every
+  field, laid out like the SyteLine help. Linked from right-click → Help once they're published
+  (`HELP_BASE`).
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout
@@ -64,6 +68,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`scripts/compare_live_lengths.py`](scripts/compare_live_lengths.py) | Checks live SQL / IDO exports against the schema; writes `docs/length-fixes.md` |
 | [`scripts/generate_schema_csv.py`](scripts/generate_schema_csv.py) | Schema master list (`FIELDS`); with `generate_ido_import.py`, `generate_sql_columns_import.py`, `generate_deploy_checklist.py`, `validate_schema_consistency.py`. `generate_form.py` is retired (built v1) |
 | `exports/ecmrs_*.csv` | Schema-generator output (design reference). For production use `exports/production/` |
+| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic + one page per field. Built from [`scripts/help_content.py`](scripts/help_content.py) by `scripts/build_help.py`. Publish the folder anywhere users can reach, then set `HELP_BASE` in `tools/apply_form_changes.py` so right-click → Help opens them |
 | [`docs/production-build-sheet.md`](docs/production-build-sheet.md) | Generated: every column and property to build, readable |
 | [`docs/deploy-checklist.md`](docs/deploy-checklist.md) | Generated: the manual IDO settings (CmrNum, Inline Lists, Read Only, Property Class) |
 | [`docs/length-fixes.md`](docs/length-fixes.md) | Generated: IDO vs SQL length differences (currently only the optional `Status`) |
@@ -79,6 +84,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 ```
 python3 tools/apply_form_changes.py --check
 python3 scripts/make_production_imports.py --check
+python3 scripts/build_help.py --check
 python3 scripts/validate_schema_consistency.py
 python3 scripts/compare_live_lengths.py        # after saving new exports in docs/reference/
 ```
