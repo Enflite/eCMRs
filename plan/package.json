@@ -1,0 +1,12 @@
+{
+  "name": "ecmrs-plan",
+  "private": true,
+  "description": "Builds the eCMRs implementation plan deck (Enflite brand style)",
+  "scripts": {
+    "build": "node build_impl_deck.js",
+    "pdf": "soffice --headless --convert-to pdf eCMRs_Implementation_Plan.pptx"
+  },
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}
