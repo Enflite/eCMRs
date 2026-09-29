@@ -38,6 +38,28 @@
                <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )</Post301Format>
                <EffectiveCaption>Notify</EffectiveCaption>
             </Component>
+            <Component Name="btn_help">
+               <DeviceID>-1</DeviceID>
+               <Type>8</Type>
+               <TabOrder>70</TabOrder>
+               <TopPos>2.9</TopPos>
+               <LeftPos>100</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12</Width>
+               <Caption>Help</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <EventToGenerate>OpenEcmrsHelp</EventToGenerate>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )</Post301Format>
+               <EffectiveCaption>Help</EffectiveCaption>
+            </Component>
             <Component Name="c_assigned_buyer">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
@@ -3191,6 +3213,10 @@ End Namespace
             <EventHandler Name="SetClosedBy" Sequence="0">
                <ResponseType>22</ResponseType>
                <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
+            </EventHandler>
+            <EventHandler Name="OpenEcmrsHelp" Sequence="0">
+               <ResponseType>39</ResponseType>
+               <Response>URL(file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html) ( )</Response>
             </EventHandler>
             <EventHandler Name="StdObjectNewCompleted" Sequence="0">
                <ResponseType>33</ResponseType>

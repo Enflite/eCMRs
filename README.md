@@ -49,8 +49,8 @@ legacy forms are the requirements reference.
 
 - **2026-09-29:** eCMRs help pages (`docs/help/`): a form topic and a definition page for every
   field, laid out like the SyteLine help and styled like the Enflite deck. Copied to the shared drive
-  (`S:\Engineering\Individual Folders\JSmith\eCMRs`) as a reference. Not linked from the form:
-  right-click → Help can only open Infor's help site, so it stays on the QC CMRs topic.
+  (`S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help`) and opened by the form's **Help** button next to Notify.
+  Right-click → Help can only open Infor's help site, so it stays on the QC CMRs topic.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
@@ -69,7 +69,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`scripts/compare_live_lengths.py`](scripts/compare_live_lengths.py) | Checks live SQL / IDO exports against the schema; writes `docs/length-fixes.md` |
 | [`scripts/generate_schema_csv.py`](scripts/generate_schema_csv.py) | Schema master list (`FIELDS`); with `generate_ido_import.py`, `generate_sql_columns_import.py`, `generate_deploy_checklist.py`, `validate_schema_consistency.py`. `generate_form.py` is retired (built v1) |
 | `exports/ecmrs_*.csv` | Schema-generator output (design reference). For production use `exports/production/` |
-| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic + one page per field. Built from [`scripts/help_content.py`](scripts/help_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; a reference for users - not linked from the form (right-click Help can only open Infor's help site) |
+| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic + one page per field. Built from [`scripts/help_content.py`](scripts/help_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; opened by the form's **Help** button from `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (`HELP_BUTTON_URL` in `tools/apply_form_changes.py`) |
 | [`docs/production-build-sheet.md`](docs/production-build-sheet.md) | Generated: every column and property to build, readable |
 | [`docs/deploy-checklist.md`](docs/deploy-checklist.md) | Generated: the manual IDO settings (CmrNum, Inline Lists, Read Only, Property Class) |
 | [`docs/length-fixes.md`](docs/length-fixes.md) | Generated: IDO vs SQL length differences (currently only the optional `Status`) |

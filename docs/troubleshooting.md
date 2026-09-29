@@ -803,11 +803,20 @@ closest match for eCMRs. Right-click → Help on any field opens it.
 `HelpFileName` set to `file:///S:/.../index.html`, Help opened
 `https://docs.infor.com/csi/latest/en-u/csbiolh/file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/index.html`.
 SyteLine always puts its Infor help address in front of `HelpFileName`, so right-click Help can
-only open pages on Infor's help site. Decision: keep Help on the Infor QC CMRs topic; no Help
-button. The eCMRs help pages stay in `docs/help/` as a reference (e.g. copied to the shared drive
-`S:\Engineering\Individual Folders\JSmith\eCMRs` and opened from there). If a link from the form is
-wanted later, the working way is a button raising an event with ResponseType 39
-`URL(<address>) ( )` - how Infor's forms open tracking and `mailto:` links.
+only open pages on Infor's help site, so it stays on the Infor QC CMRs topic.
+
+**Help button (2026-09-29)**: a **Help** button next to **Notify** opens the eCMRs help pages. It
+raises event `OpenEcmrsHelp`, a ResponseType 39 `URL(<address>) ( )` handler - the response
+Infor's own forms use to open links (tracking link on Customer Order Lines, `mailto:` on
+Incidents / Service Orders). Address (`HELP_BUTTON_URL` in `tools/apply_form_changes.py`):
+`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html` - i.e. the repo
+copied to `S:\Engineering\Individual Folders\JSmith\eCMRs`, with the pages in `docs\help`. After changing help text, rebuild
+(`scripts/build_help.py`) and copy `docs\help` again; the form doesn't change.
+
+**Check on TRN**: click **Help**. If nothing opens, the browser is blocking a `file:` link from the
+SyteLine web page (Edge/Chrome do by default): put the folder on an internal web server or
+SharePoint, change `HELP_BUTTON_URL` to its `https://` address, rebuild and re-import. Everyone
+needs `S:` mapped the same way and read access to the folder.
 
 ## General debugging order for "it's not working" reports
 

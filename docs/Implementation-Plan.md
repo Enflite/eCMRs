@@ -159,7 +159,7 @@ Tick each step as you go.
 
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
-- [ ] 2a. Optional: copy the **contents** of [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs` as the users' eCMRs reference (not linked from the form).
+- [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. The form's **Help** button opens `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`.
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**
@@ -195,7 +195,7 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
-- [ ] 20a. Right-click any field → **Help**: Infor's QC CMRs help topic opens.
+- [ ] 20a. Click the **Help** button (next to Notify): the eCMRs help opens from the S: drive. Right-click → Help opens Infor's QC CMRs topic.
 
 **Record it**
 

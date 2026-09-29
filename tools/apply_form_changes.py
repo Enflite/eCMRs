@@ -57,6 +57,9 @@ What it changes (v1 -> v2):
      HelpContextID as in that export. Fields use the form's help, as on Infor's own forms.
      Right-click Help can only open Infor's help site: SyteLine puts its help address in front of
      any HelpFileName (a file:/// link became docs.infor.com/.../file:///S:/...).
+  12. Help button next to Notify: opens the eCMRs help pages (docs/help/) from the repo copy on
+     the S: drive (HELP_BUTTON_URL) through an OpenEcmrsHelp event, ResponseType 39 URL(...) - the
+     response Infor's forms use for links. Right-click Help stays on the Infor QC_CMRs topic.
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -86,6 +89,9 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
 # Right-click -> Help can only open Infor's help site: SyteLine puts its help address in front of
 # any HelpFileName (a file:/// link became docs.infor.com/.../csbiolh/file:///S:/..., TRN 2026-09-29).
+# The eCMRs help pages (docs/help/) open from the Help button instead: the repo copied to the shared
+# drive S:/Engineering/Individual Folders/JSmith/eCMRs (spaces as %20).
+HELP_BUTTON_URL = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -242,6 +248,25 @@ def build(text):
     f.text = f.text.replace(old, "         <Width>160</Width>\r\n         <HelpFileName>"
                             + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
 
+
+    # 12. Help button (right of Notify) opening the eCMRs help pages at HELP_BUTTON_URL. Raises
+    # OpenEcmrsHelp, a ResponseType 39 "URL(<address>) ( )" handler - the response Infor's
+    # Customer Order Lines (tracking link) and Incidents / Service Orders (mailto) forms use.
+    m = re.search(r'<Component Name="btn_notify">.*?</Component>', f.text, re.S)
+    btn = m.group(0).replace('Name="btn_notify"', 'Name="btn_help"')
+    for tag, val in [("LeftPos", "100"), ("Width", "12"), ("TabOrder", "70"), ("Caption", "Help"),
+                     ("EventToGenerate", "OpenEcmrsHelp"), ("EffectiveCaption", "Help")]:
+        btn, n = re.subn(rf"<{tag}>[^<]*</{tag}>", f"<{tag}>{val}</{tag}>", btn, count=1)
+        if n != 1:
+            raise SystemExit(f"btn_help: no <{tag}>")
+    btn = btn.replace("BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )", "BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )")
+    f.text = f.text[:m.end()] + "\r\n            " + btn + f.text[m.end():]
+    ev_anchor = "         </EventHandlers>"
+    f.text = f.text.replace(ev_anchor,
+        '            <EventHandler Name="OpenEcmrsHelp" Sequence="0">\r\n'
+        '               <ResponseType>39</ResponseType>\r\n'
+        f'               <Response>URL({HELP_BUTTON_URL}) ( )</Response>\r\n'
+        '            </EventHandler>\r\n' + ev_anchor, 1)
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (

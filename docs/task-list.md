@@ -83,8 +83,10 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
-- [x] Help: right-click → Help opens Infor's QC CMRs topic (SyteLine only allows Infor's help site
-  there). eCMRs' own help pages are in `docs/help/` as a reference (e.g. copied to the S: drive).
+- [ ] Help: the **Help** button (next to Notify) opens the eCMRs help pages from
+  `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`; right-click → Help opens Infor's QC CMRs topic. To do: copy the repo
+  (at least `docs\help`) there, re-import the form, click Help. If the browser blocks the `file:`
+  link, host the folder on SharePoint / intranet and change `HELP_BUTTON_URL`.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production
