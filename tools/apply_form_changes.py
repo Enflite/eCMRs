@@ -86,7 +86,7 @@ HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_
 # docs/help folder is published at, ending in "/" (e.g. "https://<host>/ecmrs-help/"), and rebuild:
 # the form then opens index.html and each field opens fields/<key>.html (scripts/help_content.py).
 # Empty = keep the Infor QC_CMRs topic above.
-HELP_BASE = ""
+HELP_BASE = "https://enflite.github.io/eCMRs/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2

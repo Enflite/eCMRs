@@ -159,6 +159,7 @@ Tick each step as you go.
 
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
+- [ ] 2a. Help pages are live: `https://enflite.github.io/eCMRs/` opens (published from `docs/help/` by GitHub Pages).
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**
@@ -194,6 +195,7 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
+- [ ] 20a. Right-click any field → **Help**: its eCMRs help page opens (`https://enflite.github.io/eCMRs/`).
 
 **Record it**
 

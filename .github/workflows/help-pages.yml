@@ -1,0 +1,40 @@
+# Publishes ONLY docs/help/ (the eCMRs help pages) to GitHub Pages, so right-click -> Help in
+# SyteLine can open them. The rest of the repo stays private.
+# One-time setup: repo Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+# Site: https://enflite.github.io/eCMRs/  (index.html = the form topic, fields/<key>.html = fields)
+name: Publish eCMRs help pages
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/help/**", "scripts/help_content.py", "scripts/build_help.py", ".github/workflows/help-pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # The committed pages must match their source (scripts/help_content.py).
+      - run: python3 scripts/build_help.py --check
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/help
+      - id: deployment
+        uses: actions/deploy-pages@v4

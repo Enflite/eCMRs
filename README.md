@@ -48,8 +48,9 @@ legacy forms are the requirements reference.
   URL string, or no help is defined").
 
 - **2026-09-29:** eCMRs help pages (`docs/help/`): a form topic and a definition page for every
-  field, laid out like the SyteLine help. Linked from right-click → Help once they're published
-  (`HELP_BASE`).
+  field, laid out like the SyteLine help, published by GitHub Pages to
+  `https://enflite.github.io/eCMRs/` (`.github/workflows/help-pages.yml`, only `docs/help/`). The
+  form's right-click → Help opens each field's page.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
@@ -77,6 +78,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Every problem solved: symptom, cause, fix, confirmation |
 | [`docs/reference/`](docs/reference/) | Live Excel exports (SQL Columns, IDO Properties) from TRN, dated |
 | [`docs/field-mapping.md`](docs/field-mapping.md), [`docs/build-guide.md`](docs/build-guide.md) | Design-time documents, kept for the reasoning |
+| [`.github/workflows/help-pages.yml`](.github/workflows/help-pages.yml) | Publishes only `docs/help/` to GitHub Pages (`https://enflite.github.io/eCMRs/`) |
 | `AGENTS.md` / `CLAUDE.md` | The Enflite SOP (master in Enflite/Form-Project-Templates) |
 
 ## Before every commit

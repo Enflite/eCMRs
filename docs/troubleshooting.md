@@ -807,6 +807,12 @@ rebuild and re-import: the form's help and every field's right-click → Help th
 page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
 full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
 
+**Published with GitHub Pages (2026-09-29)**: `.github/workflows/help-pages.yml` publishes only
+`docs/help/` to `https://enflite.github.io/eCMRs/` on every push to `main` that touches the help.
+`HELP_BASE` is set to that address. Order: merge to `main` → repo **Settings → Pages → Source:
+GitHub Actions** (once) → the workflow runs (Actions tab) → open the address in a browser → then
+import the form. The Pages site is public (only the help pages); the repo stays private.
+
 **Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
 
 ## General debugging order for "it's not working" reports

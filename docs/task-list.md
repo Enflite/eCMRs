@@ -83,9 +83,9 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
-- [ ] Help: right-click → Help opens Infor's QC CMRs page for now. eCMRs' own help pages are
-  built (`docs/help/`, one per field): decide where to publish them, then set `HELP_BASE` in
-  `tools/apply_form_changes.py` and re-import.
+- [ ] Help: every field's right-click → Help opens its own page at `https://enflite.github.io/eCMRs/`
+  (built from `docs/help/`). To do: merge to `main`, enable GitHub Pages (Settings → Pages → Source:
+  GitHub Actions), check the site opens, re-import the form, test Help on one field.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production
