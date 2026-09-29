@@ -38,7 +38,7 @@ Set **Length**, then **Check In** the IDO and reopen the form. Do this after ste
 
 ## Left as is
 
-- `CmrNum` (cmr_num): SQL is nvarchar(999), left over from the earlier type-change attempt; the IDO stays at 20. The key is a NumSortedString, which pads to its length for sorting. Don't change either side without testing on TRN.
+- `CmrNum` (cmr_num): SQL is nvarchar(999), left over from the earlier type-change attempt - leave the SQL column; the key's IDO length is 20 (holds CMR-YYMMDD-HHMMSS, 17 characters).
 - `workflow_status` (char(255)) - not on the form; left as is.
 - `additional_changes` (char(1000)) - not on the form; left as is.
 - `general_closed_by` (EmpNumType(7)) - not on the form; left as is.

@@ -45,6 +45,12 @@ What it changes (v1 -> v2):
      Description were one line high, Internal Review Date needed three lines. Heights raised
      (1.8 = two lines, like QC Disposition; 2.7 = three), and "Next Assy Description:" is
      shortened to "Next Assy Desc:" to fit its narrow column, like "Item Desc:".
+  10. CMR Num is CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742), set by the form when you click New:
+     StdObjectNewCompleted script (same pattern as the Incidents form's StdObjectNewCompleted)
+     doing SetCurrentObjectPropertyPlusModifyRefresh("CmrNum", "CMR-" & Now...). Replaces the
+     IDO's AUTONUMBER(STEP(1)), which repeated numbers (PK_ue_ecmrs error, 2026-09-29). The IDO
+     Default Value can't format a date, so this has to be on the form. Grid column widened to
+     fit the 17 characters.
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -217,6 +223,31 @@ def build(text):
     f.place("l_next_assy_description", y=19.35, h=1.8)
     f.caption("l_next_assy_description", "Next Assy Desc:")
     f.place("l_internal_review_date", h=2.7)
+
+    # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
+    new_script = (
+        "SCRIPTTEXT(Option Explicit On\r\nOption Strict On\r\n\r\nImports System\r\n"
+        "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
+        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdObjectNewCompleted_0\r\n"
+        "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
+        "            If ThisForm.PrimaryIDOCollection.CurrentItem.Properties.Item(\"CmrNum\").GetValueOfString(\"\") = \"\" Then\r\n"
+        "                ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh(\"CmrNum\", "
+        "\"CMR-\" &amp; DateTime.Now.ToString(\"yyMMdd-HHmmss\"))\r\n"
+        "            End If\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n) COLID(object)")
+    anchor = "         </EventHandlers>"
+    if anchor not in f.text or 'EventHandler Name="StdObjectNewCompleted"' in f.text:
+        raise SystemExit("EventHandlers anchor missing or StdObjectNewCompleted already there")
+    f.text = f.text.replace(anchor,
+        '            <EventHandler Name="StdObjectNewCompleted" Sequence="0">\r\n'
+        '               <ResponseType>33</ResponseType>\r\n'
+        f'               <Response>{new_script}</Response>\r\n'
+        '            </EventHandler>\r\n' + anchor, 1)
+    # Grid: CMR Num column 10 -> 16 wide, shift the columns after it.
+    grid = re.findall(r'<Component Name="(grid_[a-z_]+)">.*?<LeftPos>([\d.]+)</LeftPos>', f.text, re.S)
+    f.set("grid_cmr_num", "Width", "16")
+    for name, left in grid:
+        if name != "grid_cmr_num":
+            f.set(name, "LeftPos", fmt(float(left) + 6))
 
     # 8. SetCloseInfo: copy the original QC_CMRs pattern (see docstring).
     m = re.search(r'(<EventHandler Name="SetCloseInfo" Sequence="0">.*?<Response>)(.*?)'

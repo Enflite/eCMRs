@@ -1564,7 +1564,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>110</LeftPos>
+               <LeftPos>116</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>8</Width>
@@ -1590,7 +1590,7 @@
                <LeftPos>0</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
-               <Width>10</Width>
+               <Width>16</Width>
                <Caption>CMR Num</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
@@ -1610,7 +1610,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>82</LeftPos>
+               <LeftPos>88</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
@@ -1633,7 +1633,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>68</LeftPos>
+               <LeftPos>74</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
@@ -1656,7 +1656,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>48</LeftPos>
+               <LeftPos>54</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
@@ -1679,7 +1679,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>96</LeftPos>
+               <LeftPos>102</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
@@ -1702,7 +1702,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>34</LeftPos>
+               <LeftPos>40</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
@@ -1725,7 +1725,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>24</LeftPos>
+               <LeftPos>30</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
@@ -1748,7 +1748,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>10</LeftPos>
+               <LeftPos>16</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>14</Width>
@@ -1771,7 +1771,7 @@
                <Type>15</Type>
                <TabOrder>0</TabOrder>
                <TopPos>0</TopPos>
-               <LeftPos>58</LeftPos>
+               <LeftPos>64</LeftPos>
                <Height>92.05</Height>
                <ListHeight>0</ListHeight>
                <Width>10</Width>
@@ -3190,6 +3190,29 @@ End Namespace
             <EventHandler Name="SetClosedBy" Sequence="0">
                <ResponseType>22</ResponseType>
                <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
+            </EventHandler>
+            <EventHandler Name="StdObjectNewCompleted" Sequence="0">
+               <ResponseType>33</ResponseType>
+               <Response>SCRIPTTEXT(Option Explicit On
+Option Strict On
+
+Imports System
+Imports Microsoft.VisualBasic
+Imports Mongoose.IDO.Protocol
+Imports Mongoose.Scripting
+
+Namespace SyteLine.GlobalScripts
+Public Class EvHandler_StdObjectNewCompleted_0
+Inherits GlobalScript
+
+Sub Main()
+            If ThisForm.PrimaryIDOCollection.CurrentItem.Properties.Item("CmrNum").GetValueOfString("") = "" Then
+                ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh("CmrNum", "CMR-" &amp; DateTime.Now.ToString("yyMMdd-HHmmss"))
+            End If
+End Sub
+End Class
+End Namespace
+) COLID(object)</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>

@@ -762,6 +762,33 @@ byte-for-byte" from the original was wrong: the original never used `ThisForm.Us
 **Confirm on TRN**: tick **Closed** - no error, Close Date = today, Closed By = your user. Untick -
 both clear. Save and reopen.
 
+## `Error Message does not exist. Object:PK_ue_ecmrs, Type:17` on save
+
+**Symptom**: saving a CMR fails with this message (TRN, 2026-09-29).
+
+**Cause**: `PK_ue_ecmrs` is the table's primary key on `cmr_num` - the save tried to write a
+CMR Num that already exists ("Error Message does not exist" only means no friendly text is set
+up for that constraint). `CmrNum` is a `NumSortedString`, stored padded with leading spaces to
+the IDO **Length**. Its length was changed from **10** (22 Sep export) to **20** (29 Sep). Records
+from before are stored 10 wide, newer ones 20 wide. AUTONUMBER takes the highest value + 1, and
+the 10-wide values always sort above the 20-wide ones (a space sorts before a digit), so it keeps
+producing the same next number - which already exists 20 wide.
+
+**Fix (decided 2026-09-29)**: drop AUTONUMBER. CMR Num is now `CMR-YYMMDD-HHMMSS` (e.g.
+`CMR-260929-111742`), set by the form when you click **New** (`StdObjectNewCompleted` script, the
+same pattern the Incidents form uses). The IDO **Default Value** can't do this itself: it only
+takes keywords like `AUTONUMBER(...)` or `CURDATE() CURTIME()`, and can't add `CMR-` or pick the
+format. In IDO Properties, `CmrNum`: **Default Value** cleared, **Data Type** `String` (not
+`NumSortedString` - no padding), **Length** 20. Leave the SQL column's 999 alone. Two CMRs
+created in the same second would still clash - retry the save.
+
+**Clean-up**: any CMR saved while the length was 20 is stored 20 wide. In the list sorted by CMR
+Num those show out of order (at the bottom), and one may repeat a number used by a 10-wide
+record. On TRN they're test records: delete them from the form.
+
+**Confirm on TRN**: **New** - CMR Num shows `CMR-YYMMDD-HHMMSS` right away; save; **New** again, save.
+Old test records keep their padded numbers (they sort at the end) - delete them.
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,
