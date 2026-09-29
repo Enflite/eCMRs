@@ -861,6 +861,13 @@ works.
 > React + Express + MongoDB). The script now builds `<HELP_SITE>/go/syteline/ecmrs/<component>`
 > (`HELP_SITE` = `http://localhost:5173`, the help's dev server, until it is hosted), and the help
 > redirects to the field's page. The `docs/help/c/` pages below are the old S: drive version.
+>
+> **Which field was clicked**: the script tries an event parameter that names a form component
+> first, then `GetCurrentComponentName()` (the focused field), and adds `?via=parm`, `?via=focus` or
+> `?via=none` to the link. The help server prints one line per click
+> (`help link syteline/ecmrs component=c_item via=focus -> /syteline/ecmrs/fields/item`). If it
+> says `via=none`, SyteLine didn't tell the script which field: click into the field first, then
+> right-click → Help, and report what the log shows.
 
 `HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
 raises the standard event `StdFormComponentHelp` (the form's own Help: `StdFormHelp`) - both are in

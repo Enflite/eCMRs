@@ -79,7 +79,9 @@ What it changes (v1 -> v2):
      placeholder message.
   16. Right-click -> Help opens the eCMRs help: handlers for the standard events
      StdFormComponentHelp (right-click a field -> Help) and StdFormHelp (the form's Help).
-     A script sets the variable EcmrsHelpUrl to the page for the right-clicked component
+     A script sets the variable EcmrsHelpUrl to the page for the right-clicked component - found
+     from an event parameter naming a form component, else GetCurrentComponentName() (the focused
+     component), with ?via=parm|focus|none so the help server's log shows which one worked -
      (<HELP_SITE>/go/syteline/ecmrs/<component>, which the Enflite help redirects to that field's
      page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is http://localhost:5173
      for now (the help's dev server). HelpFileName stays as the Infor
@@ -367,14 +369,39 @@ def build(text):
         "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
         "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormComponentHelp_0\r\n"
         "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
-        "            Dim page As String = \"\"\r\n"
+        "            ' Which component was right-clicked: an event parameter naming a component on the\r\n"
+        "            ' form, else the component with the focus. Late-bound in Try blocks, so a member this\r\n"
+        "            ' SyteLine version lacks falls through instead of failing to compile. via= shows in the\r\n"
+        "            ' help server's log which one worked.\r\n"
+        "            Dim frm As Object = ThisForm\r\n"
+        "            Dim scr As Object = Me\r\n"
+        "            Dim comp As String = \"\"\r\n"
+        "            Dim via As String = \"none\"\r\n"
         "            Try\r\n"
-        "                Dim frm As Object = ThisForm\r\n"
-        "                Dim comp As String = CStr(frm.GetCurrentComponentName())\r\n"
-        "                If comp &lt;&gt; \"\" Then page = comp\r\n"
+        "                Dim n As Integer = CInt(scr.ParameterCount)\r\n"
+        "                For i As Integer = 0 To n - 1\r\n"
+        "                    Dim p As String = CStr(scr.GetParameter(i))\r\n"
+        "                    If comp = \"\" AndAlso p &lt;&gt; \"\" Then\r\n"
+        "                        Try\r\n"
+        "                            If frm.Components(p) IsNot Nothing Then\r\n"
+        "                                comp = p\r\n"
+        "                                via = \"parm\"\r\n"
+        "                            End If\r\n"
+        "                        Catch\r\n"
+        "                        End Try\r\n"
+        "                    End If\r\n"
+        "                Next\r\n"
         "            Catch\r\n"
         "            End Try\r\n"
-        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(page = \"\", \"\", \"/\" &amp; page)\r\n"
+        "            If comp = \"\" Then\r\n"
+        "                Try\r\n"
+        "                    comp = CStr(frm.GetCurrentComponentName())\r\n"
+        "                    If comp &lt;&gt; \"\" Then via = \"focus\"\r\n"
+        "                Catch\r\n"
+        "                    comp = \"\"\r\n"
+        "                End Try\r\n"
+        "            End If\r\n"
+        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via\r\n"
         "            ReturnValue = \"0\"\r\n"
         "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
     handlers = [
