@@ -1,13 +1,11 @@
 # eCMRs — Build Guide
 
-**HISTORICAL / SUPERSEDED.** This was written as pre-build instructions before the table, IDO,
-and form existed. All of it is now live (see `README.md`'s Status section) and several details
-below are stale or wrong as a result - notably the table name (`ue_ecmr` below vs. the real,
-live `ue_ecmrs`) and the column list (lengths/types/presence have all moved on since this was
-written - `scripts/generate_schema_csv.py`'s `FIELDS` is the current source of truth, not the
-table here). Kept for the historical reasoning (why a standalone table, the naming convention,
-the two-mechanism split below), not as a build reference. For current, accurate info see
-`README.md`, `docs/troubleshooting.md`, and `docs/deploy-checklist.md`.
+**HISTORICAL / SUPERSEDED.** Written before the table, IDO and form existed; kept for the
+reasoning (why a standalone table, the naming convention, the two-mechanism split below). Its
+column table is out of date. **To build eCMRs (e.g. in production) use
+[`Implementation-Plan.md`](Implementation-Plan.md) section 5**, with the import files in
+[`../exports/production/`](../exports/production/) and the
+[`production-build-sheet.md`](production-build-sheet.md).
 
 Two separate mechanisms, don't conflate them:
 
@@ -29,7 +27,7 @@ Two separate mechanisms, don't conflate them:
 1. Under project `ue_ENF` (or wherever you want this to live), create a **new table** — suggested name `ue_ecmr`. Give it every column listed in the table below (name, type, length). **This step creates the actual physical SQL table, not just a Data Dictionary entry** — Application Studio's Table Definition screen generates the real database table automatically when you save/check it in. No separate DBA/raw-SQL step is needed for a plain table like this (that's only required for custom stored procedures, like `RSQC_CreateCmrSp` in `cmr-project`). **Caveat**: this project hasn't personally walked through that exact screen yet — every table touched so far extended an existing one rather than creating one from scratch — so confirm this matches what you see before relying on it.
 2. Create a **new IDO** on top of it — suggested name `ue_ecmrs`. Set **Primary Base Table** to `ue_ecmr`.
 3. Add a **Property** per column (`New Property` → `Bind To` the column). Set `cmr_num` as the key (`KeySequence: 1`).
-4. Set `cmr_num`'s `Default Value` to `AUTONUMBER(STEP(1))` (or your preferred numbering step) — this is what makes native **New** work with zero extra scripting, unlike `RS_QCCmrs`'s composite-key trap in `cmr-project`.
+4. Leave `cmr_num`'s **Default Value** blank and set its **Data Type** to `String` (Length 255). The form sets CMR Num to `CMR-YYMMDD-HHMMSS` when you click **New** (`StdObjectNewCompleted` script). Don't use `AUTONUMBER(STEP(1))`: on this key it repeated numbers and saves failed with `PK_ue_ecmrs` (see `troubleshooting.md`, 2026-09-29).
 5. **Check In.**
 
 ### Full column list
@@ -38,7 +36,7 @@ Every property below matches `docs/field-mapping.md` exactly — the Form Sync X
 
 | Column | Type | Length/notes |
 |---|---|---|
-| `cmr_num` | Integer, Autonumber | **Key.** |
+| `cmr_num` | String (SQL `nvarchar(999)`, IDO 255) | **Key.** `CMR-YYMMDD-HHMMSS`, set by the form on **New**. |
 | `status` | String | 20 |
 | `workflow_status` | String | 30 |
 | `create_date` | DateTime | Default `NOW()` |

@@ -1,5 +1,10 @@
 # eCMRs — Field Mapping
 
+> **Design-time document (kept for the reasoning).** What is actually built and working is in
+> [`production-build-sheet.md`](production-build-sheet.md) (every column and property, from the TRN
+> exports), [`field-review.md`](field-review.md) (against the original forms) and
+> [`task-list.md`](task-list.md) (status). The runbook is [`Implementation-Plan.md`](Implementation-Plan.md).
+
 Rebuilt from the **real, complete** `QC_CMRs` Form Sync export (every component the stakeholder pasted directly) — not just the subset `cmr-project` had tracked as its "confirmed editable scope." Every field below gets its own original column on the new standalone table. No `RsCrcvr*`/`rs_cmrUf_*` legacy names, no joins, no dependency on `rs_cmr`/`rs_crcvr`/any other table.
 
 Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Tested**.
@@ -8,7 +13,7 @@ Status vocabulary: **Planned** (in this list, not yet built), **Built**, **Teste
 
 | Field (legacy label) | Legacy property | New column | Type | Notes |
 |---|---|---|---|---|
-| CMR Num | `CmrNum` | `cmr_num` | Autonumber (key) | Decided (`task-list.md` Phase A): `AUTONUMBER(STEP(1))` directly on the column. It only needs to be a unique, auto-generated value — not a preserved legacy number — so migrated historical rows get a fresh `cmr_num` on insert too, same as any new CMR. |
+| CMR Num | `CmrNum` | `cmr_num` | String (key) | `CMR-YYMMDD-HHMMSS` (e.g. `CMR-260929-111742`), set by the form on **New**. Replaced `AUTONUMBER(STEP(1))` on 2026-09-29 - it repeated numbers (PK_ue_ecmrs save error, see `troubleshooting.md`). |
 | Status | `Status` (`DefaultFrom: QCStatusListings()`) | `status` | String / small list | Legacy `DefaultFrom` is a system function tied to `RS_QCCmrs`'s own status list — decide whether eCMRs defines its own fixed list or reimplements the lookup. |
 | Workflow Status | `rs_cmrUf_ENF_CMR_WorkFlowStatus` (`DefaultFrom: UserDefinedType(Cmr_CMR_WorkFlowStatus)`) | `workflow_status` | String / small list | `UserDefinedType(...)` is a legacy configured value-list mechanism tied to a UDT defined elsewhere in the system (`Cmr_CMR_WorkFlowStatus`) — **can't be copied as-is**; eCMRs needs its own fixed/inline list or its own new UDT. |
 | Create Date | `CreateDate` | `create_date` | DateTime | Defaults to now on creation. |

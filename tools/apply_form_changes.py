@@ -51,6 +51,10 @@ What it changes (v1 -> v2):
      IDO's AUTONUMBER(STEP(1)), which repeated numbers (PK_ue_ecmrs error, 2026-09-29). The IDO
      Default Value can't format a date, so this has to be on the form. Grid column widened to
      fit the 17 characters.
+  11. Form help: right-click → Help said "Invalid URL string, or no help is defined for this form
+     or field" (TRN 2026-09-29) - the form had no HelpFileName. Now points to the same Infor help
+     topic as the original QC_CMRs form (qc_cmrs.htm), with the HelpFileName placed before
+     HelpContextID as in that export. Fields use the form's help, as on Infor's own forms.
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -75,6 +79,9 @@ X_LBL1, W_LBL1 = 19, 9.5      # "Reviewer ID:" / "Close Date:"
 X_CTL1, W_CTL1 = 29, 12       # ID combo / Close Date
 X_LBL2, W_LBL2 = 42, 9.5      # "Reviewer:" / "Closed By:"
 X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
+
+# Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
+HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -223,6 +230,13 @@ def build(text):
     f.place("l_next_assy_description", y=19.35, h=1.8)
     f.caption("l_next_assy_description", "Next Assy Desc:")
     f.place("l_internal_review_date", h=2.7)
+
+    # 11. Form-level help (same topic as QC_CMRs).
+    old = "         <Width>160</Width>\r\n         <HelpContextID>-1</HelpContextID>"
+    if f.text.count(old) != 1:
+        raise SystemExit("form-level Width/HelpContextID not found")
+    f.text = f.text.replace(old, "         <Width>160</Width>\r\n         <HelpFileName>"
+                            + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (

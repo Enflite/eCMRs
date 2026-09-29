@@ -12,6 +12,8 @@ from generate_ido_import import INLINE_LISTS
 
 def main():
     lines = ["# eCMRs — Deploy Checklist", "",
+             "**All done on TRN and confirmed working, 2026-09-29** (TRN exports in `reference/`). "
+             "Use this list for production.", "",
              "Generated from the schema by `scripts/generate_deploy_checklist.py` - re-run it",
              "after adding a field to either tracking dict below, don't hand-edit this file.",
              "See `docs/troubleshooting.md` for why each category exists.", "",
@@ -23,9 +25,23 @@ def main():
              "real \"Missing property data type\" error on form save. See",
              "`docs/troubleshooting.md`.", ""]
 
+    lines.append("## CMR Num key")
+    lines.append("")
+    lines.append("- [ ] `CmrNum` (cmr_num): **Data Type** `String`, **Length** 255, **Default Value** blank "
+                 "(no `AUTONUMBER`). The form sets it to `CMR-YYMMDD-HHMMSS` on **New**. See "
+                 "`docs/troubleshooting.md` (PK_ue_ecmrs).")
+    lines.append("")
+    lines.append("## Lengths and Property Class")
+    lines.append("")
+    lines.append("- [ ] Every IDO property's **Length** equals its SQL column's (`docs/length-fixes.md` "
+                 "lists any difference - run `scripts/compare_live_lengths.py` on fresh exports).")
+    lines.append("- [ ] `ReasonCode`, `CauseCode`: **Property Class** blank (the QC_MRRs classes cause the "
+                 "`'FP'` error).")
+    lines.append("")
     lines.append("## Read Only must be manually unchecked")
     lines.append("")
-    lines.append("Form Sync re-import never touches an existing property's Read Only flag.")
+    lines.append("These are filled automatically by the form, which can't write a Read Only property. "
+                 "Form Sync re-import never touches an existing property's Read Only flag.")
     lines.append("")
     for col, note in REPURPOSED_WRITABLE.items():
         pname = "".join(w.capitalize() for w in col.split("_"))

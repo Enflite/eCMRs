@@ -1,3 +1,4 @@
 # Keep form exports byte-for-byte (BOM, CRLF) so they re-import through FormSync unchanged
 *.xml -text
 *.XML -text
+*.csv -text

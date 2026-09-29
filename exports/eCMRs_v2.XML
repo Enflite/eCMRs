@@ -10,6 +10,7 @@
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
          <Width>160</Width>
+         <HelpFileName>default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm</HelpFileName>
          <HelpContextID>-1</HelpContextID>
          <PaneZeroSize>40.25</PaneZeroSize>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>

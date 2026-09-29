@@ -676,8 +676,7 @@ no class. If the error still shows after that, check the **IDO property** itself
 Properties grid, `CauseCode` and `ReasonCode` must have a blank **Property Class** (the class
 may have been set there by hand at some point) - clear it and **Check In**.
 
-**Confirm on TRN**: both dropdowns list their codes, no error, value saves and reloads.
-**Status: assumed until checked on TRN.**
+**Confirmed on TRN 2026-09-29**: both dropdowns list their codes, no error (e.g. DAMAGED / EXC).
 
 ## Serial # / LOT # dropdowns are empty
 
@@ -715,7 +714,7 @@ Also seen as *"String or binary data would be truncated in table ...ue_ecmrs, co
 bound field now has `Caption = C(<its label>)` (how Infor's forms link a field to its label),
 so messages name the real field.
 
-**Confirm on TRN**: pick a PO, then a PO Line - the box shows the line number; save works.
+**Confirmed on TRN 2026-09-29**: PO Line shows the line number (e.g. `1`); save works.
 Rule for every dropdown: the value you want stored must be the first column in `DISPLAY()`.
 
 ## IDO property lengths must match the SQL column lengths
@@ -759,7 +758,7 @@ byte-for-byte" from the original was wrong: the original never used `ThisForm.Us
 `ClosedBy` / `CloseDate` must not be Read Only at the IDO level (both are clear in the
 2026-09-29 export).
 
-**Confirm on TRN**: tick **Closed** - no error, Close Date = today, Closed By = your user. Untick -
+**Confirmed on TRN 2026-09-29**: ticking **Closed** works. Test: Close Date = today, Closed By = your user; untick -
 both clear. Save and reopen.
 
 ## `Error Message does not exist. Object:PK_ue_ecmrs, Type:17` on save
@@ -779,15 +778,29 @@ producing the same next number - which already exists 20 wide.
 same pattern the Incidents form uses). The IDO **Default Value** can't do this itself: it only
 takes keywords like `AUTONUMBER(...)` or `CURDATE() CURTIME()`, and can't add `CMR-` or pick the
 format. In IDO Properties, `CmrNum`: **Default Value** cleared, **Data Type** `String` (not
-`NumSortedString` - no padding), **Length** 20. Leave the SQL column's 999 alone. Two CMRs
+`NumSortedString` - no padding), **Length** 255 (as set on TRN; the value is 17 characters). Leave the SQL column's 999 alone. Two CMRs
 created in the same second would still clash - retry the save.
 
 **Clean-up**: any CMR saved while the length was 20 is stored 20 wide. In the list sorted by CMR
 Num those show out of order (at the bottom), and one may repeat a number used by a 10-wide
 record. On TRN they're test records: delete them from the form.
 
-**Confirm on TRN**: **New** - CMR Num shows `CMR-YYMMDD-HHMMSS` right away; save; **New** again, save.
+**Confirmed on TRN 2026-09-29**: **New** shows `CMR-YYMMDD-HHMMSS`, and saves work.
 Old test records keep their padded numbers (they sort at the end) - delete them.
+
+## Right-click → Help: `Invalid URL string, or no help is defined for this form or field`
+
+**Symptom**: right-clicking a field and choosing **Help** shows this message (TRN, 2026-09-29).
+
+**Cause**: the form had no help link. Infor's forms set `<HelpFileName>` on the form (e.g.
+QC_CMRs: `default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm`); most
+fields have none of their own and use the form's.
+
+**Fix (form v2)**: the form's `HelpFileName` points to the same Infor topic as QC_CMRs, the
+closest match for eCMRs. To show an Enflite page instead (e.g. a CMR user guide), put its full URL
+in `HELP_URL` in `tools/apply_form_changes.py`, rebuild and re-import.
+
+**Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
 
 ## General debugging order for "it's not working" reports
 
