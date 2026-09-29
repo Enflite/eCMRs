@@ -736,6 +736,28 @@ both grids again (**SQL Columns** and **IDO Properties** → Excel), save them a
 `docs/reference/ToExcel_SqlColumns_<date>.csv` / `ToExcel_IdoProperties_<date>.csv`, re-run the
 script, and the IDO list should be empty.
 
+## `Error compiling script EvHandler_SetCloseInfo_0` when ticking **Closed**
+
+**Symptom**: ticking the **Closed** checkbox shows *"Error compiling script
+EvHandler_SetCloseInfo_0"* (TRN, 2026-09-29).
+
+**Cause**: our script set Closed By with `ThisForm.UserName`, which doesn't exist in the
+scripting API, so the script never compiled. The earlier claim that this script was "unchanged,
+byte-for-byte" from the original was wrong: the original never used `ThisForm.UserName`.
+
+**Fix (form v2)**: copied the original QC_CMRs form's working pattern exactly:
+- `SetCloseInfo` (checkbox event) clears or sets **Close Date** as before, but for Closed By it
+  calls `ThisForm.GenerateEvent("SetClosedBy")`; `Namespace SyteLine.GlobalScripts` as in the
+  original.
+- New handler `SetClosedBy`, ResponseType 22: `SETPROPVALUES(ClosedBy=USERNAME())` - sets the
+  property to the logged-in user. Our property is also named `ClosedBy`.
+
+`ClosedBy` / `CloseDate` must not be Read Only at the IDO level (both are clear in the
+2026-09-29 export).
+
+**Confirm on TRN**: tick **Closed** - no error, Close Date = today, Closed By = your user. Untick -
+both clear. Save and reopen.
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,

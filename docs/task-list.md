@@ -207,7 +207,10 @@ hanging off the bottom). See `docs/field-review.md`.
 - [ ] **CmReviewerEmpNum**, **CmReviewerName** — Same confirmed-broken pairing as above, same
   fix.
 - [x] **CmComplete** — Plain checkbox, confirmed live (unchecked, nothing flagged).
-- [ ] **CloseDate**, **ClosedBy**, **Closed** — The `SetCloseInfo` mechanism (checkbox toggle →
+- [ ] **CloseDate**, **ClosedBy**, **Closed** — **2026-09-29: ticking Closed gave "Error compiling
+  script EvHandler_SetCloseInfo_0"** (`ThisForm.UserName` doesn't exist). Fixed in v2 with the
+  original's `GenerateEvent("SetClosedBy")` + `SETPROPVALUES(ClosedBy=USERNAME())`; check on TRN.
+  Earlier note: The `SetCloseInfo` mechanism (checkbox toggle →
   auto-sets/clears these two) was restored and moved into this section, matching the original's
   own confirmed-working `EventToGenerate="SetCloseInfo"` on its `Closed` checkbox exactly.
   Latest screenshot shows all three in the expected pre-check state (Close Date/Closed By

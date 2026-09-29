@@ -3168,7 +3168,7 @@ Imports Microsoft.VisualBasic
 Imports Mongoose.IDO.Protocol
 Imports Mongoose.Scripting
 
-Namespace Mongoose.GlobalScripts
+Namespace SyteLine.GlobalScripts
 Public Class EvHandler_SetCloseInfo_0
 Inherits GlobalScript
 
@@ -3177,8 +3177,8 @@ Inherits GlobalScript
                 ThisForm.Components("c_closed_by").Text = ""
                 ThisForm.Components("c_close_date").Text = ""
             Else
-                ThisForm.Compone</Response>
-               <Response2>nts("c_closed_by").Text = ThisForm.UserName
+               </Response>
+               <Response2> ThisForm.GenerateEvent("SetClosedBy")
                 ThisForm.Components("c_close_date").Text = CStr(Today)
             End If
             ReturnValue = "0"
@@ -3186,6 +3186,10 @@ Inherits GlobalScript
 End Class
 End Namespace
 )</Response2>
+            </EventHandler>
+            <EventHandler Name="SetClosedBy" Sequence="0">
+               <ResponseType>22</ResponseType>
+               <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
