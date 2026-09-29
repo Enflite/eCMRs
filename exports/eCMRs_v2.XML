@@ -10,7 +10,7 @@
          <LeftPos>0</LeftPos>
          <TopPos>0</TopPos>
          <Width>160</Width>
-         <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/index.html</HelpFileName>
+         <HelpFileName>default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm</HelpFileName>
          <HelpContextID>-1</HelpContextID>
          <PaneZeroSize>40.25</PaneZeroSize>
          <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
@@ -34,10 +34,31 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/notify.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )</Post301Format>
                <EffectiveCaption>Notify</EffectiveCaption>
+            </Component>
+            <Component Name="btn_help">
+               <DeviceID>-1</DeviceID>
+               <Type>8</Type>
+               <TabOrder>70</TabOrder>
+               <TopPos>2.9</TopPos>
+               <LeftPos>100</LeftPos>
+               <Height>1.4</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12</Width>
+               <Caption>Help</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <Binding>0</Binding>
+               <EventToGenerate>OpenEcmrsHelp</EventToGenerate>
+               <Flags>1</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )</Post301Format>
+               <EffectiveCaption>Help</EffectiveCaption>
             </Component>
             <Component Name="c_assigned_buyer">
                <DeviceID>-1</DeviceID>
@@ -58,8 +79,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/assigned_buyer.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -84,8 +104,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/assigned.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -106,8 +125,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/assigned.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sUserName</EffectiveCaption>
             </Component>
@@ -129,8 +147,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/auth_supplier_ship.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>Authorization For Supplier To Ship</EffectiveCaption>
             </Component>
@@ -152,8 +169,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/cause_code.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_close_date">
@@ -174,8 +190,7 @@
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/close_date.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sDate</EffectiveCaption>
             </Component>
@@ -198,8 +213,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/closed.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>Closed</EffectiveCaption>
             </Component>
@@ -221,8 +235,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/internal_review_date.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_closed_by">
@@ -243,8 +256,7 @@
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/closed_by.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sRSQCClosedBy</EffectiveCaption>
             </Component>
@@ -266,8 +278,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/cm.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>CM</EffectiveCaption>
             </Component>
@@ -292,8 +303,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/cm.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -314,8 +324,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/cm.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_cmr_num">
@@ -336,8 +345,7 @@
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/cmr_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_create_date">
@@ -358,8 +366,7 @@
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/create_date.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_created_by">
@@ -380,8 +387,7 @@
                <Flags>1</Flags>
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/created_by.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_dept">
@@ -404,8 +410,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/dept.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sDepartment</EffectiveCaption>
             </Component>
@@ -427,8 +432,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/dept_description.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sDescription</EffectiveCaption>
             </Component>
@@ -450,8 +454,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/due_date.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>sDate</EffectiveCaption>
             </Component>
@@ -473,8 +476,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/eng_disposition.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_eng_rca_notes">
@@ -495,8 +497,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/eng_rca_notes.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
@@ -521,8 +522,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/eng_reviewer.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -543,8 +543,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/eng_reviewer.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sUserName</EffectiveCaption>
             </Component>
@@ -566,8 +565,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/eo_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_general_note">
@@ -588,8 +586,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/general_note.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
@@ -611,8 +608,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/hold_on_po.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>Hold On PO</EffectiveCaption>
             </Component>
@@ -635,8 +631,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/initial_change.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_item">
@@ -660,8 +655,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/item.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
@@ -684,8 +678,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/job_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_latest_revision">
@@ -706,8 +699,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/latest_revision.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sRevision</EffectiveCaption>
             </Component>
@@ -730,8 +722,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/lot_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_mdl">
@@ -752,8 +743,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/mdl.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_next_assy_item">
@@ -777,8 +767,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/next_assy_item.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
@@ -800,8 +789,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/next_assy_description.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_planning_complete">
@@ -822,8 +810,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/planning.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>Planning</EffectiveCaption>
             </Component>
@@ -848,8 +835,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/planning.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -870,8 +856,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/planning.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_po_line">
@@ -893,8 +878,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/po_line.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_po_num">
@@ -916,8 +900,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/po_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_poc">
@@ -938,8 +921,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/poc.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_priority">
@@ -960,8 +942,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/priority.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sPriority</EffectiveCaption>
             </Component>
@@ -983,8 +964,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/purchasing.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>Purchasing</EffectiveCaption>
             </Component>
@@ -1009,8 +989,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/purchasing.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -1031,8 +1010,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/purchasing.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_qc_disposition">
@@ -1053,8 +1031,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/qc_disposition.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_qc_rca_notes">
@@ -1075,8 +1052,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/qc_rca_notes.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
@@ -1101,8 +1077,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/qc_reviewer.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sEmployee</EffectiveCaption>
             </Component>
@@ -1123,8 +1098,7 @@
                <Binding>1</Binding>               <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/qc_reviewer.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sUserName</EffectiveCaption>
             </Component>
@@ -1146,8 +1120,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/qty.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_reason_code_v2">
@@ -1168,8 +1141,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/reason_code.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_reported_by">
@@ -1190,8 +1162,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/reported_by.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_req_costing">
@@ -1212,8 +1183,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requirements.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Req: Costing</EffectiveCaption>
             </Component>
@@ -1235,8 +1205,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requirements.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Req: Documentation</EffectiveCaption>
             </Component>
@@ -1258,8 +1227,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requirements.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Req: Material</EffectiveCaption>
             </Component>
@@ -1281,8 +1249,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requirements.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Req: Process</EffectiveCaption>
             </Component>
@@ -1304,8 +1271,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requirements.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>Req: Tool/Machine</EffectiveCaption>
             </Component>
@@ -1327,8 +1293,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/requested_action.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
@@ -1350,8 +1315,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/revision.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sRevision</EffectiveCaption>
             </Component>
@@ -1373,8 +1337,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/rfq_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_serial_num_v2">
@@ -1396,8 +1359,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/serial_num.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_sox_impacted">
@@ -1418,8 +1380,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/sox_impacted.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>SOX Impacted</EffectiveCaption>
             </Component>
@@ -1441,8 +1402,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/status.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sStatus</EffectiveCaption>
             </Component>
@@ -1464,8 +1424,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/sub_assembly.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_top_level_pn">
@@ -1486,8 +1445,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/top_level_pn.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
             <Component Name="c_vendor">
@@ -1511,8 +1469,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/vendor.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_vendor_name">
@@ -1533,8 +1490,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/vendor_name.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
             </Component>
             <Component Name="c_wc">
@@ -1557,8 +1513,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/wc.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sWC</EffectiveCaption>
             </Component>
@@ -1580,8 +1535,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/wc_description.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
                <EffectiveCaption>sDescription</EffectiveCaption>
             </Component>
@@ -1603,8 +1557,7 @@
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
-               <HelpFileName>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/fields/item_description.html</HelpFileName>
-               <HelpContextID>-1</HelpContextID>
+               <HelpContextID>0</HelpContextID>
                <Post301Format />
                <EffectiveCaption>sDescription</EffectiveCaption>
             </Component>
@@ -3260,6 +3213,10 @@ End Namespace
             <EventHandler Name="SetClosedBy" Sequence="0">
                <ResponseType>22</ResponseType>
                <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
+            </EventHandler>
+            <EventHandler Name="OpenEcmrsHelp" Sequence="0">
+               <ResponseType>39</ResponseType>
+               <Response>URL(file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html) ( )</Response>
             </EventHandler>
             <EventHandler Name="StdObjectNewCompleted" Sequence="0">
                <ResponseType>33</ResponseType>

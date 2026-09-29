@@ -1,7 +1,7 @@
 """Help text for the eCMRs form: one entry per field, in form order, by section.
 
-Single source for the help pages (scripts/build_help.py writes docs/help/) and for the form's
-per-field help links (tools/apply_form_changes.py, when HELP_BASE is set). Describe what the
+Single source for the help pages (scripts/build_help.py writes docs/help/). The pages are a
+reference for users, opened by the form's Help button; right-click Help stays on Infor's topic. Describe what the
 form actually does on TRN - see docs/task-list.md and docs/troubleshooting.md - not plans.
 
 Each field: key (help page name), label (as on the form), components (form component names that
@@ -55,6 +55,9 @@ FIELDS = [
          filled=EMP_FILL),
     dict(key="notify", section="header", label="Notify", components=["btn_notify"],
          text=["Shows a message only. No notification is sent from this button yet."]),
+    dict(key="help", section="header", label="Help", components=["btn_help"],
+         text=["Opens this eCMRs help: the form overview and a page for every field. Right-click a "
+               "field and choose Help for Infor's QC CMRs help topic."]),
     dict(key="cmr_num", section="header", label="CMR Num", components=["c_cmr_num"],
          text=["The CMR's unique number, in the form CMR-YYMMDD-HHMMSS: the date and time "
                "New was clicked (for example CMR-260929-111742). It can't be changed."],
