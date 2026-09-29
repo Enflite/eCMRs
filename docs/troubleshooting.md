@@ -788,6 +788,20 @@ record. On TRN they're test records: delete them from the form.
 **Confirmed on TRN 2026-09-29**: **New** shows `CMR-YYMMDD-HHMMSS`, and saves work.
 Old test records keep their padded numbers (they sort at the end) - delete them.
 
+## Right-click → Help: `Invalid URL string, or no help is defined for this form or field`
+
+**Symptom**: right-clicking a field and choosing **Help** shows this message (TRN, 2026-09-29).
+
+**Cause**: the form had no help link. Infor's forms set `<HelpFileName>` on the form (e.g.
+QC_CMRs: `default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm`); most
+fields have none of their own and use the form's.
+
+**Fix (form v2)**: the form's `HelpFileName` points to the same Infor topic as QC_CMRs, the
+closest match for eCMRs. To show an Enflite page instead (e.g. a CMR user guide), put its full URL
+in `HELP_URL` in `tools/apply_form_changes.py`, rebuild and re-import.
+
+**Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
+
 ## General debugging order for "it's not working" reports
 
 1. **Check our own generated files first** (`generate_form.py`'s output,

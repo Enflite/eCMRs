@@ -83,6 +83,8 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
+- [ ] Help: right-click → Help opens Infor's QC CMRs page (fixed 2026-09-29; check on TRN). Optional:
+  an Enflite eCMRs user guide page instead (`HELP_URL` in `tools/apply_form_changes.py`).
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production

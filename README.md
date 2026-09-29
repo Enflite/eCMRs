@@ -44,6 +44,9 @@ legacy forms are the requirements reference.
   (seven phases, production runbook), deck in [`plan/`](plan/), production import files built from
   the TRN exports ([`exports/production/`](exports/production/)) with a `--verify` check.
 
+- **2026-09-29:** Right-click → Help works: the form points to the Infor CMR help topic (was "Invalid
+  URL string, or no help is defined").
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout
