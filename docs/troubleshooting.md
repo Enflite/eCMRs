@@ -807,11 +807,20 @@ rebuild and re-import: the form's help and every field's right-click → Help th
 page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
 full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
 
-**Published with GitHub Pages (2026-09-29)**: `.github/workflows/help-pages.yml` publishes only
-`docs/help/` to `https://enflite.github.io/eCMRs/` on every push to `main` that touches the help.
-`HELP_BASE` is set to that address. Order: merge to `main` → repo **Settings → Pages → Source:
-GitHub Actions** (once) → the workflow runs (Actions tab) → open the address in a browser → then
-import the form. The Pages site is public (only the help pages); the repo stays private.
+**Hosted on the shared drive (2026-09-29)**: copy the contents of `docs/help/` to
+`S:\Engineering\Individual Folders\JSmith\eCMRs` (`index.html` directly inside it). `HELP_BASE` is
+`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/` (spaces as `%20`), so the form opens
+`index.html` and each field `fields/<key>.html` there. After editing the help text, rebuild
+(`scripts/build_help.py`) and copy the folder again - the form doesn't change.
+
+**Check on TRN before relying on it**:
+- Browsers (Edge, Chrome) usually refuse to open a `file:` link from a web page. If right-click →
+  Help does nothing or shows an error in SyteLine's **web** client, that's why; it may still work
+  from the desktop client. Fixes then: host the same folder on an internal web server or SharePoint
+  (and change `HELP_BASE`), or ask IT to allow `file:` links from the SyteLine site.
+- `S:` has to be mapped to the same share for every user. A `\\server\share\...` path
+  (`file://server/share/...`) avoids that - send the server name if you want it.
+- Everyone who opens Help needs read access to the folder (it's in an individual folder today).
 
 **Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
 

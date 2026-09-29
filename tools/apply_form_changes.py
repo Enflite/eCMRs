@@ -82,11 +82,11 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 
 # Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
-# Our own help (docs/help/, built by scripts/build_help.py). Set HELP_BASE to the web address the
-# docs/help folder is published at, ending in "/" (e.g. "https://<host>/ecmrs-help/"), and rebuild:
-# the form then opens index.html and each field opens fields/<key>.html (scripts/help_content.py).
-# Empty = keep the Infor QC_CMRs topic above.
-HELP_BASE = "https://enflite.github.io/eCMRs/"
+# Our own help (docs/help/, built by scripts/build_help.py). HELP_BASE = where the CONTENTS of
+# docs/help/ are copied (index.html directly inside it), as a URL ending in "/". Now the shared
+# drive S:\Engineering\Individual Folders\JSmith\eCMRs (spaces as %20). The form opens index.html
+# and each field opens fields/<key>.html (scripts/help_content.py). Empty = the Infor QC_CMRs topic.
+HELP_BASE = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2

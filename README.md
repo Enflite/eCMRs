@@ -48,9 +48,8 @@ legacy forms are the requirements reference.
   URL string, or no help is defined").
 
 - **2026-09-29:** eCMRs help pages (`docs/help/`): a form topic and a definition page for every
-  field, laid out like the SyteLine help, published by GitHub Pages to
-  `https://enflite.github.io/eCMRs/` (`.github/workflows/help-pages.yml`, only `docs/help/`). The
-  form's right-click → Help opens each field's page.
+  field, laid out like the SyteLine help and styled like the Enflite deck. Copied to the shared drive
+  (`S:\Engineering\Individual Folders\JSmith\eCMRs`); the form's right-click → Help opens each field's page there.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
@@ -69,7 +68,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`scripts/compare_live_lengths.py`](scripts/compare_live_lengths.py) | Checks live SQL / IDO exports against the schema; writes `docs/length-fixes.md` |
 | [`scripts/generate_schema_csv.py`](scripts/generate_schema_csv.py) | Schema master list (`FIELDS`); with `generate_ido_import.py`, `generate_sql_columns_import.py`, `generate_deploy_checklist.py`, `validate_schema_consistency.py`. `generate_form.py` is retired (built v1) |
 | `exports/ecmrs_*.csv` | Schema-generator output (design reference). For production use `exports/production/` |
-| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic + one page per field. Built from [`scripts/help_content.py`](scripts/help_content.py) by `scripts/build_help.py`. Publish the folder anywhere users can reach, then set `HELP_BASE` in `tools/apply_form_changes.py` so right-click → Help opens them |
+| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic + one page per field. Built from [`scripts/help_content.py`](scripts/help_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; the form's right-click → Help opens them there (`HELP_BASE` in `tools/apply_form_changes.py`) |
 | [`docs/production-build-sheet.md`](docs/production-build-sheet.md) | Generated: every column and property to build, readable |
 | [`docs/deploy-checklist.md`](docs/deploy-checklist.md) | Generated: the manual IDO settings (CmrNum, Inline Lists, Read Only, Property Class) |
 | [`docs/length-fixes.md`](docs/length-fixes.md) | Generated: IDO vs SQL length differences (currently only the optional `Status`) |
@@ -78,7 +77,6 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Every problem solved: symptom, cause, fix, confirmation |
 | [`docs/reference/`](docs/reference/) | Live Excel exports (SQL Columns, IDO Properties) from TRN, dated |
 | [`docs/field-mapping.md`](docs/field-mapping.md), [`docs/build-guide.md`](docs/build-guide.md) | Design-time documents, kept for the reasoning |
-| [`.github/workflows/help-pages.yml`](.github/workflows/help-pages.yml) | Publishes only `docs/help/` to GitHub Pages (`https://enflite.github.io/eCMRs/`) |
 | `AGENTS.md` / `CLAUDE.md` | The Enflite SOP (master in Enflite/Form-Project-Templates) |
 
 ## Before every commit

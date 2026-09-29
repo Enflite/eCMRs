@@ -83,9 +83,10 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
-- [ ] Help: every field's right-click → Help opens its own page at `https://enflite.github.io/eCMRs/`
-  (built from `docs/help/`). To do: merge to `main`, enable GitHub Pages (Settings → Pages → Source:
-  GitHub Actions), check the site opens, re-import the form, test Help on one field.
+- [ ] Help: every field's right-click → Help opens its own page from `S:\Engineering\Individual Folders\JSmith\eCMRs` (a copy of
+  `docs/help/`). To do: copy the folder there, re-import the form, test Help on one field. S: must be
+  mapped for every user; a web browser may refuse `file:` links from SyteLine's web client - see
+  troubleshooting.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production
