@@ -29,11 +29,7 @@ TEXT_TYPES = {"nvarchar", "char", "varchar", "nchar"}
 # Deliberately left as they are - explained in the generated file.
 KEEP = {
     "cmr_num": "SQL is nvarchar(999), left over from the earlier type-change attempt - leave the SQL "
-               "column. The IDO length is NOT matched to SQL: CmrNum is a NumSortedString key, "
-               "stored padded with leading spaces to the IDO length, so it must stay at 10 - the "
-               "length every existing record was created with. Changing it (it was 20 on "
-               "2026-09-29) makes AUTONUMBER repeat a number: save fails with \"Error Message does "
-               "not exist. Object:PK_ue_ecmrs, Type:17\".",
+               "column; the key's IDO length is 20 (holds CMR-YYMMDD-HHMMSS, 17 characters).",
 }
 SYSTEM_IDO = {"CreatedBy": "128"}  # system property whose IDO length differs from SQL
 

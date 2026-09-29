@@ -33,7 +33,7 @@ AUTO_GENERATED_COLUMNS = {"created_by", "create_date"}
 # 2026-09-29 after cause_code turned out to be char(1). See docs/length-fixes.md.
 # bind_to, property_name, data_type, length, decimal, column_data_type, label_string_id, required, readonly, description
 FIELDS = [
-    ("cmr_num", "CmrNum", "NumSortedString", "10", "", "", "", "", "", "CMR number, key, auto-generated via AUTONUMBER on the table. Kept as nvarchar/NumSortedString (not a true int) - both QCSeq and QCInteger came back invalid Data Types in this environment's picker, and changing the SQL column's own type hit a DF_ue_ecmrs_cmr_num default-constraint dependency error. Stored as digits in a string column, AUTONUMBER(STEP(1)) still gives sequential, unique values starting at 1 - the actual requirement - without fighting either problem."),
+    ("cmr_num", "CmrNum", "String", "20", "", "", "", "", "", "CMR number, key. Set by the form on New: CMR-YYMMDD-HHMMSS (e.g. CMR-260929-111742, 17 characters) - StdObjectNewCompleted script, see tools/apply_form_changes.py. Plain String, no IDO default: replaced AUTONUMBER(STEP(1)) on a NumSortedString, which repeated numbers after the IDO length changed (PK_ue_ecmrs error, 2026-09-29). SQL column stays nvarchar(999)."),
     ("status", "Status", "String", "255", "", "char", "sStatus", "", "", "Overall CMR status. Confirmed 7-value list: CM, Complete, Data Input, Eng Review, Planning, Purchasing, QC Approval - needs its own Property Class + Inline List set up directly in Application Studio (QCPriorityType-style reuse of a real system class was tried for Priority below and came back blank live, so don't repeat that for Status)."),
     ("workflow_status", "WorkflowStatus", "String", "255", "", "char", "", "", "", "Workflow status. Fixed value list not yet confirmed."),
     ("priority", "Priority", "String", "12", "", "", "sPriority", "", "", "Confirmed list: High, Medium, Low. Reusing the system's own QCPriorityType as Property Class came back blank in the live IDO Properties export - needs its own custom Property Class + Inline List instead, same as Status/InitialChange."),
@@ -193,7 +193,7 @@ def main():
                            ("String" if dtype == "NumSortedString" else dtype)))
             pk = "Y" if col == "cmr_num" else "N"
             nullable = "No" if col == "cmr_num" else "Yes"
-            default = "AUTONUMBER(STEP(1))" if col == "cmr_num" else ""
+            default = ""  # cmr_num is set by the form (CMR-YYMMDD-HHMMSS), no AUTONUMBER
             w.writerow([col, table_type, length, decimal, nullable, pk, default, desc])
 
     with open("exports/ecmrs_ido_properties.csv", "w", newline="") as fh:
