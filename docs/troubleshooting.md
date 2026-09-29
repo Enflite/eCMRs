@@ -640,13 +640,13 @@ property and writes nothing else. Used on the live Incidents form in this tenant
 
 The list column (`Description`) must be in the dropdown's `PROPERTIES()`.
 
+**Confirmed on TRN 2026-09-29**: Dept `100` → **Operations**, Work Center `BRAZE` → **Brazing**.
+
 The target properties (`DeptDescription`, `WcDescription`) must have their IDO **Read Only**
 flag cleared (Rule #1B, `docs/deploy-checklist.md`), and their form components stay bare Edit
 boxes (no list source, see the ItemDescription section above).
 
-**Confirm on TRN**: pick a Dept, the description fills; pick a Work Center, WC Description
-fills; save, reopen, both still there. **Status: assumed until checked on TRN.** Environments:
-TRN, then production.
+Environments: TRN (confirmed), then production.
 
 ## `'FP' is not a recognized built-in function name.::4` on Cause Code (and an empty Reason list)
 
@@ -687,6 +687,10 @@ may have been set there by hand at some point) - clear it and **Check In**.
 (`FILTER(Item='P(Item)')` on `SLSerials` / `SLLots`). An item that isn't serial- or
 lot-tracked, or has no serials/lots yet, gives an empty list. That is expected, and you can
 still type a value.
+
+**Seen on TRN 2026-09-29**: Item `92185-001-02` - LOT # lists `20092024-000002`, Serial #
+opens with an empty list and no error. An empty list with no error means the query ran and found
+no serials for that item (a lot-tracked item), not a broken dropdown.
 
 **Check**: pick an Item you know has serials (or lots) - e.g. one from a recent receipt - and open
 the dropdown. To see what exists for an item, open a throw-away Dataview on `SLSerials` (or

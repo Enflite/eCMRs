@@ -92,11 +92,11 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Change Request Fields
 
-- [ ] **Dept** (`dept`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(DeptDescription, Description)` on
+- [x] **Dept** (`dept`) — **Confirmed on TRN 2026-09-29** (100 → Operations). Fixed in v2: validator `SetPropertyFromList(DeptDescription, Description)` on
   the combo (the `Dept(...)` validator failed on TRN: DivName not in cache). See
   `docs/troubleshooting.md` "Description auto-fill for Dept and Work Center".
-- [ ] **Wc** (`wc`) — **Fixed in v2, check on TRN**: validator `SetPropertyFromList(WcDescription, Description)`.
-- [ ] **DeptDescription**, **WcDescription** — Filled by the validators above in v2. Clear both
+- [x] **Wc** (`wc`) — **Confirmed on TRN 2026-09-29** (BRAZE → Brazing). Fixed in v2: validator `SetPropertyFromList(WcDescription, Description)`.
+- [x] **DeptDescription**, **WcDescription** — Filling on TRN (2026-09-29). Filled by the validators above in v2. Clear both
   properties' IDO **Read Only** flag before importing v2 (`docs/deploy-checklist.md`). Reported
   2026-09-28: not filling in v1.
 - [x] **Item** (`item`) — `DefaultFrom="Item(ItemDescription)"` confirmed live working (commit
@@ -143,7 +143,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 
 ## Additional Fields
 
-- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — Render as dropdowns on TRN now
+- [ ] **SerialNum**, **LotNum** (`serial_num`, `lot_num`) — **2026-09-29**: LOT # confirmed working
+  (item 92185-001-02 → lot 20092024-000002). Serial # opens empty, no error, on that lot-tracked
+  item - needs a test with a serial-tracked item. Render as dropdowns on TRN now
   (2026-09-28 screenshot). Lists were empty for item `00000-42560`; they only show serials/lots
   of the selected Item, so re-test with a serial/lot-tracked item before changing anything. See
   `docs/troubleshooting.md` "Serial # / LOT # dropdowns are empty".
