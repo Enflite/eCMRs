@@ -82,6 +82,11 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 
 # Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
+# Our own help (docs/help/, built by scripts/build_help.py). HELP_BASE = where the CONTENTS of
+# docs/help/ are copied (index.html directly inside it), as a URL ending in "/". Now the shared
+# drive S:\Engineering\Individual Folders\JSmith\eCMRs (spaces as %20). The form opens index.html
+# and each field opens fields/<key>.html (scripts/help_content.py). Empty = the Infor QC_CMRs topic.
+HELP_BASE = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -235,8 +240,19 @@ def build(text):
     old = "         <Width>160</Width>\r\n         <HelpContextID>-1</HelpContextID>"
     if f.text.count(old) != 1:
         raise SystemExit("form-level Width/HelpContextID not found")
+    form_help = HELP_BASE + "index.html" if HELP_BASE else HELP_URL
     f.text = f.text.replace(old, "         <Width>160</Width>\r\n         <HelpFileName>"
-                            + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
+                            + form_help + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
+    if HELP_BASE:
+        # Per-field help, the way Infor's fields carry it: HelpFileName + HelpContextID -1.
+        sys.path.insert(0, os.path.join(ROOT, "scripts"))
+        from help_content import FIELDS as HELP_FIELDS
+        for hf in HELP_FIELDS:
+            for comp in hf["components"]:
+                f.set(comp, "HelpContextID", "-1")
+                f._edit(comp, lambda b, url=HELP_BASE + "fields/" + hf["key"] + ".html": b.replace(
+                    "<HelpContextID>-1</HelpContextID>",
+                    "<HelpFileName>" + url + "</HelpFileName>\r\n" + IND + "<HelpContextID>-1</HelpContextID>", 1))
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (

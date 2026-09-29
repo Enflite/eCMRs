@@ -800,6 +800,28 @@ fields have none of their own and use the form's.
 closest match for eCMRs. To show an Enflite page instead (e.g. a CMR user guide), put its full URL
 in `HELP_URL` in `tools/apply_form_changes.py`, rebuild and re-import.
 
+**Own help pages (2026-09-29)**: `docs/help/` holds eCMRs help like the SyteLine library - a form
+topic and one page per field - generated from `scripts/help_content.py`. Publish the folder where
+all SyteLine users can open it, set `HELP_BASE` (ending in `/`) in `tools/apply_form_changes.py`,
+rebuild and re-import: the form's help and every field's right-click → Help then open their own
+page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
+full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
+
+**Hosted on the shared drive (2026-09-29)**: copy the contents of `docs/help/` to
+`S:\Engineering\Individual Folders\JSmith\eCMRs` (`index.html` directly inside it). `HELP_BASE` is
+`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/` (spaces as `%20`), so the form opens
+`index.html` and each field `fields/<key>.html` there. After editing the help text, rebuild
+(`scripts/build_help.py`) and copy the folder again - the form doesn't change.
+
+**Check on TRN before relying on it**:
+- Browsers (Edge, Chrome) usually refuse to open a `file:` link from a web page. If right-click →
+  Help does nothing or shows an error in SyteLine's **web** client, that's why; it may still work
+  from the desktop client. Fixes then: host the same folder on an internal web server or SharePoint
+  (and change `HELP_BASE`), or ask IT to allow `file:` links from the SyteLine site.
+- `S:` has to be mapped to the same share for every user. A `\\server\share\...` path
+  (`file://server/share/...`) avoids that - send the server name if you want it.
+- Everyone who opens Help needs read access to the folder (it's in an individual folder today).
+
 **Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
 
 ## General debugging order for "it's not working" reports
