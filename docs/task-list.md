@@ -83,6 +83,10 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Rollout: does eCMRs replace the `cmr-project` consolidated form and the legacy screens
   (Create Change Request, Change Request Management, QC_CMRs)? Historical data migration from
   `rs_cmr`/`rs_crcvr`: when.
+- [ ] Procedures: the team reviews the drafts in the help (**Procedures**: QA-300-037 Rev B, QA-300-003 Rev F).
+  Open before release: can documents be attached in **IDM** to an eCMRs record (steps 5.5.5, 5.5.7,
+  5.5.8; SDR 5.6)? Does **Notify** need to send the email (step 5.5.9.4)? Then route the new revisions
+  for approval and replace the drafts with the released text.
 - [ ] Help: the **Help** button (next to Notify) opens the eCMRs help pages from
   `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`; right-click → Help opens Infor's QC CMRs topic. To do: copy the repo
   (at least `docs\help`) there, re-import the form, click Help. If the browser blocks the `file:`
