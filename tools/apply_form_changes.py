@@ -26,6 +26,13 @@ What it changes (v1 -> v2):
      Closed / Close Date / Closed By as the last row of the same grid.
   5. Internal Review Date moved back to Engineering (where the original QC_CMRs form has it,
      next to Disposition) instead of hanging off the bottom of Implementation.
+  6. PO Line list back to DISPLAY(1,2,3). DISPLAY(2,1,3) (show Item first) made the combo
+     write the Item into PoLine - confirmed on TRN 2026-09-29: PO Line showed 92185-001-17 and
+     save failed with "Data length for Notify (12) is greater than effective length (10)".
+     The combo writes the first DISPLAYed column, not the first PROPERTIES() entry.
+  7. Every bound field gets Caption C(<its label>), the same way Infor's own forms link a field
+     to its label, so error messages name the right field (the one above said "Notify"
+     because the fields had no caption of their own).
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -172,6 +179,24 @@ def build(text):
     f.place("l_internal_review_date", y=IRD_Y - 0.1, x=2, w=8.75, h=1.8)
     f.place("c_internal_review_date", y=IRD_Y, x=11.25, w=17.25, tab=54)
     f.place("c_eng_rca_notes", tab=55)
+
+    # 6. PO Line writes PoLine again.
+    f._edit("c_po_line", lambda b: b.replace(
+        "PROPERTIES(PoLine,Item,PoNum) DISPLAY(2,1,3)", "PROPERTIES(PoLine,Item,PoNum) DISPLAY(1,2,3)"))
+
+    # 7. Caption C(label) on every bound, caption-less field that has an l_<column> label.
+    for m in list(re.finditer(r'<Component Name="(c_[a-z_]+?)(_v2)?">(.*?)</Component>', f.text, re.S)):
+        name, col, block = m.group(1) + (m.group(2) or ""), m.group(1)[2:], m.group(3)
+        label = f"l_{col}"
+        if "<Caption>" in block or "<DataSource>object." not in block:
+            continue
+        if f'<Component Name="{label}">' not in f.text:
+            continue
+        f.insert_after(name, "Width", "Caption", f"C({label})")
+    # The two that don't follow the l_<column> naming: Assigned ID shares the "Assigned:"
+    # label with Assigned (username); Item Desc was hand-added in Application Studio.
+    f.insert_after("c_assigned_empnum_v2", "Width", "Caption", "C(l_assigned_username)")
+    f.insert_after("edit1_SITE", "Width", "Caption", "C(l_item1_SITE)")
 
     return f.text
 

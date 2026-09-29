@@ -289,6 +289,10 @@ without any auto-populate script: rebind the combo's own `DataSource` to
 the `Username`-holding property, and reorder the `ComboListSource`'s
 `PROPERTIES()` list so `Username` is listed **first**.
 
+> **Correction 2026-09-29:** it's the first column in `DISPLAY(...)`, not in
+> `PROPERTIES(...)`. With `DISPLAY(1,2,3)` the two are the same, which is why this looked
+> positional on `PROPERTIES`. See "Data length for Notify" below.
+
 STDOLE combos write back whichever property is listed first in
 `PROPERTIES(...)` — confirmed **positional, not name-matched** (Vendor's
 own combo proves this: `DataSource=Vendor`, but the list's first entry is
@@ -677,6 +681,24 @@ still type a value.
 the dropdown. To see what exists for an item, open a throw-away Dataview on `SLSerials` (or
 `SLLots`) filtered on `Item = <item>`. If the Dataview has rows and the dropdown is still empty,
 that's a real bug - write it up here.
+
+## `Data length for Notify (12) is greater than effective length (10).`
+
+**Symptom**: saving a CMR fails with this message. **PO Line** shows an Item number (e.g.
+`92185-001-17`) instead of a line number.
+
+**Cause**: the PO Line dropdown was `STDOLE SLPoItems( PROPERTIES(PoLine,Item,PoNum)
+DISPLAY(2,1,3) ...)`. A dropdown writes back the **first displayed** column, so it wrote the
+Item (12 characters) into `PoLine` (length 10). "Notify" is wrong in the message only because
+the fields had no Caption linking them to their labels, so SyteLine used a nearby component's
+name.
+
+**Fix (form v2)**: `DISPLAY(1,2,3)` again - PoLine first, Item still shown in the list. Every
+bound field now has `Caption = C(<its label>)` (how Infor's forms link a field to its label),
+so messages name the real field.
+
+**Confirm on TRN**: pick a PO, then a PO Line - the box shows the line number; save works.
+Rule for every dropdown: the value you want stored must be the first column in `DISPLAY()`.
 
 ## General debugging order for "it's not working" reports
 

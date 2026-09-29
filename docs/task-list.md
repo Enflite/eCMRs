@@ -56,8 +56,9 @@ corrections to earlier assumptions, flagged inline below with **⚠ per the orig
 - [ ] **PoNum** — separate, still-open item: no `RECORDCAP` on `SLPoItems`' unfiltered list
   source. Fine now, but will get slow as the collection grows — needs a different mitigation
   (paging, a narrowing property) since re-adding `FILTER()` reproduces the original bug.
-- [x] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(po_num)')`, the exact
-  same working pattern confirmed in the real original's own PO Line combo.
+- [ ] **PoLine** (`po_line`) — Cascades off PO Num via `FILTER(PoNum='P(PoNum)')`. **Fixed in v2,
+  check on TRN**: `DISPLAY(2,1,3)` wrote the Item into PoLine and broke save ("Data length for
+  Notify (12) is greater than effective length (10)"). Back to `DISPLAY(1,2,3)`.
 - [x] **AssignedBuyer** (`assigned_buyer`) — Combo, `SLEmployees`. No open issues flagged.
 - [x] **Qty**, **Poc** — Plain fields, nothing flagged.
 - [x] **RfqNum** — Plain field, nothing flagged.

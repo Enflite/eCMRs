@@ -23,7 +23,7 @@ Status: **OK** = matches and seen working on TRN · **Fixed v2** = changed in v2
 | Assigned: ID + user | `AssignedUserEmpNum` combo + `AssignedUser` | `AssignedEmpNum` combo + `AssignedUsername` | Check | Original defaulted the user to whoever is logged in (`UserName()`); ours fills from the ID. |
 | Notify | button | `btn_notify` | Diff | Placeholder message only - no notification sent yet. |
 | CMR Num / Create Date / Created By | `CmrNum` / `CreateDate` / `CreatedBy` | same | OK | |
-| PO / PO Line | `PoNum` / `PoNumLine` combos | `PoNum` / `PoLine` | OK | PO filter dropped on purpose (padding bug in the original). |
+| PO / PO Line | `PoNum` / `PoNumLine` combos | `PoNum` / `PoLine` | **Fixed v2** | PO Line wrote the Item (save error "Data length for Notify (12)…"); back to `DISPLAY(1,2,3)`. PO filter dropped on purpose (padding bug in the original). |
 | Assigned Buyer | `BuyerPlannerUsr` (username) | `AssignedBuyer` (employee combo) | Diff | Stores the employee number, not the username. |
 | Qty / POC | plain | same | OK | |
 | RFQ / Job Num | plain / `SLMatltrans` combo | same | OK | |

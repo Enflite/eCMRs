@@ -49,6 +49,8 @@ Application Studio, and a few schema fields that quietly aren't on the form at a
   ([`docs/field-review.md`](docs/field-review.md)): Dept/WC descriptions auto-fill (validators),
   Reason/Cause Code get their own code lists (fixes the `'FP'` error), Implementation section
   re-laid out, Internal Review Date moved back to Engineering.
+- **2026-09-29:** v2 also fixes PO Line (it stored the Item, so saves failed with "Data length for
+  Notify (12) ...") and links every field to its label so error messages name the right field.
 
 ### Importing v2 on TRN
 
