@@ -3205,14 +3205,14 @@ Public Class EvHandler_StdFormComponentHelp_0
 Inherits GlobalScript
 
 Sub Main()
-            Dim page As String = "index.html"
+            Dim page As String = ""
             Try
                 Dim frm As Object = ThisForm
                 Dim comp As String = CStr(frm.GetCurrentComponentName())
-                If comp &lt;&gt; "" Then page = "c/" &amp; comp &amp; ".html"
+                If comp &lt;&gt; "" Then page = comp
             Catch
             End Try
-            ThisForm.Variables("EcmrsHelpUrl").Value = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/" &amp; page
+            ThisForm.Variables("EcmrsHelpUrl").Value = "http://localhost:5173/go/syteline/ecmrs" &amp; If(page = "", "", "/" &amp; page)
             ReturnValue = "0"
 End Sub
 End Class
@@ -3225,7 +3225,7 @@ End Namespace
             </EventHandler>
             <EventHandler Name="StdFormHelp" Sequence="0">
                <ResponseType>39</ResponseType>
-               <Response>URL(file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html) ( )</Response>
+               <Response>URL(http://localhost:5173/go/syteline/ecmrs) ( )</Response>
             </EventHandler>
             <EventHandler Name="StdFormPredisplay" Sequence="0">
                <ResponseType>0</ResponseType>
@@ -3268,7 +3268,7 @@ End Namespace
                <Description />
             </Variable>
             <Variable Name="EcmrsHelpUrl">
-               <Value>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html</Value>
+               <Value>http://localhost:5173/go/syteline/ecmrs</Value>
                <Value2 />
                <Value3 />
                <Description />

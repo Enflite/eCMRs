@@ -127,7 +127,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Item / Next Assy / Vendor → description | `DefaultFrom` `Item(ItemDescription)`, `Item(NextAssyDescription)`, `VendNum(VendorName)` |
 | Dept / Work Center → description | `Validators` `SetPropertyFromList(DeptDescription, Description)` / `(WcDescription, Description)`, with **Validate Immediately** (Flags 33) |
 | Notify → email | `ENF_NotifyUser`: `SLEmployees(... SETV(EcmrsNotifyEmail=Username))`, then `EVENT(ENF_NotifyUserWithCMR)` |
-| Right-click → Help | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp` (the Help button is deleted) |
+| Right-click → Help | `StdFormComponentHelp` (script builds `<HELP_SITE>/go/syteline/ecmrs/<component>`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp` (the Help button is deleted) |
 | IDM / side-panel widgets | `StdFormPredisplay` + `StdObjectSelectCurrentCompleted`: `SLFormExtMsgEntities` and `JSONMSGTYPE(inforBusinessContext)` |
 | Reviewer ID → name (Assigned, QC, Eng, Planning, Purchasing, CM) | `DefaultFrom` `EmpNum(<name property>)` on an `SLEmployees` list |
 | Initial Change → Req checkboxes | `DefaultFrom` `Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)` |
@@ -166,7 +166,7 @@ where they had it.
 | General Note label placed weird | Label directly above the box, left-aligned | Same |
 | Dept / WC Description only fill after save | **Validate Immediately** on Dept and Work Center (Flags 33, as on Infor's own Dept fields) | Pick a Dept: the description fills straight away. Same for Work Center |
 | Fix the Notify button | Notify raises `ENF_NotifyUserWithCMR` (Enflite's email event from QC_CMRs) with `CmrNum`, the Assigned employee's username (email), `Priority` | **EMAIL SENT!**, and the Assigned person gets it |
-| Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open `docs/help/c/<field>.html` on the S: drive. **Confirmed** the handler runs (TRN 2026-09-29); the browser shows SyteLine's `GetFile.aspx` page for `file:` links until the help has an `https://` address | Right-click a field → **Help**: that field's eCMRs page opens |
+| Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open the [Enflite help](https://github.com/Enflite/help) at `<HELP_SITE>/go/syteline/ecmrs/<component>`, which redirects to that field's page. **Confirmed** the handler runs (TRN 2026-09-29). `HELP_SITE` is `http://localhost:5173` for now: the help running on your own PC (`npm run dev` in Enflite/help); change it to the `https://` address once the help is hosted | Right-click a field → **Help**: that field's eCMRs page opens |
 | Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form. If FormSync leaves it on TRN, delete it once in **Design Mode** (TRN only: production never had it) |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Sub Assembly | Findings under open item 8 | Team decides |
@@ -183,7 +183,7 @@ Before importing:
 If right-click → Help still opens Infor's topic (or both open): SyteLine runs its own help too. Write it
 down in [`troubleshooting.md`](troubleshooting.md).
 If nothing opens: the browser blocks `file:` links from SyteLine - host `docs/help` on an `https://`
-address (SharePoint / intranet) and change `HELP_BUTTON_URL`.
+address and change `HELP_SITE` in `tools/apply_form_changes.py`.
 
 ---
 
@@ -234,7 +234,7 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
-- [ ] 20a. Right-click a field → **Help**: that field's eCMRs page opens (or SyteLine's `GetFile.aspx` page while the help is on the S: drive: **Copy Link**, paste).
+- [ ] 20a. Right-click a field → **Help**: that field's page opens in the Enflite help. (Production needs `HELP_SITE` set to the hosted help's `https://` address first: `localhost` only works on a PC running the help.)
 - [ ] 20b. On a saved test CMR with **Assigned** filled in, click **Notify**: **EMAIL SENT!** and the email arrives.
 - [ ] 20c. Pick a CMR with an Item: the IDM documents widget shows that Item's documents.
 

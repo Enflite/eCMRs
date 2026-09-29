@@ -857,6 +857,11 @@ works.
 
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
+> **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),
+> React + Express + MongoDB). The script now builds `<HELP_SITE>/go/syteline/ecmrs/<component>`
+> (`HELP_SITE` = `http://localhost:5173`, the help's dev server, until it is hosted), and the help
+> redirects to the field's page. The `docs/help/c/` pages below are the old S: drive version.
+
 `HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
 raises the standard event `StdFormComponentHelp` (the form's own Help: `StdFormHelp`) - both are in
 Mongoose's standard event list next to `StdFormPredisplay` etc. The form handles them itself:

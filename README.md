@@ -61,6 +61,9 @@ legacy forms are the requirements reference.
 - **2026-09-29:** Right-click → Help runs the form's own help handler on TRN (confirmed). The
   Help button is deleted (right-click → Help replaces it); "Next Assy Desc:" label is now "Assy Desc:"
   (it wrapped and showed "Next _Assy").
+- **2026-09-29:** Right-click → Help points at the Enflite help ([Enflite/help](https://github.com/Enflite/help))
+  on `http://localhost:5173` for now (`HELP_SITE` in `tools/apply_form_changes.py`); `docs/help/` here is
+  the old S: drive copy, replaced by that repo.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 

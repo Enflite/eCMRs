@@ -80,8 +80,9 @@ What it changes (v1 -> v2):
   16. Right-click -> Help opens the eCMRs help: handlers for the standard events
      StdFormComponentHelp (right-click a field -> Help) and StdFormHelp (the form's Help).
      A script sets the variable EcmrsHelpUrl to the page for the right-clicked component
-     (docs/help/c/<component>.html, built by scripts/build_help.py for every component on the
-     form) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HelpFileName stays as the Infor
+     (<HELP_SITE>/go/syteline/ecmrs/<component>, which the Enflite help redirects to that field's
+     page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is http://localhost:5173
+     for now (the help's dev server). HelpFileName stays as the Infor
      topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
      handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
   18. Help button deleted (team, 2026-09-29: keep right-click -> Help, delete the button): btn_help
@@ -121,15 +122,16 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 
 # Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
-# Right-click -> Help can only open Infor's help site: SyteLine puts its help address in front of
-# any HelpFileName (a file:/// link became docs.infor.com/.../csbiolh/file:///S:/..., TRN 2026-09-29).
-# The eCMRs help pages (docs/help/) open from the Help button instead: the repo copied to the shared
-# drive S:/Engineering/Individual Folders/JSmith/eCMRs (spaces as %20).
-HELP_BUTTON_URL = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html"
-
-# Right-click -> Help pages, one per form component (docs/help/c/<component>.html redirects to
-# the field's page), next to HELP_BUTTON_URL.
-HELP_BASE_URL = HELP_BUTTON_URL.rsplit("/", 1)[0] + "/"
+# Right-click -> Help opens the Enflite help (Enflite/help: React + Express + MongoDB), not a
+# HelpFileName: SyteLine puts Infor's help address in front of any HelpFileName, and browsers won't
+# open file: links from SyteLine (GetFile.aspx page, TRN 2026-09-29). The help's /go/<space>/<form>/
+# <component> link redirects to the page for the component clicked (its aliases), else the form's page.
+# For now: the help's dev server on the user's own PC (npm run dev in Enflite/help: client on :5173,
+# which passes /go to the API on :3000). Change HELP_SITE to the https:// address once it is hosted.
+HELP_SITE = "http://localhost:5173"
+HELP_FORM_URL = f"{HELP_SITE}/go/syteline/ecmrs"
+HELP_BUTTON_URL = HELP_FORM_URL  # used by StdFormHelp and as EcmrsHelpUrl's start value
+HELP_BASE_URL = HELP_FORM_URL + "/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -365,14 +367,14 @@ def build(text):
         "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
         "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormComponentHelp_0\r\n"
         "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
-        "            Dim page As String = \"index.html\"\r\n"
+        "            Dim page As String = \"\"\r\n"
         "            Try\r\n"
         "                Dim frm As Object = ThisForm\r\n"
         "                Dim comp As String = CStr(frm.GetCurrentComponentName())\r\n"
-        "                If comp &lt;&gt; \"\" Then page = \"c/\" &amp; comp &amp; \".html\"\r\n"
+        "                If comp &lt;&gt; \"\" Then page = comp\r\n"
         "            Catch\r\n"
         "            End Try\r\n"
-        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_BASE_URL}\" &amp; page\r\n"
+        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(page = \"\", \"\", \"/\" &amp; page)\r\n"
         "            ReturnValue = \"0\"\r\n"
         "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
     handlers = [

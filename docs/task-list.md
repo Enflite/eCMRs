@@ -89,6 +89,8 @@ Production has not been done yet - see "Production" at the end.
 - [ ] Help: right-click → **Help** runs the form's handler (confirmed TRN 2026-09-29; the Help button is deleted).
   The browser shows SyteLine's `GetFile.aspx` page for the `file:` address: host `docs/help` on an
   `https://` address (internal web server / Azure Static Web App) and change `HELP_BUTTON_URL`.
+  **2026-09-29:** now points at the Enflite help (`Enflite/help`) on `http://localhost:5173` (`HELP_SITE`):
+  works on a PC running `npm run dev` there. Change `HELP_SITE` once the help is hosted.
   Check that right-clicking a field opens that field's page, not `index.html`.
 - [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
   Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
