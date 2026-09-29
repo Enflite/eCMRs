@@ -55,6 +55,9 @@ FIELDS = [
          filled=EMP_FILL),
     dict(key="notify", section="header", label="Notify", components=["btn_notify"],
          text=["Shows a message only. No notification is sent from this button yet."]),
+    dict(key="help", section="header", label="Help", components=["btn_help"],
+         text=["Opens this eCMRs help: the form overview and a page for every field. Right-click a "
+               "field and choose Help for Infor's QC CMRs help topic."]),
     dict(key="cmr_num", section="header", label="CMR Num", components=["c_cmr_num"],
          text=["The CMR's unique number, in the form CMR-YYMMDD-HHMMSS: the date and time "
                "New was clicked (for example CMR-260929-111742). It can't be changed."],

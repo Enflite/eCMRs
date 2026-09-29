@@ -195,7 +195,7 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
-- [ ] 20a. Right-click any field → **Help**: its eCMRs help page opens from the S: drive.
+- [ ] 20a. Click the **Help** button (next to Notify): the eCMRs help opens from the S: drive. Right-click → Help opens Infor's QC CMRs topic.
 
 **Record it**
 

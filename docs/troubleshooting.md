@@ -807,22 +807,23 @@ rebuild and re-import: the form's help and every field's right-click → Help th
 page (`HelpFileName` + `HelpContextID -1`, as on Infor's fields). Test one field first - that a
 full `https://` address works in `HelpFileName` is assumed, not yet confirmed.
 
-**Hosted on the shared drive (2026-09-29)**: copy the contents of `docs/help/` to
-`S:\Engineering\Individual Folders\JSmith\eCMRs` (`index.html` directly inside it). `HELP_BASE` is
-`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/` (spaces as `%20`), so the form opens
-`index.html` and each field `fields/<key>.html` there. After editing the help text, rebuild
-(`scripts/build_help.py`) and copy the folder again - the form doesn't change.
+**Right-click Help can't open our pages (confirmed on TRN 2026-09-29)**: with the fields' HelpFileName
+set to `file:///S:/.../index.html`, Help opened
+`https://docs.infor.com/csi/latest/en-u/csbiolh/file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/index.html`.
+SyteLine always puts its Infor help address in front of `HelpFileName`, so right-click Help can
+only open pages on Infor's help site. Right-click Help is back on the Infor QC CMRs topic.
 
-**Check on TRN before relying on it**:
-- Browsers (Edge, Chrome) usually refuse to open a `file:` link from a web page. If right-click →
-  Help does nothing or shows an error in SyteLine's **web** client, that's why; it may still work
-  from the desktop client. Fixes then: host the same folder on an internal web server or SharePoint
-  (and change `HELP_BASE`), or ask IT to allow `file:` links from the SyteLine site.
-- `S:` has to be mapped to the same share for every user. A `\\server\share\...` path
-  (`file://server/share/...`) avoids that - send the server name if you want it.
-- Everyone who opens Help needs read access to the folder (it's in an individual folder today).
+**Fix: a Help button** next to **Notify** raises event `OpenEcmrsHelp`, a ResponseType 39
+`URL(<address>) ( )` handler - the response Infor's own forms use to open links (tracking link on
+Customer Order Lines, `mailto:` on Incidents / Service Orders). It opens `index.html` of the help
+pages at `HELP_BASE` (`tools/apply_form_changes.py`), now
+`file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/`. Copy the **contents** of `docs/help/`
+to `S:\Engineering\Individual Folders\JSmith\eCMRs`.
 
-**Confirm on TRN**: right-click any field → **Help** opens the Infor CMR help page.
+**Check on TRN**: click **Help**. If nothing opens, the browser is blocking a `file:` link from
+the SyteLine web page (Edge/Chrome do by default): put the same folder on an internal web server or
+SharePoint, set `HELP_BASE` to its `https://` address, rebuild and re-import. Everyone needs `S:`
+mapped the same way and read access to the folder.
 
 ## General debugging order for "it's not working" reports
 

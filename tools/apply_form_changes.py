@@ -55,6 +55,10 @@ What it changes (v1 -> v2):
      or field" (TRN 2026-09-29) - the form had no HelpFileName. Now points to the same Infor help
      topic as the original QC_CMRs form (qc_cmrs.htm), with the HelpFileName placed before
      HelpContextID as in that export. Fields use the form's help, as on Infor's own forms.
+     Right-click Help can only open Infor's help site: SyteLine puts its help address in front of
+     any HelpFileName (a file:/// link became docs.infor.com/.../file:///S:/...).
+  12. Help button next to Notify: opens our own help pages (docs/help/, at HELP_BASE) through an
+     OpenEcmrsHelp event, ResponseType 39 URL(...) - the response Infor's forms use for links.
   Tab order is renumbered for the moved components so tabbing follows the screen.
 
 Run:   python3 tools/apply_form_changes.py          (writes exports/eCMRs_v2.XML)
@@ -82,10 +86,10 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 
 # Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
-# Our own help (docs/help/, built by scripts/build_help.py). HELP_BASE = where the CONTENTS of
-# docs/help/ are copied (index.html directly inside it), as a URL ending in "/". Now the shared
-# drive S:\Engineering\Individual Folders\JSmith\eCMRs (spaces as %20). The form opens index.html
-# and each field opens fields/<key>.html (scripts/help_content.py). Empty = the Infor QC_CMRs topic.
+# Our own help (docs/help/, built by scripts/build_help.py), opened by the form's Help button.
+# HELP_BASE = where the CONTENTS of docs/help/ are copied (index.html directly inside it), as a URL
+# ending in "/". Now the shared drive S:\Engineering\Individual Folders\JSmith\eCMRs (spaces as
+# %20). If a browser blocks file: links, use an http(s) address (intranet / SharePoint) instead.
 HELP_BASE = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
@@ -240,19 +244,29 @@ def build(text):
     old = "         <Width>160</Width>\r\n         <HelpContextID>-1</HelpContextID>"
     if f.text.count(old) != 1:
         raise SystemExit("form-level Width/HelpContextID not found")
-    form_help = HELP_BASE + "index.html" if HELP_BASE else HELP_URL
     f.text = f.text.replace(old, "         <Width>160</Width>\r\n         <HelpFileName>"
-                            + form_help + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
-    if HELP_BASE:
-        # Per-field help, the way Infor's fields carry it: HelpFileName + HelpContextID -1.
-        sys.path.insert(0, os.path.join(ROOT, "scripts"))
-        from help_content import FIELDS as HELP_FIELDS
-        for hf in HELP_FIELDS:
-            for comp in hf["components"]:
-                f.set(comp, "HelpContextID", "-1")
-                f._edit(comp, lambda b, url=HELP_BASE + "fields/" + hf["key"] + ".html": b.replace(
-                    "<HelpContextID>-1</HelpContextID>",
-                    "<HelpFileName>" + url + "</HelpFileName>\r\n" + IND + "<HelpContextID>-1</HelpContextID>", 1))
+                            + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
+
+    # 12. Help button (right of Notify) opening our help pages. Right-click -> Help can't: SyteLine
+    # always puts its Infor help address in front of HelpFileName (TRN 2026-09-29 opened
+    # "https://docs.infor.com/csi/latest/en-u/csbiolh/file:///S:/..."). A button raising an event
+    # with ResponseType 39 "URL(<address>) ( )" opens any address - the same response Infor's
+    # Customer Order Lines (tracking link) and Incidents / Service Orders (mailto) forms use.
+    m = re.search(r'<Component Name="btn_notify">.*?</Component>', f.text, re.S)
+    btn = m.group(0).replace('Name="btn_notify"', 'Name="btn_help"')
+    for tag, val in [("LeftPos", "100"), ("Width", "12"), ("TabOrder", "70"), ("Caption", "Help"),
+                     ("EventToGenerate", "OpenEcmrsHelp"), ("EffectiveCaption", "Help")]:
+        btn, n = re.subn(rf"<{tag}>[^<]*</{tag}>", f"<{tag}>{val}</{tag}>", btn, count=1)
+        if n != 1:
+            raise SystemExit(f"btn_help: no <{tag}>")
+    btn = re.sub(r"BACKCOLOR\(TYPE=0; ARGB=\[255, 47,111,237\]; \)", "BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )", btn)
+    f.text = f.text[:m.end()] + "\r\n            " + btn + f.text[m.end():]
+    anchor = "         </EventHandlers>"
+    f.text = f.text.replace(anchor,
+        '            <EventHandler Name="OpenEcmrsHelp" Sequence="0">\r\n'
+        '               <ResponseType>39</ResponseType>\r\n'
+        f'               <Response>URL({HELP_BASE}index.html) ( )</Response>\r\n'
+        '            </EventHandler>\r\n' + anchor, 1)
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (

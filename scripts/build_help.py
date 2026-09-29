@@ -11,7 +11,7 @@ Enflite/Form-Project-Templates branding/enflite-style-guide.md.
 
 Plain static HTML with relative links, so the folder works from anywhere: copy the contents of
 docs/help/ to the shared drive (S:\Engineering\Individual Folders\JSmith\eCMRs). The form's
-right-click -> Help opens them (HELP_BASE in tools/apply_form_changes.py). Page addresses never
+Help button opens them (HELP_BASE in tools/apply_form_changes.py). Page addresses never
 change with the styling.
 
 Run: python3 scripts/build_help.py          (writes docs/help/)
