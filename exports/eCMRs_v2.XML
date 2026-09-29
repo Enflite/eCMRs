@@ -55,7 +55,7 @@
                <EventToGenerate>OpenEcmrsHelp</EventToGenerate>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
+               <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )</Post301Format>
                <EffectiveCaption>Help</EffectiveCaption>

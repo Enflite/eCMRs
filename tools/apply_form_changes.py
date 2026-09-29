@@ -83,7 +83,11 @@ What it changes (v1 -> v2):
      A script sets the variable EcmrsHelpUrl to the page for the right-clicked component
      (docs/help/c/<component>.html, built by scripts/build_help.py for every component on the
      form) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HelpFileName stays as the Infor
-     topic, used if SyteLine still runs its own help after ours.
+     topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
+     handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
+  18. Help button hidden (Hidden=True): right-click -> Help does the job (team, 2026-09-29). Kept
+     in the file rather than dropped, because FormSync doesn't delete a component that is missing
+     from the file - TRN already has it. HELP_BUTTON_URL is still the help address.
   17. IDM documents widget: the business-context handlers every Infor form uses (QC_CMRs, Lots,
      Service Orders, Customer Order Lines): StdFormPredisplay loads the form's message template
      (SLFormExtMsgEntities.LoadJSONVar, form name eCMRs) and StdObjectSelectCurrentCompleted
@@ -294,6 +298,10 @@ def build(text):
         if n != 1:
             raise SystemExit(f"btn_help: no <{tag}>")
     btn = btn.replace("BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )", "BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )")
+    # 18. Hidden: right-click -> Help replaces it.
+    btn, n = re.subn(r"<Hidden>False</Hidden>", "<Hidden>True</Hidden>", btn, count=1)
+    if n != 1:
+        raise SystemExit("btn_help: no <Hidden>")
     f.text = f.text[:m.end()] + "\r\n            " + btn + f.text[m.end():]
     ev_anchor = "         </EventHandlers>"
     f.text = f.text.replace(ev_anchor,

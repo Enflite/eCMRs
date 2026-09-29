@@ -58,6 +58,8 @@ legacy forms are the requirements reference.
   Item Desc, Top Level PN hidden, Requested Action / General Note labels on their boxes, Dept/WC
   Description fill before save (Validate Immediately), Notify sends the email (`ENF_NotifyUserWithCMR`,
   as QC_CMRs), right-click → Help opens the field's eCMRs page, IDM widget business context.
+- **2026-09-29:** Right-click → Help runs the form's own help handler on TRN (confirmed). The
+  Help button is hidden: right-click → Help replaces it.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
@@ -77,7 +79,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`scripts/generate_schema_csv.py`](scripts/generate_schema_csv.py) | Schema master list (`FIELDS`); with `generate_ido_import.py`, `generate_sql_columns_import.py`, `generate_deploy_checklist.py`, `validate_schema_consistency.py`. `generate_form.py` is retired (built v1) |
 | `exports/ecmrs_*.csv` | Schema-generator output (design reference). For production use `exports/production/` |
 | [`docs/reference/procedures/`](docs/reference/procedures/) | Released procedures the help updates: QA-300-037 Rev A, QA-300-003 Rev E (PDF, copied into the help by `scripts/build_help.py`) |
-| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic, one page per field and the updated [procedures](docs/help/procedures/index.html). Built from [`scripts/help_content.py`](scripts/help_content.py) and [`scripts/procedures_content.py`](scripts/procedures_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; opened by the form's **Help** button from `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (`HELP_BUTTON_URL` in `tools/apply_form_changes.py`); right-click → Help opens `c/<component>.html`, one redirect per form component |
+| [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic, one page per field and the updated [procedures](docs/help/procedures/index.html). Built from [`scripts/help_content.py`](scripts/help_content.py) and [`scripts/procedures_content.py`](scripts/procedures_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; right-click → **Help** on the form opens `c/<component>.html` (one redirect per form component) from `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (`HELP_BUTTON_URL` in `tools/apply_form_changes.py`) |
 | [`docs/production-build-sheet.md`](docs/production-build-sheet.md) | Generated: every column and property to build, readable |
 | [`docs/deploy-checklist.md`](docs/deploy-checklist.md) | Generated: the manual IDO settings (CmrNum, Inline Lists, Read Only, Property Class) |
 | [`docs/length-fixes.md`](docs/length-fixes.md) | Generated: IDO vs SQL length differences (currently only the optional `Status`) |

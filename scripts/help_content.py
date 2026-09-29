@@ -1,7 +1,7 @@
 """Help text for the eCMRs form: one entry per field, in form order, by section.
 
 Single source for the help pages (scripts/build_help.py writes docs/help/). The pages are a
-reference for users, opened by the form's Help button and by right-click -> Help. Describe what the
+reference for users, opened by right-click -> Help on the form. Describe what the
 form actually does on TRN - see docs/task-list.md and docs/troubleshooting.md - not plans.
 
 Each field: key (help page name), label (as on the form), components (form component names that
@@ -58,9 +58,6 @@ FIELDS = [
                "Priority. The email goes to the Assigned employee's SyteLine user (their email address). "
                "Save the CMR first, and make sure Assigned is filled in."],
          related=["assigned"]),
-    dict(key="help", section="header", label="Help", components=["btn_help"],
-         text=["Opens this eCMRs help: the form overview, a page for every field and the procedures. "
-               "Right-click a field and choose Help to open that field's page."]),
     dict(key="cmr_num", section="header", label="CMR Num", components=["c_cmr_num"],
          text=["The CMR's unique number, in the form CMR-YYMMDD-HHMMSS: the date and time "
                "New was clicked (for example CMR-260929-111742). It can't be changed."],

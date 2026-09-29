@@ -127,7 +127,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Item / Next Assy / Vendor → description | `DefaultFrom` `Item(ItemDescription)`, `Item(NextAssyDescription)`, `VendNum(VendorName)` |
 | Dept / Work Center → description | `Validators` `SetPropertyFromList(DeptDescription, Description)` / `(WcDescription, Description)`, with **Validate Immediately** (Flags 33) |
 | Notify → email | `ENF_NotifyUser`: `SLEmployees(... SETV(EcmrsNotifyEmail=Username))`, then `EVENT(ENF_NotifyUserWithCMR)` |
-| Right-click → Help, Help button | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp`, `OpenEcmrsHelp` |
+| Right-click → Help | `StdFormComponentHelp` (script picks `c/<component>.html`, then `URL(V(EcmrsHelpUrl))`), `StdFormHelp` (Help button hidden) |
 | IDM / side-panel widgets | `StdFormPredisplay` + `StdObjectSelectCurrentCompleted`: `SLFormExtMsgEntities` and `JSONMSGTYPE(inforBusinessContext)` |
 | Reviewer ID → name (Assigned, QC, Eng, Planning, Purchasing, CM) | `DefaultFrom` `EmpNum(<name property>)` on an `SLEmployees` list |
 | Initial Change → Req checkboxes | `DefaultFrom` `Change(ReqCosting, ReqProcess, ReqDocumentation, ReqToolMachine, ReqMaterial)` |
@@ -166,7 +166,8 @@ where they had it.
 | General Note label placed weird | Label directly above the box, left-aligned | Same |
 | Dept / WC Description only fill after save | **Validate Immediately** on Dept and Work Center (Flags 33, as on Infor's own Dept fields) | Pick a Dept: the description fills straight away. Same for Work Center |
 | Fix the Notify button | Notify raises `ENF_NotifyUserWithCMR` (Enflite's email event from QC_CMRs) with `CmrNum`, the Assigned employee's username (email), `Priority` | **EMAIL SENT!**, and the Assigned person gets it |
-| Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open `docs/help/c/<field>.html` on the S: drive | Right-click a field → **Help**: that field's eCMRs page opens |
+| Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open `docs/help/c/<field>.html` on the S: drive. **Confirmed** the handler runs (TRN 2026-09-29); the browser shows SyteLine's `GetFile.aspx` page for `file:` links until the help has an `https://` address | Right-click a field → **Help**: that field's eCMRs page opens |
+| Remove the extra Help button (2026-09-29) | **Help** button hidden | Not on the form |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Sub Assembly | Findings under open item 8 | Team decides |
 | Dash under Next Assy label | Needs a screenshot (open item 12) | - |
@@ -179,7 +180,7 @@ Before importing:
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
 
 If right-click → Help still opens Infor's topic (or both open): SyteLine runs its own help too. Write it
-down in [`troubleshooting.md`](troubleshooting.md); the **Help** button still opens the eCMRs help.
+down in [`troubleshooting.md`](troubleshooting.md).
 If nothing opens: the browser blocks `file:` links from SyteLine - host `docs/help` on an `https://`
 address (SharePoint / intranet) and change `HELP_BUTTON_URL`.
 
@@ -195,7 +196,7 @@ Tick each step as you go.
 
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
-- [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. The form's **Help** button and right-click → **Help** open pages from there.
+- [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. Right-click → **Help** opens pages from there.
 - [ ] 2b. IDM: the AddIDM set-up for form name **`eCMRs`** in production, the same as on TRN (4c step 3).
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
@@ -232,7 +233,7 @@ Tick each step as you go.
 - [ ] 18. Reason Code and Cause Code list their codes (no error).
 - [ ] 19. Save; **New** again and save a second one; reopen both.
 - [ ] 20. Tick **Closed** on a test CMR: Close Date = today, Closed By = you. Delete the test CMRs.
-- [ ] 20a. Click the **Help** button (next to Notify): the eCMRs help opens from the S: drive. Right-click a field → **Help**: that field's eCMRs page opens.
+- [ ] 20a. Right-click a field → **Help**: that field's eCMRs page opens (or SyteLine's `GetFile.aspx` page while the help is on the S: drive: **Copy Link**, paste).
 - [ ] 20b. On a saved test CMR with **Assigned** filled in, click **Notify**: **EMAIL SENT!** and the email arrives.
 - [ ] 20c. Pick a CMR with an Item: the IDM documents widget shows that Item's documents.
 
