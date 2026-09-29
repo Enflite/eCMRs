@@ -57,11 +57,10 @@ What it changes (v1 -> v2):
      HelpContextID as in that export. Fields use the form's help, as on Infor's own forms.
      Right-click Help can only open Infor's help site: SyteLine puts its help address in front of
      any HelpFileName (a file:/// link became docs.infor.com/.../file:///S:/...).
-  12. Help button next to Notify: opens the eCMRs help pages (docs/help/) from the repo copy on
-     the S: drive (HELP_BUTTON_URL) through an OpenEcmrsHelp event, ResponseType 39 URL(...) - the
-     response Infor's forms use for links. Right-click Help stays on the Infor QC_CMRs topic.
+  12. (Removed.) There was a Help button next to Notify; right-click -> Help replaced it (18).
   13. Team feedback (TRN review, 2026-09-29):
      a. Item Desc is wider (to the Dept Description's right edge) so long descriptions show.
+     d. "Next Assy Desc:" -> "Assy Desc:" so the label fits its two lines (it showed "Next _Assy").
      b. Top Level PN is hidden (label and field, Hidden=True). Not deleted: FormSync only applies
         what is in the file, so a component left out of the file would stay on the form. The
         top_level_pn column and TopLevelPn property stay, so existing data is kept.
@@ -80,10 +79,18 @@ What it changes (v1 -> v2):
      placeholder message.
   16. Right-click -> Help opens the eCMRs help: handlers for the standard events
      StdFormComponentHelp (right-click a field -> Help) and StdFormHelp (the form's Help).
-     A script sets the variable EcmrsHelpUrl to the page for the right-clicked component
-     (docs/help/c/<component>.html, built by scripts/build_help.py for every component on the
-     form) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HelpFileName stays as the Infor
-     topic, used if SyteLine still runs its own help after ours.
+     A script sets the variable EcmrsHelpUrl to the page for the right-clicked component - found
+     from an event parameter naming a form component, else GetCurrentComponentName() (the focused
+     component), with ?via=parm|focus|none so the help server's log shows which one worked -
+     (<HELP_SITE>/go/syteline/ecmrs/<component>, which the Enflite help redirects to that field's
+     page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is http://localhost:5173
+     for now (the help's dev server). HelpFileName stays as the Infor
+     topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
+     handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
+  18. Help button deleted (team, 2026-09-29: keep right-click -> Help, delete the button): btn_help
+     and its OpenEcmrsHelp handler are no longer in the file, so production never gets them. TRN
+     already has them: if FormSync leaves the button there, delete it once in Design Mode (Implementation
+     Plan 4c). HELP_BUTTON_URL is still the help address used by right-click -> Help.
   17. IDM documents widget: the business-context handlers every Infor form uses (QC_CMRs, Lots,
      Service Orders, Customer Order Lines): StdFormPredisplay loads the form's message template
      (SLFormExtMsgEntities.LoadJSONVar, form name eCMRs) and StdObjectSelectCurrentCompleted
@@ -117,15 +124,16 @@ X_CTL2, W_CTL2 = 52, 40       # reviewer name / Closed By
 
 # Form help: Infor's online-help topic for the original QC_CMRs form (copied from its export).
 HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_cmrs.htm"
-# Right-click -> Help can only open Infor's help site: SyteLine puts its help address in front of
-# any HelpFileName (a file:/// link became docs.infor.com/.../csbiolh/file:///S:/..., TRN 2026-09-29).
-# The eCMRs help pages (docs/help/) open from the Help button instead: the repo copied to the shared
-# drive S:/Engineering/Individual Folders/JSmith/eCMRs (spaces as %20).
-HELP_BUTTON_URL = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html"
-
-# Right-click -> Help pages, one per form component (docs/help/c/<component>.html redirects to
-# the field's page), next to HELP_BUTTON_URL.
-HELP_BASE_URL = HELP_BUTTON_URL.rsplit("/", 1)[0] + "/"
+# Right-click -> Help opens the Enflite help (Enflite/help: React + Express + MongoDB), not a
+# HelpFileName: SyteLine puts Infor's help address in front of any HelpFileName, and browsers won't
+# open file: links from SyteLine (GetFile.aspx page, TRN 2026-09-29). The help's /go/<space>/<form>/
+# <component> link redirects to the page for the component clicked (its aliases), else the form's page.
+# For now: the help's dev server on the user's own PC (npm run dev in Enflite/help: client on :5173,
+# which passes /go to the API on :3000). Change HELP_SITE to the https:// address once it is hosted.
+HELP_SITE = "http://localhost:5173"
+HELP_FORM_URL = f"{HELP_SITE}/go/syteline/ecmrs"
+HELP_BUTTON_URL = HELP_FORM_URL  # used by StdFormHelp and as EcmrsHelpUrl's start value
+HELP_BASE_URL = HELP_FORM_URL + "/"
 
 # Engineering: new row under Reviewer, left column (the Eng RCA Notes box sits at x>=44).
 IRD_Y = 78.2
@@ -272,7 +280,6 @@ def build(text):
     f.place("l_reason_code", y=55.95, h=1.8)
     f.place("l_vendor_name", y=21.4, h=1.8)
     f.place("l_next_assy_description", y=19.35, h=1.8)
-    f.caption("l_next_assy_description", "Next Assy Desc:")
     f.place("l_internal_review_date", h=2.7)
 
     # 11. Form-level help (same topic as QC_CMRs).
@@ -283,24 +290,10 @@ def build(text):
                             + HELP_URL + "</HelpFileName>\r\n         <HelpContextID>-1</HelpContextID>", 1)
 
 
-    # 12. Help button (right of Notify) opening the eCMRs help pages at HELP_BUTTON_URL. Raises
-    # OpenEcmrsHelp, a ResponseType 39 "URL(<address>) ( )" handler - the response Infor's
-    # Customer Order Lines (tracking link) and Incidents / Service Orders (mailto) forms use.
-    m = re.search(r'<Component Name="btn_notify">.*?</Component>', f.text, re.S)
-    btn = m.group(0).replace('Name="btn_notify"', 'Name="btn_help"')
-    for tag, val in [("LeftPos", "100"), ("Width", "12"), ("TabOrder", "70"), ("Caption", "Help"),
-                     ("EventToGenerate", "OpenEcmrsHelp"), ("EffectiveCaption", "Help")]:
-        btn, n = re.subn(rf"<{tag}>[^<]*</{tag}>", f"<{tag}>{val}</{tag}>", btn, count=1)
-        if n != 1:
-            raise SystemExit(f"btn_help: no <{tag}>")
-    btn = btn.replace("BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )", "BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )")
-    f.text = f.text[:m.end()] + "\r\n            " + btn + f.text[m.end():]
-    ev_anchor = "         </EventHandlers>"
-    f.text = f.text.replace(ev_anchor,
-        '            <EventHandler Name="OpenEcmrsHelp" Sequence="0">\r\n'
-        '               <ResponseType>39</ResponseType>\r\n'
-        f'               <Response>URL({HELP_BUTTON_URL}) ( )</Response>\r\n'
-        '            </EventHandler>\r\n' + ev_anchor, 1)
+    # 12. (Help button: removed 2026-09-29 - right-click -> Help replaces it, see 16 and 18.)
+    # 13d. "Next Assy Desc:" wrapped to three lines in its narrow column and showed "Next _Assy"
+    # (TRN screenshot 2026-09-29, the "dash under the Next Assy label"): Caption only.
+    f.caption("l_next_assy_description", "Assy Desc:")
 
     # 10. CMR Num = CMR-YYMMDD-HHMMSS on New.
     new_script = (
@@ -376,14 +369,39 @@ def build(text):
         "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
         "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormComponentHelp_0\r\n"
         "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
-        "            Dim page As String = \"index.html\"\r\n"
+        "            ' Which component was right-clicked: an event parameter naming a component on the\r\n"
+        "            ' form, else the component with the focus. Late-bound in Try blocks, so a member this\r\n"
+        "            ' SyteLine version lacks falls through instead of failing to compile. via= shows in the\r\n"
+        "            ' help server's log which one worked.\r\n"
+        "            Dim frm As Object = ThisForm\r\n"
+        "            Dim scr As Object = Me\r\n"
+        "            Dim comp As String = \"\"\r\n"
+        "            Dim via As String = \"none\"\r\n"
         "            Try\r\n"
-        "                Dim frm As Object = ThisForm\r\n"
-        "                Dim comp As String = CStr(frm.GetCurrentComponentName())\r\n"
-        "                If comp &lt;&gt; \"\" Then page = \"c/\" &amp; comp &amp; \".html\"\r\n"
+        "                Dim n As Integer = CInt(scr.ParameterCount)\r\n"
+        "                For i As Integer = 0 To n - 1\r\n"
+        "                    Dim p As String = CStr(scr.GetParameter(i))\r\n"
+        "                    If comp = \"\" AndAlso p &lt;&gt; \"\" Then\r\n"
+        "                        Try\r\n"
+        "                            If frm.Components(p) IsNot Nothing Then\r\n"
+        "                                comp = p\r\n"
+        "                                via = \"parm\"\r\n"
+        "                            End If\r\n"
+        "                        Catch\r\n"
+        "                        End Try\r\n"
+        "                    End If\r\n"
+        "                Next\r\n"
         "            Catch\r\n"
         "            End Try\r\n"
-        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_BASE_URL}\" &amp; page\r\n"
+        "            If comp = \"\" Then\r\n"
+        "                Try\r\n"
+        "                    comp = CStr(frm.GetCurrentComponentName())\r\n"
+        "                    If comp &lt;&gt; \"\" Then via = \"focus\"\r\n"
+        "                Catch\r\n"
+        "                    comp = \"\"\r\n"
+        "                End Try\r\n"
+        "            End If\r\n"
+        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via\r\n"
         "            ReturnValue = \"0\"\r\n"
         "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
     handlers = [

@@ -167,7 +167,7 @@ def bold_names(text):
     names = sorted({f["label"] for f in FIELDS if len(f["label"]) < 30} |
                    {"New", "Create Change Request", "Change Request Management", "QC CMRs", "QC MRRs",
                     "Requirement checkboxes", "Item Desc", "Dept Description", "WC Description",
-                    "Next Assy Desc", "Vendor Name", "Reviewer ID", "Close Date", "Closed By"},
+                    "Assy Desc", "Vendor Name", "Reviewer ID", "Close Date", "Closed By"},
                    key=len, reverse=True)
     out, i = [], 0
     s = e(text)

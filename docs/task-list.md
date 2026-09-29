@@ -26,7 +26,7 @@ Production has not been done yet - see "Production" at the end.
   the Item and saves failed.
 - [x] **Assigned Buyer**, **Qty**, **POC**, **RFQ Num**, **Job Num**, **Drawing Revision**,
   **Latest Revision**, **Requested Action**.
-- [x] **Item** → **Item Desc**, **Next Lvl Assy** → **Next Assy Desc**, **Vendor** → **Vendor Name**
+- [x] **Item** → **Item Desc**, **Next Lvl Assy** → **Assy Desc**, **Vendor** → **Vendor Name**
   — descriptions fill when the code is picked.
 - [x] **Priority** — Inline List High/Medium/Low.
 - [ ] **PO Num** list has no record cap: it lists every PO line. Fine now; may get slow as POs grow.
@@ -86,16 +86,19 @@ Production has not been done yet - see "Production" at the end.
   Open before release: which documents the **IDM** widget shows for an eCMRs record and how
   attaching works (steps 5.5.5, 5.5.7, 5.5.8; SDR 5.6); Notify's email arrives (step 5.5.9.4). Then
   route the new revisions for approval and replace the drafts with the released text.
-- [ ] Help: the **Help** button (next to Notify) opens the eCMRs help pages from
-  `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help\index.html`; right-click → Help opens the field's page (`c\` folder). To do: copy the repo
-  (at least `docs\help`) there, re-import the form, click Help. If the browser blocks the `file:`
-  link, host the folder on SharePoint / intranet and change `HELP_BUTTON_URL`.
+- [ ] Help: right-click → **Help** runs the form's handler (confirmed TRN 2026-09-29; the Help button is deleted).
+  The browser shows SyteLine's `GetFile.aspx` page for the `file:` address: host `docs/help` on an
+  `https://` address (internal web server / Azure Static Web App) and change `HELP_BUTTON_URL`.
+  **2026-09-29:** now points at the Enflite help (`Enflite/help`) on `http://localhost:5173` (`HELP_SITE`):
+  works on a PC running `npm run dev` there. Change `HELP_SITE` once the help is hosted.
+  Check that right-clicking a field opens that field's page, not `index.html`.
 - [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
   Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
   fill before save, Notify email, right-click Help, IDM widget (needs the AddIDM set-up; add the
   guide from `S:\Public\Engineering\Syteline\AddIDM` to `docs/`).
 - [ ] Sub Assembly: team to say what it should hold (Implementation Plan open item 8).
-- [ ] "Dash under the Next Assy label": get a screenshot (open item 12).
+- [x] "Dash under the Next Assy label": the label wrapped ("Next _Assy"); now **Assy Desc:**.
+- [ ] After the next import: if the **Help** button is still on TRN, delete it in Design Mode.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production

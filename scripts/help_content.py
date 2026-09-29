@@ -1,7 +1,7 @@
 """Help text for the eCMRs form: one entry per field, in form order, by section.
 
 Single source for the help pages (scripts/build_help.py writes docs/help/). The pages are a
-reference for users, opened by the form's Help button and by right-click -> Help. Describe what the
+reference for users, opened by right-click -> Help on the form. Describe what the
 form actually does on TRN - see docs/task-list.md and docs/troubleshooting.md - not plans.
 
 Each field: key (help page name), label (as on the form), components (form component names that
@@ -58,9 +58,6 @@ FIELDS = [
                "Priority. The email goes to the Assigned employee's SyteLine user (their email address). "
                "Save the CMR first, and make sure Assigned is filled in."],
          related=["assigned"]),
-    dict(key="help", section="header", label="Help", components=["btn_help"],
-         text=["Opens this eCMRs help: the form overview, a page for every field and the procedures. "
-               "Right-click a field and choose Help to open that field's page."]),
     dict(key="cmr_num", section="header", label="CMR Num", components=["c_cmr_num"],
          text=["The CMR's unique number, in the form CMR-YYMMDD-HHMMSS: the date and time "
                "New was clicked (for example CMR-260929-111742). It can't be changed."],
@@ -106,8 +103,8 @@ FIELDS = [
     dict(key="next_assy_item", section="header", label="Next Lvl Assy", components=["c_next_assy_item"],
          text=["The next-level assembly that uses the item. The list shows the job items that use "
                "the selected Item."],
-         filled="Next Assy Desc is filled in from the assembly.", related=["item", "next_assy_description"]),
-    dict(key="next_assy_description", section="header", label="Next Assy Desc", components=["c_next_assy_description"],
+         filled="Assy Desc is filled in from the assembly.", related=["item", "next_assy_description"]),
+    dict(key="next_assy_description", section="header", label="Assy Desc", components=["c_next_assy_description"],
          text=["The description of the next-level assembly."],
          filled="Filled in when a Next Lvl Assy is selected. You can type over it.", related=["next_assy_item"]),
     dict(key="vendor", section="header", label="Vendor", components=["c_vendor"],

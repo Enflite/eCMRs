@@ -38,28 +38,6 @@
                <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 47,111,237]; )</Post301Format>
                <EffectiveCaption>Notify</EffectiveCaption>
             </Component>
-            <Component Name="btn_help">
-               <DeviceID>-1</DeviceID>
-               <Type>8</Type>
-               <TabOrder>70</TabOrder>
-               <TopPos>2.9</TopPos>
-               <LeftPos>100</LeftPos>
-               <Height>1.4</Height>
-               <ListHeight>0</ListHeight>
-               <Width>12</Width>
-               <Caption>Help</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <Binding>0</Binding>
-               <EventToGenerate>OpenEcmrsHelp</EventToGenerate>
-               <Flags>1</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <Post301Format>FONT(9,0,0,0,700,0,0,0,0,0,0,0,0,Microsoft Sans Serif) FORECOLOR(255,255,255) BACKCOLOR(TYPE=0; ARGB=[255, 26,26,26]; )</Post301Format>
-               <EffectiveCaption>Help</EffectiveCaption>
-            </Component>
             <Component Name="c_assigned_buyer">
                <DeviceID>-1</DeviceID>
                <Type>27</Type>
@@ -2562,7 +2540,7 @@
                <Height>1.8</Height>
                <ListHeight>0</ListHeight>
                <Width>6.5</Width>
-               <Caption>Next Assy Desc:</Caption>
+               <Caption>Assy Desc:</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName />
                <ContainerSequence>0</ContainerSequence>
@@ -2573,7 +2551,7 @@
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
                <Post301Format />
-               <EffectiveCaption>Next Assy Desc:</EffectiveCaption>
+               <EffectiveCaption>Assy Desc:</EffectiveCaption>
             </Component>
             <Component Name="l_planning_reviewer_empnum">
                <DeviceID>-1</DeviceID>
@@ -3181,10 +3159,6 @@ End Namespace
                <ResponseType>22</ResponseType>
                <Response> SETPROPVALUES(ClosedBy=USERNAME())</Response>
             </EventHandler>
-            <EventHandler Name="OpenEcmrsHelp" Sequence="0">
-               <ResponseType>39</ResponseType>
-               <Response>URL(file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html) ( )</Response>
-            </EventHandler>
             <EventHandler Name="StdObjectNewCompleted" Sequence="0">
                <ResponseType>33</ResponseType>
                <Response>SCRIPTTEXT(Option Explicit On
@@ -3231,14 +3205,39 @@ Public Class EvHandler_StdFormComponentHelp_0
 Inherits GlobalScript
 
 Sub Main()
-            Dim page As String = "index.html"
+            ' Which component was right-clicked: an event parameter naming a component on the
+            ' form, else the component with the focus. Late-bound in Try blocks, so a member this
+            ' SyteLine version lacks falls through instead of failing to compile. via= shows in the
+            ' help server's log which one worked.
+            Dim frm As Object = ThisForm
+            Dim scr As Object = Me
+            Dim comp As String = ""
+            Dim via As String = "none"
             Try
-                Dim frm As Object = ThisForm
-                Dim comp As String = CStr(frm.GetCurrentComponentName())
-                If comp &lt;&gt; "" Then page = "c/" &amp; comp &amp; ".html"
+                Dim n As Integer = CInt(scr.ParameterCount)
+                For i As Integer = 0 To n - 1
+                    Dim p As String = CStr(scr.GetParameter(i))
+                    If comp = "" AndAlso p &lt;&gt; "" Then
+                        Try
+                            If frm.Components(p) IsNot Nothing Then
+                                comp = p
+                                via = "parm"
+                            End If
+                        Catch
+                        End Try
+                    End If
+                Next
             Catch
             End Try
-            ThisForm.Variables("EcmrsHelpUrl").Value = "file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/" &amp; page
+            If comp = "" Then
+                Try
+                    comp = CStr(frm.GetCurrentComponentName())
+                    If comp &lt;&gt; "" Then via = "focus"
+                Catch
+                    comp = ""
+                End Try
+            End If
+            ThisForm.Variables("EcmrsHelpUrl").Value = "http://localhost:5173/go/syteline/ecmrs" &amp; If(comp = "", "", "/" &amp; comp) &amp; "?via=" &amp; via
             ReturnValue = "0"
 End Sub
 End Class
@@ -3251,7 +3250,7 @@ End Namespace
             </EventHandler>
             <EventHandler Name="StdFormHelp" Sequence="0">
                <ResponseType>39</ResponseType>
-               <Response>URL(file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html) ( )</Response>
+               <Response>URL(http://localhost:5173/go/syteline/ecmrs) ( )</Response>
             </EventHandler>
             <EventHandler Name="StdFormPredisplay" Sequence="0">
                <ResponseType>0</ResponseType>
@@ -3294,7 +3293,7 @@ End Namespace
                <Description />
             </Variable>
             <Variable Name="EcmrsHelpUrl">
-               <Value>file:///S:/Engineering/Individual%20Folders/JSmith/eCMRs/docs/help/index.html</Value>
+               <Value>http://localhost:5173/go/syteline/ecmrs</Value>
                <Value2 />
                <Value3 />
                <Description />

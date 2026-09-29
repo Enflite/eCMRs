@@ -834,7 +834,40 @@ re-import through FormSync. In Design Mode it's the component's **Validate Immed
 **Confirm**: pick a Dept: the description fills straight away, before saving. Same for Work Center.
 Environments: TRN (to confirm), then production with the same file.
 
+## Help opens a `GetFile.aspx` page ("If the following link will not open, copy the file path...")
+
+**Symptom** (TRN, 2026-09-29): clicking Help opens a new tab at
+`https://csi10f.erpsl.inforcloudsuite.com/WSWebClient/GetFile.aspx?u_addr=file%3A%2F%2FS%3A%2F...`
+showing "If the following link will not open, copy the file path below and paste it into the
+address bar above", the `file://S:/...` link and a **Copy Link** button.
+
+**Cause**: SyteLine runs as an `https://` web page, and browsers (Chrome, Edge) never let a web page
+open a `file:` address. The SyteLine web client knows this, so for any `file:` URL it opens its own
+`GetFile.aspx` helper page instead, with the path to copy. Nothing in the form can change that: it is
+the browser's security rule. (It does show the form's `URL(...)` handler ran.)
+
+**Fix**: serve `docs/help` from an `https://` address the team can reach, then set `HELP_BUTTON_URL`
+in `tools/apply_form_changes.py` to that address, rebuild and re-import. Options: an internal web
+server (IIS) or an Azure Static Web App with company sign-in. SharePoint Online document libraries
+download `.html` files instead of showing them, so a plain library doesn't work. Don't use a public
+site: the procedures are company private. Until then, **Copy Link** and paste into the address bar
+works.
+
+**Environments**: TRN and production (same browser rule).
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
+
+> **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),
+> React + Express + MongoDB). The script now builds `<HELP_SITE>/go/syteline/ecmrs/<component>`
+> (`HELP_SITE` = `http://localhost:5173`, the help's dev server, until it is hosted), and the help
+> redirects to the field's page. The `docs/help/c/` pages below are the old S: drive version.
+>
+> **Which field was clicked**: the script tries an event parameter that names a form component
+> first, then `GetCurrentComponentName()` (the focused field), and adds `?via=parm`, `?via=focus` or
+> `?via=none` to the link. The help server prints one line per click
+> (`help link syteline/ecmrs component=c_item via=focus -> /syteline/ecmrs/fields/item`). If it
+> says `via=none`, SyteLine didn't tell the script which field: click into the field first, then
+> right-click → Help, and report what the log shows.
 
 `HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
 raises the standard event `StdFormComponentHelp` (the form's own Help: `StdFormHelp`) - both are in
@@ -855,6 +888,17 @@ each redirecting to that field's page (labels to their field, the rest to the fo
 Infor's topic opens as well, SyteLine still runs its built-in help after ours: write that down here.
 If the index page opens for every field, `GetCurrentComponentName` didn't return the clicked
 component: write that down too. If nothing opens: the browser blocks the `file:` link (see above).
+
+## "Dash" under the Next Assy label (shows "Next _Assy")
+
+**Symptom** (TRN, 2026-09-29): the label left of Next Assy's description reads "Next" / "_Assy",
+with "Desc:" missing.
+
+**Cause**: the caption "Next Assy Desc:" needs three lines in its 6.5-wide, two-line-high column
+(1.8), so it wraps and is cut off; the wrap shows as a dash.
+
+**Fix**: caption only, "Assy Desc:" (fits two lines like "Vendor Name:"),
+`tools/apply_form_changes.py` step 13d. Confirm: the label reads **Assy Desc:**. TRN, then production.
 
 ## General debugging order for "it's not working" reports
 
