@@ -834,6 +834,27 @@ re-import through FormSync. In Design Mode it's the component's **Validate Immed
 **Confirm**: pick a Dept: the description fills straight away, before saving. Same for Work Center.
 Environments: TRN (to confirm), then production with the same file.
 
+## Help opens a `GetFile.aspx` page ("If the following link will not open, copy the file path...")
+
+**Symptom** (TRN, 2026-09-29): clicking Help opens a new tab at
+`https://csi10f.erpsl.inforcloudsuite.com/WSWebClient/GetFile.aspx?u_addr=file%3A%2F%2FS%3A%2F...`
+showing "If the following link will not open, copy the file path below and paste it into the
+address bar above", the `file://S:/...` link and a **Copy Link** button.
+
+**Cause**: SyteLine runs as an `https://` web page, and browsers (Chrome, Edge) never let a web page
+open a `file:` address. The SyteLine web client knows this, so for any `file:` URL it opens its own
+`GetFile.aspx` helper page instead, with the path to copy. Nothing in the form can change that: it is
+the browser's security rule. (It does show the form's `URL(...)` handler ran.)
+
+**Fix**: serve `docs/help` from an `https://` address the team can reach, then set `HELP_BUTTON_URL`
+in `tools/apply_form_changes.py` to that address, rebuild and re-import. Options: an internal web
+server (IIS) or an Azure Static Web App with company sign-in. SharePoint Online document libraries
+download `.html` files instead of showing them, so a plain library doesn't work. Don't use a public
+site: the procedures are company private. Until then, **Copy Link** and paste into the address bar
+works.
+
+**Environments**: TRN and production (same browser rule).
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
 `HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
