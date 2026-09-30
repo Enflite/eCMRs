@@ -421,7 +421,10 @@ def build(text):
     # event: #17 raised one and the menu stopped opening): read what SyteLine passes with Infor's
     # CountParameter/GetParameter (the other scripts call "ParameterCount", which isn't Infor's
     # name, so they never saw any), ask GetCurrentComponentName() for the focused field, and put
-    # it all in the link: via=focus|focusempty|focuserr, p=the parameters (or err), e=any error.
+    # it all in the link: via=focus|focusempty|focuserr, e=any error.
+    # #20 (direct CountParameter/GetParameter + GetCurrentComponentName) failed to compile on TRN
+    # with no detail ("Error compiling script EvHandler_StdFormHelp_0->"), so one call at a time:
+    # this version has only ThisForm.GetCurrentComponentName(); parameters come back once it compiles.
     # Calls go straight to ThisForm and the script (CountParameter, GetParameter): SyteLine refuses
     # late-bound calls through an Object variable ("Attempt by method ...InvokeMethod... to access
     # method ...ScriptForm.Variables(System.String) failed", TRN 2026-09-30), which is also why the
@@ -429,13 +432,11 @@ def build(text):
     form_help = (
         "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
         "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
-        'Dim c As String = "", v As String = "none", q As String = "", e As String = ""\r\n'
-        "Try\r\nFor i As Integer = 0 To CountParameter() - 1\r\n"
-        'q = q & "," & GetParameter(i)\r\nNext\r\nCatch x As Exception\r\nq = "err"\r\ne = x.Message\r\nEnd Try\r\n'
-        'Try\r\nc = ThisForm.GetCurrentComponentName()\r\nv = If(c = "", "focusempty", "focus")\r\n'
-        'Catch x As Exception\r\nv = "focuserr"\r\ne = e & " " & x.Message\r\nEnd Try\r\n'
+        'Dim c As String = "", v As String = "focusempty", e As String = ""\r\n'
+        'Try\r\nc = ThisForm.GetCurrentComponentName()\r\nIf c <> "" Then v = "focus"\r\n'
+        'Catch x As Exception\r\nv = "focuserr"\r\ne = x.Message\r\nEnd Try\r\n'
         f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
-        ' & "&ev=form&p=" & Uri.EscapeDataString(q) & "&e=" & Uri.EscapeDataString(If(e.Length > 200, e.Substring(0, 200), e))\r\n'
+        ' & "&ev=form&e=" & Uri.EscapeDataString(If(e.Length > 200, e.Substring(0, 200), e))\r\n'
         'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
 
     handlers = [

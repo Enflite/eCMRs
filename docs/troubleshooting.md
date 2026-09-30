@@ -994,6 +994,13 @@ now goes into the link as `&e=`. `StdFormHelp` step 0 only for now; the same fix
 **Confirm**: right-click **Item** → **Help** shows no error dialog; Vercel's log shows `via=`, `p=`
 and `e=` for the request.
 
+**Then (TRN, 2026-09-30, after #20)**: `Error compiling script EvHandler_StdFormHelp_0->`, with no more
+detail in the dialog or the browser console. So one of the direct calls doesn't exist in SyteLine's
+web scripting (`ThisForm` there is a `ScriptingDomain.ScriptForm`, not the Windows client's
+`IWSForm` the help pages describe). Next import: only `ThisForm.GetCurrentComponentName()` (the
+parameter calls removed). It compiles → the parameter calls were the problem; the same compile
+error → `GetCurrentComponentName` is.
+
 ## "Your pop-up Blocker may be enabled" on right-click → Help
 
 **Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up
