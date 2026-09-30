@@ -975,6 +975,25 @@ or `nofocusapi`; `p=` the parameters, or `err`). No second event, no change to `
 the grid or menus. Import only after checking that the right-click menu opens on other forms and
 that **F1** in **Item** works.
 
+## "Attempt by method ...InvokeMethod... to access method ...ScriptForm.Variables(System.String) failed"
+
+**Symptom** (TRN, 2026-09-30, after #19): right-click a field → **Help** shows `Error during
+execution of Global script class [Mongoose.GlobalScripts.EvHandler_StdFormHelp_0]` with that message.
+
+**Cause (confirmed by the message)**: SyteLine refuses *late-bound* calls on the form, calls made
+through a plain `Object` variable (`Dim f As Object = ThisForm`, then `f.Variables(...)`). #19's
+`f.Variables(...)` was outside a `Try`, so it showed. The older scripts made the same kind of call
+(`f.GetCurrentComponentName()`, `f.Components(p)`) inside a `Try`, so the refusal was hidden and they
+always reported `via=none`: SyteLine never got to answer.
+
+**Fix (in the XML)**: call directly, as Infor's own scripts do: `ThisForm.GetCurrentComponentName()`,
+`ThisForm.Variables(...)`, and the script's own `CountParameter()` / `GetParameter(i)`. Any error text
+now goes into the link as `&e=`. `StdFormHelp` step 0 only for now; the same fix applies to
+`StdFormComponentHelp` and `ENF_FindHelpField` once `StdFormHelp` is confirmed.
+
+**Confirm**: right-click **Item** → **Help** shows no error dialog; Vercel's log shows `via=`, `p=`
+and `e=` for the request.
+
 ## "Your pop-up Blocker may be enabled" on right-click → Help
 
 **Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up
