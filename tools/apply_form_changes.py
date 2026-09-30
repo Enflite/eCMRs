@@ -93,6 +93,10 @@ What it changes (v1 -> v2):
      and its OpenEcmrsHelp handler are no longer in the file, so production never gets them. TRN
      already has them: if FormSync leaves the button there, delete it once in Design Mode (Implementation
      Plan 4c). HELP_BUTTON_URL is still the help address used by right-click -> Help.
+  19. Item is required (team, 2026-09-30): the IDM look-up matches on the Item, and a blank Item
+     would match every document with a blank Item. Flags 1 -> 513 on c_item: bit 512 is REQUIRED
+     (Mongoose ComponentFlags, read from WSEnums.dll: VALIDATE_IMMEDIATELY = 32, REQUIRED = 512;
+     Infor's forms use it, e.g. Service Orders CgsRevLocLaborEdit 513, Incidents SSRSiteEdit 545).
   17. IDM documents widget: the business-context handlers every Infor form uses (QC_CMRs, Lots,
      Service Orders, Customer Order Lines): StdFormPredisplay loads the form's message template
      (SLFormExtMsgEntities.LoadJSONVar, form name eCMRs) and StdObjectSelectCurrentCompleted
@@ -360,6 +364,8 @@ def build(text):
     # 14. Validate Immediately on the two description validators.
     for name in ("c_dept", "c_wc"):
         f.set(name, "Flags", "33")
+    # 19. Item required.
+    f.set("c_item", "Flags", "513")
 
     # 15-17. New event handlers and the variables they use.
     f.set("btn_notify", "EventToGenerate", "ENF_NotifyUser")

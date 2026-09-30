@@ -889,6 +889,26 @@ what the old files carry; eCMRs sends `2` or `CMR-YYMMDD-HHMMSS`, so nothing mat
 Item only ([Enflite/IDM, eCMRs plan](https://github.com/Enflite/IDM/blob/main/docs/ecmrs/Implementation-Plan.md)). Confirm with the same `bc/search` request in the browser's
 network tab. Environments: TRN, then production.
 
+## Component `Flags` values (Validate Immediately, Required, Read Only ...)
+
+A component's `<Flags>` in the form XML is a sum of bits. Values from Mongoose's `ComponentFlags`
+enum (read from `WSEnums.dll`, `cmr-project/mg-bin`), the ones we use or may need:
+
+| Bit | Meaning |
+|---|---|
+| 1 | Set on almost every field component in Infor's exports |
+| 32 | Validate Immediately (validators run as soon as the value changes; step 14) |
+| 512 | Required (step 19, **Item**) |
+| 1024 | No Clear On New |
+| 2048 | Uppercase |
+| 8192 / 16384 | Read Only for existing / for new records |
+| 524288 | No Tab Stop |
+| 1048576 | Combo auto-complete |
+
+Example: Required + Validate Immediately on a field = `1 + 32 + 512` = `545` (Incidents
+`SSRSiteEdit`). FormSync applies the value in the file, so set it in the build script, never in
+Design Mode.
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),

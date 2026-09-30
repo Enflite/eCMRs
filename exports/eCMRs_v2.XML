@@ -630,7 +630,7 @@
                <ComboListSource>STDOLE SLItems(  PROPERTIES(Item,Description) DISPLAY(1,2))</ComboListSource>
                <DefaultFrom>Item(ItemDescription)</DefaultFrom>
                <PropertyClassName>Item</PropertyClassName>
-               <Flags>1</Flags>
+               <Flags>513</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>

@@ -47,7 +47,7 @@ Production has not been done yet - see "Production" at the end.
 - [x] **Top Level PN**, **Sub Assembly**.
 - [ ] IDM: the form sends its message (confirmed TRN 2026-09-30). Look-up by Item: set up
   `ECMR_Documents` per [Enflite/IDM's eCMRs plan](https://github.com/Enflite/IDM/blob/main/docs/ecmrs/Implementation-Plan.md), then check the files show.
-- [ ] Decide: make **Item** required (a CMR without one would match every file with a blank Item)?
+- [ ] **Item** required (team, 2026-09-30; build script step 19): after the next import, check a CMR can't be saved without an Item.
 - [ ] **Top Level PN** and **Sub Assembly** hidden (team, 2026-09-29 / 09-30): check they are gone on TRN after the next import.
 
 ## Quality
