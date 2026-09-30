@@ -898,6 +898,29 @@ Infor's topic opens as well, SyteLine still runs its built-in help after ours: w
 If the index page opens for every field, `GetCurrentComponentName` didn't return the clicked
 component: write that down too. If nothing opens: the browser blocks the `file:` link (see above).
 
+## "SCRIPTTEXT keyword required for InlineScript event handlers" on right-click → Help
+
+**Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows a dialog **Infor SyteLine -
+eCMRs**: `SCRIPTTEXT keyword required for InlineScript event handlers`, after importing the build
+where `StdFormHelp` runs the find-the-field script.
+
+**Cause (likely, not confirmed)**: TRN already had `StdFormHelp` step 0 as a **URL** response
+(`URL(<HELP_SITE>/go/syteline/ecmrs) ( )`). The new export makes step 0 an inline script (type 33,
+`SCRIPTTEXT(...)`). FormSync merged into the existing step and kept its old `URL(...)` text under the
+new type. The export itself is correct: both `StdFormComponentHelp` and `StdFormHelp` step 0 start
+with `SCRIPTTEXT(`.
+
+**Fix**:
+1. **Design Mode** → **Form** → **Event Handlers** → **StdFormHelp**: check step 0 (to confirm the cause:
+   inline script type with a `URL(` response).
+2. Delete both **StdFormHelp** steps and save.
+3. Import `exports/eCMRs_v2.XML` through **FormSync** again, so `StdFormHelp` is added fresh.
+
+**Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
+
+**Environments**: TRN only. Production never had the URL-only `StdFormHelp`; Service Orders and
+Incidents had no help handlers before.
+
 ## "Dash" under the Next Assy label (shows "Next _Assy")
 
 **Symptom** (TRN, 2026-09-29): the label left of Next Assy's description reads "Next" / "_Assy",
