@@ -17,7 +17,7 @@ Production has not been done yet - see "Production" at the end.
   ([`length-fixes.md`](length-fixes.md)). Works as is.
 - [x] **Assigned** (`AssignedEmpNum` combo → `AssignedUsername`) — picking the ID fills the name
   (e.g. 3 → Arguelles, Paul G.).
-- [x] **Notify** button — shows a message only; sends nothing (see "Open decisions").
+- [ ] **Notify** button — raises Enflite's `ENF_NotifyUserWithCMR` email event, like QC_CMRs (round 1). Not yet confirmed on TRN that the email arrives.
 - [x] **CMR Num** (`CmrNum`) — set on **New** to `CMR-YYMMDD-HHMMSS` by the form
   (`StdObjectNewCompleted`). IDO: String, length 255, no Default Value. Replaced
   `AUTONUMBER(STEP(1))`, which repeated numbers (PK_ue_ecmrs save error).
