@@ -81,6 +81,9 @@ legacy forms are the requirements reference.
 - **2026-09-30:** `HELP_SITE` is now the help's Vercel production domain, `https://help-seven-xi.vercel.app`. The
   `help-212448u20-…` address was one fixed deployment, so it never got the help's later fixes.
 
+- **2026-09-30:** After #17 the right-click menu didn't open on TRN. The help handlers are back to
+  #16's (menu opened, script ran), with only the production domain changed (`docs/troubleshooting.md`).
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout

@@ -934,6 +934,25 @@ to open the help link (see the pop-up entry below).
 **Environments**: TRN, then production with the same file. Service Orders and Incidents get the same
 scripts (no apostrophes) before their first import.
 
+## Right-click menu doesn't open (after Enflite/eCMRs#17)
+
+**Symptom** (TRN, 2026-09-30): after importing #17, right-clicking a field shows no menu at all.
+
+**Cause (not confirmed)**: #17 changed only the help handlers: `StdFormComponentHelp` and
+`StdFormHelp` both collected their parameters into a new variable, `EcmrsHelpParms`, and raised
+`ENF_FindHelpField`. Everything else was the same as #16, where the menu opened and the script ran.
+`StdFormComponentHelp` is the handler tied to right-clicking a field, and it now raised another
+event from inside itself.
+
+**Fix (in the XML)**: back to #16's handlers exactly, with only `HELP_SITE` changed to the production
+domain: `StdFormComponentHelp` runs the find-the-field script itself; `StdFormHelp` raises
+`ENF_FindHelpField`, which runs it; step 1 of each opens `URL(V(EcmrsHelpUrl))`. Import
+`exports/eCMRs_v2.XML` through **FormSync**. TRN keeps the unused `EcmrsHelpParms` variable
+(FormSync keeps what the file leaves out); it does nothing. Further diagnostics go in one small
+change at a time, each tested on TRN.
+
+**Confirm**: right-click a field → the menu opens; **Help** opens the help (pop-up allowed).
+
 ## "Your pop-up Blocker may be enabled" on right-click → Help
 
 **Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up
