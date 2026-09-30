@@ -910,11 +910,12 @@ where `StdFormHelp` runs the find-the-field script.
 new type. The export itself is correct: both `StdFormComponentHelp` and `StdFormHelp` step 0 start
 with `SCRIPTTEXT(`.
 
-**Fix**:
-1. **Design Mode** → **Form** → **Event Handlers** → **StdFormHelp**: check step 0 (to confirm the cause:
-   inline script type with a `URL(` response).
-2. Delete both **StdFormHelp** steps and save.
-3. Import `exports/eCMRs_v2.XML` through **FormSync** again, so `StdFormHelp` is added fresh.
+**Fix** (no Design Mode): import the same `exports/eCMRs_v2.XML` through **FormSync** again. Step 0
+is now already an inline script on TRN, so the second import only changes its text, and FormSync
+does update text on an existing step (the `HELP_SITE` change from `localhost:5173` to the Vercel
+address reached TRN that way). If the dialog still shows after that, the next step is to move the
+script to an event name TRN has never had, so FormSync creates it fresh (as with
+`c_reason_code_v2` above).
 
 **Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
 
