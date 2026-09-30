@@ -421,17 +421,21 @@ def build(text):
     # event: #17 raised one and the menu stopped opening): read what SyteLine passes with Infor's
     # CountParameter/GetParameter (the other scripts call "ParameterCount", which isn't Infor's
     # name, so they never saw any), ask GetCurrentComponentName() for the focused field, and put
-    # it all in the link: via=focus|focusempty|nofocusapi, p=the parameters (or err).
+    # it all in the link: via=focus|focusempty|focuserr, p=the parameters (or err), e=any error.
+    # Calls go straight to ThisForm and the script (CountParameter, GetParameter): SyteLine refuses
+    # late-bound calls through an Object variable ("Attempt by method ...InvokeMethod... to access
+    # method ...ScriptForm.Variables(System.String) failed", TRN 2026-09-30), which is also why the
+    # older scripts' f.GetCurrentComponentName() and f.Components(p) never answered (via=none).
     form_help = (
         "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
         "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
-        'Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none", q As String = ""\r\n'
-        "Try\r\nFor i As Integer = 0 To CInt(s.CountParameter()) - 1\r\n"
-        'q = q & "," & CStr(s.GetParameter(i))\r\nNext\r\nCatch\r\nq = "err"\r\nEnd Try\r\n'
-        'Try\r\nc = CStr(f.GetCurrentComponentName())\r\nv = If(c = "", "focusempty", "focus")\r\n'
-        'Catch\r\nv = "nofocusapi"\r\nEnd Try\r\n'
-        f'f.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
-        ' & "&ev=form&p=" & System.Uri.EscapeDataString(q)\r\n'
+        'Dim c As String = "", v As String = "none", q As String = "", e As String = ""\r\n'
+        "Try\r\nFor i As Integer = 0 To CountParameter() - 1\r\n"
+        'q = q & "," & GetParameter(i)\r\nNext\r\nCatch x As Exception\r\nq = "err"\r\ne = x.Message\r\nEnd Try\r\n'
+        'Try\r\nc = ThisForm.GetCurrentComponentName()\r\nv = If(c = "", "focusempty", "focus")\r\n'
+        'Catch x As Exception\r\nv = "focuserr"\r\ne = e & " " & x.Message\r\nEnd Try\r\n'
+        f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
+        ' & "&ev=form&p=" & Uri.EscapeDataString(q) & "&e=" & Uri.EscapeDataString(If(e.Length > 200, e.Substring(0, 200), e))\r\n'
         'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
 
     handlers = [
