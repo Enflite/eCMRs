@@ -862,16 +862,19 @@ KB2024412): on each record the form posts a JSON business-context message. `StdF
 loads the form's template (`SLFormExtMsgEntities.LoadJSONVar`, form `eCMRs`),
 `StdObjectSelectCurrentCompleted` fills it for the record (`FormatJSONVar`) and sends it
 (`JSONMSGTYPE(inforBusinessContext)`). IDM matches the entity type to a Business Context Model
-entry (`InforItemSpec` → document type `CS_Item`) and shows the documents whose attributes match.
+entry (`CMR_Documents`, the entity the old QC_CMRs form sends) and shows the documents whose
+attributes match its XQuery.
 
 **If the panel is empty**, in this order:
-1. **Form External Message Entities** has no rows for form `eCMRs` (the entity types are defined per
-   form). Add `InforItemSpec` with `accountingEntity` = `V(Parm_Site)`, `id1` = `P(Item)`, copied
-   from the Items form's row (Implementation Plan 4c step 3).
-2. Case: attribute names and values are case sensitive (`id1`, not `ID1`).
-3. The form name in the JSON isn't `eCMRs` (the guide's note for extended forms): check it in the
+1. **Form External Message Entities** has no row for form `eCMRs` (the entity types are defined per
+   form). Add `CMR_Documents` with the QC_CMRs attribute names mapped to eCMRs properties
+   (Implementation Plan 4c step 3).
+2. The IDM **Business Context Model** entry for `CMR_Documents` names screen `QC_CMRs` only: add
+   one for `eCMRs`. Its XQuery decides whether documents match on `Item` or `CmrNum`.
+3. Case: attribute names and values are case sensitive (`RFQNum`, not `RfqNum`, as the attribute).
+4. The form name in the JSON isn't `eCMRs` (the guide's note for extended forms): check it in the
    **Context Viewer** app.
-4. The Item has no documents in IDM (check the same item on the **Items** form).
+5. There are no matching documents in IDM yet.
 
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 

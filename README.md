@@ -84,7 +84,7 @@ legacy forms are the requirements reference.
 - **2026-09-30:** After #17 the right-click menu didn't open on TRN. The help handlers are back to
   #16's (menu opened, script ran), with only the production domain changed (`docs/troubleshooting.md`).
 - **2026-09-30:** **Sub Assembly** removed from the form (hidden like Top Level PN; column and data kept).
-- **2026-09-30:** IDM: the form's handlers match Infor's AddIDM guide (KB2024412, in `docs/reference/`); the remaining step is the **Form External Message Entities** rows for `eCMRs` (plan 4c step 3).
+- **2026-09-30:** IDM: the form's handlers match Infor's AddIDM guide (KB2024412, in `docs/reference/`); the remaining step is a **Form External Message Entities** row for `eCMRs`, entity `CMR_Documents` like QC_CMRs (plan 4c step 3).
 
 - **2026-09-30:** Right-click a field → **Help** opens that field's page in the Enflite help on TRN
   (**confirmed**, #21): the form's Help asks `ThisForm.GetCurrentComponentName()` directly. **F1** /
