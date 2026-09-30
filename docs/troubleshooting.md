@@ -869,6 +869,13 @@ works.
 > says `via=none`, SyteLine didn't tell the script which field: click into the field first, then
 > right-click → Help, and report what the log shows.
 >
+> **2026-09-30, TRN: `ev=form via=none`.** SyteLine raised the form's Help for right-click a field,
+> and the script found neither a parameter naming a component nor a focused component. The script
+> now says which: both help events pass the event's parameters to `ENF_FindHelpField` (variable
+> `EcmrsHelpParms`), and the link carries them as `&p=` plus a finer `via=`: `parm`, `focus`,
+> `focusempty` (`GetCurrentComponentName()` exists but returned nothing), `nofocusapi` (the method
+> doesn't exist here) or `none`. Vercel's request log lists every query value (**Search Params**).
+>
 > **2026-09-30, TRN: right-click a field → Help opened the eCMRs form page, not the field's.**
 > Cause: the help log showed `GET /go/syteline/ecmrs` with no `?via=`, the link the form's own Help
 > (`StdFormHelp`) sends, so SyteLine raised `StdFormHelp` for the right-click, not

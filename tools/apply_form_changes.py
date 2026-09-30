@@ -372,29 +372,35 @@ def build(text):
     # script left TRN with the new type but the old URL(...) text ("SCRIPTTEXT keyword required for
     # InlineScript event handlers"). Step 0 keeps the inline-script type now, so importing this is a
     # text change there, and ENF_FindHelpField is new, so FormSync adds it whole.
-    def help_script(event, ev):
-        """The find-the-field script: the clicked component is an event parameter naming one, else
-        the focused one. Plain text, escaped and split into <Response>/<Response2> when written.
-        No comments: a VB comment starts with an apostrophe, and SyteLine reads ' in a response as
-        a quote, so an unmatched one hides the keyword ("SCRIPTTEXT keyword required for InlineScript
-        event handlers", TRN 2026-09-30). Infor's own inline scripts have none either."""
-        return (
-            "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
-            f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
-            'Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none"\r\n'
+    def script(event, body):
+        return ("SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
+                f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
+                + body + 'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
+
+    def collect(event, ev):
+        """Step 0 of both help events: put the event's name and parameters in EcmrsHelpParms
+        ("form,p1,p2..."), then raise ENF_FindHelpField. No comments in scripts: SyteLine reads an
+        apostrophe in a response as a quote ("SCRIPTTEXT keyword required", TRN 2026-09-30)."""
+        return script(event,
+            f'Dim s As Object = Me, q As String = "{ev}"\r\n'
             "Try\r\nFor i As Integer = 0 To CInt(s.ParameterCount) - 1\r\n"
-            "Dim p As String = CStr(s.GetParameter(i))\r\n"
-            'If c = "" AndAlso p <> "" Then\r\nTry\r\nIf f.Components(p) IsNot Nothing Then c = p : v = "parm"\r\n'
-            "Catch\r\nEnd Try\r\nEnd If\r\nNext\r\nCatch\r\nEnd Try\r\n"
-            'If c = "" Then\r\nTry\r\nc = CStr(f.GetCurrentComponentName())\r\nIf c <> "" Then v = "focus"\r\n'
-            "Catch\r\nEnd Try\r\nEnd If\r\n"
-            f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v & "&ev={ev}"\r\n'
-            'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
-    raise_find_field = (
-        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
-        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
-        'ThisForm.GenerateEvent("ENF_FindHelpField")\r\n'
-        'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
+            'q = q & "," & CStr(s.GetParameter(i))\r\nNext\r\nCatch\r\nq = q & ",err"\r\nEnd Try\r\n'
+            'ThisForm.Variables("EcmrsHelpParms").Value = q\r\n'
+            'ThisForm.GenerateEvent("ENF_FindHelpField")\r\n')
+
+    # ENF_FindHelpField: the clicked component is a parameter naming one, else the focused one.
+    # via= says how it was found (parm, focus, focusempty, nofocusapi, none); p= carries what
+    # SyteLine passed, so the help's log shows it (TRN 2026-09-30: via=none, ev=form).
+    find_field = script("ENF_FindHelpField",
+        'Dim f As Object = ThisForm, c As String = "", v As String = "none"\r\n'
+        'Dim q As String = CStr(f.Variables("EcmrsHelpParms").Value)\r\n'
+        'For Each p As String In q.Split(","c)\r\n'
+        'If c = "" AndAlso p <> "" Then\r\nTry\r\nIf f.Components(p) IsNot Nothing Then c = p : v = "parm"\r\n'
+        "Catch\r\nEnd Try\r\nEnd If\r\nNext\r\n"
+        'If c = "" Then\r\nTry\r\nc = CStr(f.GetCurrentComponentName())\r\nv = If(c = "", "focusempty", "focus")\r\n'
+        'Catch\r\nv = "nofocusapi"\r\nEnd Try\r\nEnd If\r\n'
+        f'f.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
+        ' & "&ev=" & q.Split(","c)(0) & "&p=" & System.Uri.EscapeDataString(q)\r\n')
 
     def response_xml(text):
         """<Response>, plus <Response2> for a long script: Infor's exports split a response at 500
@@ -417,11 +423,11 @@ def build(text):
         ("ENF_NotifyUser", 1, 43,
          "EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! "
          "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
-        ("StdFormComponentHelp", 0, 33, help_script("StdFormComponentHelp", "field")),
+        ("StdFormComponentHelp", 0, 33, collect("StdFormComponentHelp", "field")),
         ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("StdFormHelp", 0, 33, raise_find_field),
+        ("StdFormHelp", 0, 33, collect("StdFormHelp", "form")),
         ("StdFormHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("ENF_FindHelpField", 0, 33, help_script("ENF_FindHelpField", "form")),
+        ("ENF_FindHelpField", 0, 33, find_field),
         ("StdFormPredisplay", 0, 0,
          "SLFormExtMsgEntities.LoadJSONVar( PARMS(VAR eCMRs, RVAR V(JSONVarNotInterpretWithLIT)) )"),
         ("StdFormPredisplay", 1, 22, "SETVARVALUES(JSONVarNotInterpret=V(JSONVarNotInterpretWithLIT))"),
@@ -445,6 +451,7 @@ def build(text):
         ("ehp1_ENF_NotifyUser0", "CmrNum=P(CmrNum), EAddres=V(EcmrsNotifyEmail), Priority = P(Priority)"),
         ("EcmrsNotifyEmail", ""),
         ("EcmrsHelpUrl", HELP_BUTTON_URL),
+        ("EcmrsHelpParms", ""),
     ]
     anchor = "         </Variables>"
     if f.text.count(anchor) != 1:
