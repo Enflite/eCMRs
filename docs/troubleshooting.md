@@ -935,6 +935,13 @@ with "Desc:" missing.
 
 ## General debugging order for "it's not working" reports
 
+**Rule (team, 2026-09-30): every fix goes in the XML, never in Design Mode.** Change the build
+script, rebuild `exports/eCMRs_v2.XML`, commit both, and re-import through **FormSync**. Design
+Mode is only for looking (checking a property, a handler, a binding), not for changing the form.
+When FormSync keeps an old setting, fix it in the file: re-import once more if only the text of a
+step or property changed, or give the component or event a new name so FormSync creates it fresh
+(`c_reason_code_v2`).
+
 1. **Check our own generated files first** (`generate_form.py`'s output,
    `generate_schema_csv.py`'s `FIELDS`) before assuming it's a live
    Application-Studio-only mystery — several real bugs (the `String`

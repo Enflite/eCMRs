@@ -99,7 +99,7 @@ Production has not been done yet - see "Production" at the end.
   guide from `S:\Public\Engineering\Syteline\AddIDM` to `docs/`).
 - [ ] Sub Assembly: team to say what it should hold (Implementation Plan open item 8).
 - [x] "Dash under the Next Assy label": the label wrapped ("Next _Assy"); now **Assy Desc:**.
-- [ ] After the next import: if the **Help** button is still on TRN, delete it in Design Mode.
+- [x] After the next import: **Help** button gone on TRN (screenshot 2026-09-30: nothing next to **Notify**). Had it stayed, the fix would go in the XML, not Design Mode.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.
 
 ## Production
