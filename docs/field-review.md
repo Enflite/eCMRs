@@ -51,7 +51,7 @@ Status (updated 2026-09-29, after v2 was imported and tested on TRN): **OK** = w
 |---|---|---|
 | Serial # (`SerialNum`) | OK | Lists serials of the selected Item (`SLSerials`). Empty for items with no serials - test with a serial-tracked item. |
 | LOT # (`LotNum`) | OK | Same, `SLLots`. |
-| Top Level PN / Sub Assembly | **Changed (round 1)** | Top Level PN hidden (team feedback). Sub Assembly: plain text; open question whether it's the same as Next Lvl Assy. |
+| Top Level PN / Sub Assembly | **Hidden** | Both removed from the form by the team (Top Level PN 2026-09-29, Sub Assembly 2026-09-30); columns and data kept. |
 
 ## Quality
 

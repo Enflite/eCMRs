@@ -63,7 +63,8 @@ What it changes (v1 -> v2):
      d. "Next Assy Desc:" -> "Assy Desc:" so the label fits its two lines (it showed "Next _Assy").
      b. Top Level PN is hidden (label and field, Hidden=True). Not deleted: FormSync only applies
         what is in the file, so a component left out of the file would stay on the form. The
-        top_level_pn column and TopLevelPn property stay, so existing data is kept.
+        top_level_pn column and TopLevelPn property stay, so existing data is kept. Sub Assembly is
+        hidden the same way (team, 2026-09-30: "Remove Sub Assembly"; sub_assembly / SubAssembly kept).
      c. Requested Action: and General Note: labels sit directly above the top-left corner of
         their text boxes (they floated to the left, away from the boxes). Requested Action's box
         starts one row lower to make room.
@@ -346,8 +347,8 @@ def build(text):
 
     # 13a. Item Desc to the Dept Description's right edge (11.25 + 40).
     f.place("edit1_SITE", w=51.25 - 11.625)
-    # 13b. Top Level PN hidden (see docstring).
-    for name in ("l_top_level_pn", "c_top_level_pn"):
+    # 13b. Top Level PN and Sub Assembly hidden (see docstring).
+    for name in ("l_top_level_pn", "c_top_level_pn", "l_sub_assembly", "c_sub_assembly"):
         f.set(name, "Hidden", "True")
     # 13c. Labels above their text boxes, left-aligned with the box.
     f.place("l_requested_action", y=10.35, x=54, w=14, h=1)
