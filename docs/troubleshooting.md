@@ -904,17 +904,20 @@ component: write that down too. If nothing opens: the browser blocks the `file:`
 eCMRs**: `SCRIPTTEXT keyword required for InlineScript event handlers`, after importing the build
 where `StdFormHelp` runs the find-the-field script.
 
-**Cause (likely, not confirmed)**: TRN already had `StdFormHelp` step 0 as a **URL** response
-(`URL(<HELP_SITE>/go/syteline/ecmrs) ( )`). The new export makes step 0 an inline script (type 33,
-`SCRIPTTEXT(...)`). FormSync merged into the existing step and kept its old `URL(...)` text under the
-new type. The export itself is correct: both `StdFormComponentHelp` and `StdFormHelp` step 0 start
-with `SCRIPTTEXT(`.
+**Cause (found 2026-09-30)**: the scripts had VB comments, and a VB comment starts with an
+apostrophe (`' Which component…`, `server's`). SyteLine reads `'` in an event response as a quote
+(as in `FILTER(Item='P(Item)')`), so an unmatched one hides the `SCRIPTTEXT(` keyword. The
+one-line `StdFormHelp` script from the first fix attempt had one too (`' Find the clicked field…`),
+which is why the error stayed. None of Infor's 16 inline scripts in the Service Orders export has an
+apostrophe, and neither does our working `StdObjectNewCompleted` script.
 
-**Fix (in the XML, 2026-09-30)**: `StdFormHelp` step 0 keeps the inline-script type TRN now has
-and becomes a one-line script, `ThisForm.GenerateEvent("ENF_FindHelpField")`. The find-the-field
-script moved to the new event `ENF_FindHelpField` (step 0), which TRN has never had, so FormSync
-adds it whole. Step 1 is unchanged (`URL(V(EcmrsHelpUrl))`). `tools/apply_form_changes.py`, rebuilt
-`exports/eCMRs_v2.XML`. Import it through **FormSync**; no Design Mode.
+**Fix (in the XML)**: no comments in inline scripts; the build script stops with an error if one
+contains `'`. The find-the-field script is also shorter (about 880 characters) and split into
+`<Response>` (500 characters) and `<Response2>`, as Infor's exports store long scripts.
+`StdFormHelp` step 0 is a one-line script, `ThisForm.GenerateEvent("ENF_FindHelpField")`; the
+find-the-field script is the new event `ENF_FindHelpField`; step 1 opens `URL(V(EcmrsHelpUrl))`.
+`tools/apply_form_changes.py`, rebuilt `exports/eCMRs_v2.XML`. Import it through **FormSync**; no
+Design Mode.
 
 **Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
 
