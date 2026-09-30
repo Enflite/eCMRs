@@ -67,6 +67,9 @@ legacy forms are the requirements reference.
 - **2026-09-30:** `HELP_SITE` is now the hosted help on Vercel (`https://help-212448u20-hellojakesmiths-projects.vercel.app`), so right-click → Help
   works without the help running on your PC. Rebuilt `exports/eCMRs_v2.XML`; to import on TRN.
 
+- **2026-09-30:** Right-click → Help on TRN opened the form page: SyteLine raises `StdFormHelp` for
+  it. The form's Help now finds the clicked field too (`docs/troubleshooting.md`); rebuilt, to import on TRN.
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout

@@ -868,6 +868,15 @@ works.
 > (`help link syteline/ecmrs component=c_item via=focus -> /syteline/ecmrs/fields/item`). If it
 > says `via=none`, SyteLine didn't tell the script which field: click into the field first, then
 > right-click → Help, and report what the log shows.
+>
+> **2026-09-30, TRN: right-click a field → Help opened the eCMRs form page, not the field's.**
+> Cause: the help log showed `GET /go/syteline/ecmrs` with no `?via=`, the link the form's own Help
+> (`StdFormHelp`) sends, so SyteLine raised `StdFormHelp` for the right-click, not
+> `StdFormComponentHelp`. Fix: `StdFormHelp` runs the same script (find the clicked component, then
+> `URL(V(EcmrsHelpUrl))`), and every link says which event sent it (`&ev=field` or `&ev=form`).
+> Rebuild, import on TRN, right-click a field → Help. Confirm: the field's page opens; the log line
+> reads `ev=form via=focus` or `via=parm`. If it reads `via=none`, the form page says so too. TRN,
+> then production.
 
 `HelpFileName` can't do it (SyteLine prefixes Infor's help address, see above). Right-click → **Help**
 raises the standard event `StdFormComponentHelp` (the form's own Help: `StdFormHelp`) - both are in
