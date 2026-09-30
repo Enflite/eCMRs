@@ -60,7 +60,7 @@ during TRN testing. Field-by-field comparison with the originals:
 | Top | PO Num, PO Line, Assigned Buyer, Qty, POC, RFQ Num, Job Num, Drawing Revision, Latest Revision, Requested Action | `PoNum`, `PoLine`, `AssignedBuyer`, `Qty`, `Poc`, `RfqNum`, `JobNum`, `Revision`, `LatestRevision`, `RequestedAction` | lookups, text | QC_CMRs |
 | Top | Item + Item Desc, Next Lvl Assy + Assy Desc, Vendor + Vendor Name, Priority | `Item`, `ItemDescription`, `NextAssyItem`, `NextAssyDescription`, `Vendor`, `VendorName`, `Priority` | lookup + auto-fill | QC_CMRs |
 | Change Request Fields | Dept + description, Work Center + description, Reported By, Due Date, Initial Change, 5 Req checkboxes, General Note | `Dept`, `DeptDescription`, `Wc`, `WcDescription`, `ReportedBy`, `DueDate`, `InitialChange`, `Req*`, `GeneralNote` | lookup + auto-fill, cascade | Create Change Request |
-| Additional Fields | Serial #, LOT #, Sub Assembly (Top Level PN hidden, team feedback 2026-09-29) | `SerialNum`, `LotNum`, `SubAssembly` (`TopLevelPn` kept, not shown) | lookup, text | SOW |
+| Additional Fields | Serial #, LOT # (Top Level PN and Sub Assembly hidden, team feedback 2026-09-29 / 09-30) | `SerialNum`, `LotNum` (`TopLevelPn`, `SubAssembly` kept, not shown) | lookup, text | SOW |
 | Quality | SOX Impacted, Hold On PO, Authorization For Supplier To Ship, Reason Code, Cause Code, QC Disposition, Reviewer, QC RCA Notes | `SoxImpacted`, `HoldOnPo`, `AuthSupplierShip`, `ReasonCode`, `CauseCode`, `QcDisposition`, `QcReviewer*`, `QcRcaNotes` | checkbox, drop-down, lookup | QC_CMRs, SOW |
 | Engineering | EO Num, MDL, Engineering Disposition, Reviewer, Internal Review Date, Eng RCA Notes | `EoNum`, `Mdl`, `EngDisposition`, `EngReviewer*`, `InternalReviewDate`, `EngRcaNotes` | text, drop-down, lookup, date | QC_CMRs |
 | Implementation | Planning / Purchasing / CM (done + reviewer), Closed, Close Date, Closed By | `*Complete`, `*ReviewerEmpNum`, `*ReviewerName`, `Closed`, `CloseDate`, `ClosedBy` | checkbox, lookup, automatic | QC_CMRs |
@@ -90,10 +90,10 @@ during TRN testing. Field-by-field comparison with the originals:
 5. ~~**Notify** button shows a message only~~ **Answered** (team feedback 2026-09-29: "fix the notify button"): Notify raises Enflite's `ENF_NotifyUserWithCMR` email event, like QC_CMRs. To test on TRN (4c).
 6. **Reported By** is free text; the original was an employee lookup. Keep or change? *Blocks nothing.*
 7. **Assigned Buyer** stores the employee number; the original stored the username. Keep or change? *Blocks nothing.*
-8. **Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one. *Blocks nothing.* Findings (2026-09-29): Sub Assembly is not on any of the three legacy screens; it was added from the SOW as plain text, next to Top Level PN (now hidden). **Next Lvl Assy** already lists the assemblies that use the Item (jobs' materials, `SLJobmatls`) and fills Assy Desc. The team to say what Sub Assembly should hold: the same as Next Lvl Assy (then hide it too), or a different level (then say which, and it can get a lookup).
+8. ~~**Sub Assembly** vs **Next Lvl Assy**: same thing? If so, drop one.~~ **Answered** (team, 2026-09-30): remove Sub Assembly. It is hidden like Top Level PN; the column and any data stay. Findings (2026-09-29): Sub Assembly is not on any of the three legacy screens; it was added from the SOW as plain text, next to Top Level PN (now hidden). **Next Lvl Assy** already lists the assemblies that use the Item (jobs' materials, `SLJobmatls`) and fills Assy Desc. The team to say what Sub Assembly should hold: the same as Next Lvl Assy (then hide it too), or a different level (then say which, and it can get a lookup).
 9. **Legacy screens and history**: when production is live, retire Create Change Request / Change Request Management / QC_CMRs? Migrate old CMRs from `rs_cmr`/`rs_crcvr`? *Blocks retiring the old screens, not the launch.*
 10. **Status** IDO length is blank on TRN (works). Optional: set 255 to match the column ([`length-fixes.md`](length-fixes.md)). *Blocks nothing.*
-11. **IDM documents widget**: the form now sends its record to the side-panel widgets the way Infor's forms do (4c). What the widget looks up (the **Item**) is set up in SyteLine for the form name `eCMRs`, following the team's guide `S:\Public\Engineering\Syteline\AddIDM` (not in this repo yet: add it to `docs/`). *Blocks the IDM test in 4c.*
+11. **IDM documents widget**: the form's handlers match the [AddIDM guide](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx) (Infor KB2024412) exactly: `StdFormPredisplay` (`LoadJSONVar`, `SETVARVALUES`) and `StdObjectSelectCurrentCompleted` (`FormatJSONVar`, `SETVARVALUES`, `JSONMSGTYPE(inforBusinessContext)`), with form name `eCMRs`. What's left is set-up in SyteLine, not the form: the **Form External Message Entities** row for `eCMRs`, entity `CMR_Documents` like the old QC_CMRs form (4c step 3). *Blocks the IDM test in 4c.* Which documents show (by Item or by CMR) is set by the `CMR_Documents` Business Context Model's XQuery in IDM (4c step 3.4).
 12. ~~**"Dash under the Next Assy label"**~~ **Answered** (TRN screenshot 2026-09-29): the label **Next Assy Desc:** wrapped to three lines in its narrow column and showed "Next _Assy". Now **Assy Desc:** (caption only).
 
 ---
@@ -169,14 +169,35 @@ where they had it.
 | Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open the [Enflite help](https://github.com/Enflite/help) at `<HELP_SITE>/go/syteline/ecmrs/<component>`, which redirects to that field's page. **Confirmed** the handler runs (TRN 2026-09-29). `HELP_SITE` is the hosted help on Vercel (`https://help-seven-xi.vercel.app`, 2026-09-30; was `http://localhost:5173`); re-import after changing it | Right-click a field → **Help**: that field's eCMRs page opens |
 | Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form (TRN screenshot 2026-09-30: no **Help** next to **Notify**). If FormSync ever leaves it, the fix goes in the XML (the build script adds `btn_help` back with `Hidden` set, re-import), never Design Mode |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
-| Sub Assembly | Findings under open item 8 | Team decides |
+| Remove Sub Assembly (2026-09-30) | **Sub Assembly** hidden (label and field), like Top Level PN. Column and data kept | Not on the form; old CMRs open without errors |
 | Dash under Next Assy label | The label wrapped ("Next _Assy"); now **Assy Desc:** | Label reads **Assy Desc:** on two lines |
 
 Before importing:
 
 1. Copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` again (it now has the `c\` folder for right-click Help and the procedures).
 2. **Event Handlers** form: open `ENF_NotifyUserWithCMR` and check its actions only use `CmrNum`, `EAddres` and `Priority` (the eCMRs values: `CMR-...` number, the username, High/Medium/Low), and don't look the CMR up in the old `rs_cmr` table. If they do, write down what they read: they need an eCMRs version.
-3. IDM: do the form set-up from the AddIDM guide for form name **`eCMRs`**, with the **Item** as what to look up. Until this is done, opening eCMRs may show a message from `LoadJSONVar`; if it does, that's the sign the set-up is missing.
+3. IDM (from the [AddIDM guide](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx), SyteLine 10 part). eCMRs sends the same entity as the old **QC_CMRs** form, **`CMR_Documents`**, so the CMR document type and its IDM Business Context Model already exist. On TRN, QC_CMRs's row (screenshot 2026-09-30) is: `accountingEntity` = `V(Parm_Site)`, `CmrNum` = `P(CmrNum)`, `Item` = `P(RsCrcvrItem)`, `JobNum` = `P(rs_cmrUf_ENF_CMR_JobNum)`, `PoLine` = `P(rs_cmrUf_ENF_CMR_PoNumLine)`, `PoNum` = `P(rs_cmrUf_ENF_CMR_PoNum)`, `RFQNum` = `P(rs_cmrUf_ENF_CMR_RFQNum)`, `VendNum` = `P(rs_cmrUf_ENF_CMR_Vendor)`.
+   1. **Form External Message Entities** → **New**: **Form Name** `eCMRs`, **External Message Entity** `CMR_Documents`.
+   2. **Entity Attributes**: the same attribute names (case sensitive), with the eCMRs properties as values:
+
+      | Attribute | Value |
+      |---|---|
+      | `accountingEntity` | `V(Parm_Site)` |
+      | `CmrNum` | `P(CmrNum)` |
+      | `Item` | `P(Item)` |
+      | `JobNum` | `P(JobNum)` |
+      | `PoLine` | `P(PoLine)` |
+      | `PoNum` | `P(PoNum)` |
+      | `RFQNum` | `P(RfqNum)` |
+      | `VendNum` | `P(Vendor)` |
+
+   3. **BOD Reference**: copy what QC_CMRs has there (blank if blank). Save.
+   4. **Done on TRN 2026-09-30:** eCMRs sends `CMR_Documents` (IDM search request from screen `CSI_eCMRs`). But the shared Business Context Model query requires `@CmrNum` to match (`@CmrNum = "{CmrNum}" AND (@JobNum ... OR @Item = "{Item}")`), and old QC_CMRs files carry the padded old number (`"         2"`), which an eCMRs number (`2`, or `CMR-260930-111742`) never equals. Decision (team, 2026-09-30): the CMR number must not be required; match on the **Item**. In IDM **Business Context Model**, add an entry for entity `CMR_Documents`, document type `ENF_CMRFiles`, screen `CSI_eCMRs` (QC_CMRs keeps the shared entry), with the query:
+      `/ENF_CMRFiles[@AccountingEntity = "{accountingEntity}" AND @EntityType = "{entityType}" AND @Item = "{Item}"]`
+      Keep sending `CmrNum` (step 2): files attached from eCMRs are stamped with it, so each file still records its CMR. Check: re-open eCMRs on a CMR with Item `85274-01`; the browser's `bc/search` request shows the query ending `@Item = "85274-01"]` and returns that Item's files (4 on TRN). If it still shows the old query, IDM is using the shared entry: tell the team before changing it, because that changes QC_CMRs too.
+      Open: a CMR with no Item sends `Item = ""` and would match every file with a blank Item. Make **Item** required on eCMRs, unless some CMRs have no Item (team to confirm).
+   5. After the import (step 4): open eCMRs on a CMR with an Item and open the **Related Information** panel. The **Context Viewer** app shows the JSON eCMRs sends (`"entityType": "CMR_Documents"` with the values above).
+   Until the row exists, `LoadJSONVar` has nothing to load for `eCMRs`: the panel stays empty (and a message may show when the form opens).
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
 5. If the **Help** button is still there (FormSync may keep a component that isn't in the file): report it; the fix goes in the XML (hide `btn_help` through the build script) and is re-imported. No Design Mode edits.
 
@@ -198,7 +219,7 @@ Tick each step as you go.
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
 - [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. Right-click → **Help** opens pages from there.
-- [ ] 2b. IDM: the AddIDM set-up for form name **`eCMRs`** in production, the same as on TRN (4c step 3).
+- [ ] 2b. IDM: in production's **Form External Message Entities**, add the same `eCMRs` / `CMR_Documents` row as on TRN, and in IDM the `CSI_eCMRs` Business Context Model entry matching on Item (4c step 3). Export TRN's rows to Excel first as the checklist.
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**
@@ -274,7 +295,7 @@ In production: the smoke test in section 5 (steps 15-20).
 
 - Track issues from each team (Quality, Engineering, Planning, Purchasing, CM) using eCMRs
 - Fix bugs through TRN first, then production, same way (new form version in `exports/`, FormSync)
-- Decide the open items (Reported By, Assigned Buyer, Sub Assembly, legacy screens)
+- Decide the open items (Reported By, Assigned Buyer, legacy screens)
 - Update the CMR procedure (QA-300-037, section 5.5) for eCMRs; submit for manager approval
 
 ## Rollback

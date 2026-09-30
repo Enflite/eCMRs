@@ -165,8 +165,6 @@ FIELDS = [
          text=["The lot of the affected material. The list shows the lots of the selected Item; it is "
                "empty for items that aren't lot-tracked. You can also type a value."],
          related=["item", "serial_num"]),
-    dict(key="sub_assembly", section="additional", label="Sub Assembly", components=["c_sub_assembly"],
-         text=["The sub-assembly the affected part belongs to."]),
 
     # --- Quality --------------------------------------------------------------------------------
     dict(key="sox_impacted", section="quality", label="SOX Impacted", components=["c_sox_impacted"],

@@ -855,6 +855,40 @@ works.
 
 **Environments**: TRN and production (same browser rule).
 
+## IDM documents (Related Information) empty on eCMRs
+
+**How it works** ([AddIDM guide](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx), Infor
+KB2024412): on each record the form posts a JSON business-context message. `StdFormPredisplay`
+loads the form's template (`SLFormExtMsgEntities.LoadJSONVar`, form `eCMRs`),
+`StdObjectSelectCurrentCompleted` fills it for the record (`FormatJSONVar`) and sends it
+(`JSONMSGTYPE(inforBusinessContext)`). IDM matches the entity type to a Business Context Model
+entry (`CMR_Documents`, the entity the old QC_CMRs form sends) and shows the documents whose
+attributes match its XQuery.
+
+**If the panel is empty**, in this order:
+1. **Form External Message Entities** has no row for form `eCMRs` (the entity types are defined per
+   form). Add `CMR_Documents` with the QC_CMRs attribute names mapped to eCMRs properties
+   (Implementation Plan 4c step 3).
+2. The IDM **Business Context Model** entry for `CMR_Documents` names screen `QC_CMRs` only: add
+   one for `eCMRs`. Its XQuery decides whether documents match on `Item` or `CmrNum`.
+3. Case: attribute names and values are case sensitive (`RFQNum`, not `RfqNum`, as the attribute).
+4. The form name in the JSON isn't `eCMRs` (the guide's note for extended forms): check it in the
+   **Context Viewer** app.
+5. There are no matching documents in IDM yet.
+
+## IDM finds the files on QC_CMRs but not on eCMRs (CmrNum doesn't match)
+
+**Symptom** (TRN 2026-09-30): same Item and Job on both forms; the IDM `bc/search` request from
+QC_CMRs returns the files, the one from eCMRs (`screenId: CSI_eCMRs`) returns none.
+
+**Cause**: both use the shared `CMR_Documents` Business Context Model, whose query requires
+`@CmrNum = "{CmrNum}"`. QC_CMRs sends its number padded to 10 characters (`"         2"`), which is
+what the old files carry; eCMRs sends `2` or `CMR-YYMMDD-HHMMSS`, so nothing matches.
+
+**Fix**: an IDM Business Context Model entry for screen `CSI_eCMRs` that matches on the Item only
+(Implementation Plan 4c step 3.4). Confirm with the same `bc/search` request in the browser's
+network tab. Environments: TRN, then production.
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),

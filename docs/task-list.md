@@ -17,7 +17,7 @@ Production has not been done yet - see "Production" at the end.
   ([`length-fixes.md`](length-fixes.md)). Works as is.
 - [x] **Assigned** (`AssignedEmpNum` combo → `AssignedUsername`) — picking the ID fills the name
   (e.g. 3 → Arguelles, Paul G.).
-- [x] **Notify** button — shows a message only; sends nothing (see "Open decisions").
+- [ ] **Notify** button — raises Enflite's `ENF_NotifyUserWithCMR` email event, like QC_CMRs (round 1). Not yet confirmed on TRN that the email arrives.
 - [x] **CMR Num** (`CmrNum`) — set on **New** to `CMR-YYMMDD-HHMMSS` by the form
   (`StdObjectNewCompleted`). IDO: String, length 255, no Default Value. Replaced
   `AUTONUMBER(STEP(1))`, which repeated numbers (PK_ue_ecmrs save error).
@@ -45,7 +45,10 @@ Production has not been done yet - see "Production" at the end.
   lot-tracked items).
 - [x] **LOT #** — lists the selected Item's lots.
 - [x] **Top Level PN**, **Sub Assembly**.
-- [ ] Open question: is **Sub Assembly** the same thing as **Next Lvl Assy**? If so, drop one.
+- [ ] IDM: the form sends `CMR_Documents` (confirmed TRN 2026-09-30). Add the IDM Business Context
+  Model entry for screen `CSI_eCMRs` matching on Item (plan 4c step 3.4), then check the files show.
+- [ ] Decide: make **Item** required (a CMR without one would match every file with a blank Item)?
+- [ ] **Top Level PN** and **Sub Assembly** hidden (team, 2026-09-29 / 09-30): check they are gone on TRN after the next import.
 
 ## Quality
 
@@ -95,9 +98,9 @@ Production has not been done yet - see "Production" at the end.
   Check that right-clicking a field opens that field's page, not `index.html`.
 - [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
   Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
-  fill before save, Notify email, right-click Help, IDM widget (needs the AddIDM set-up; add the
-  guide from `S:\Public\Engineering\Syteline\AddIDM` to `docs/`).
-- [ ] Sub Assembly: team to say what it should hold (Implementation Plan open item 8).
+  fill before save, Notify email, right-click Help, IDM widget (needs the **Form External Message
+  Entities** row for `eCMRs`, entity `CMR_Documents`, Implementation Plan 4c step 3; guide:
+  [`reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx`](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx)).
 - [x] "Dash under the Next Assy label": the label wrapped ("Next _Assy"); now **Assy Desc:**.
 - [x] After the next import: **Help** button gone on TRN (screenshot 2026-09-30: nothing next to **Notify**). Had it stayed, the fix would go in the XML, not Design Mode.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.

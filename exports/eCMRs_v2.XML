@@ -1401,7 +1401,7 @@
                <Binding>5</Binding>
                <Flags>1</Flags>
                <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
+               <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
                <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
             </Component>
@@ -3008,7 +3008,7 @@
                <Binding>0</Binding>
                <Flags>3</Flags>
                <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
+               <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
                <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
