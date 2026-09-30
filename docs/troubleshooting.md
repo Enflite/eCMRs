@@ -885,8 +885,8 @@ QC_CMRs returns the files, the one from eCMRs (`screenId: CSI_eCMRs`) returns no
 `@CmrNum = "{CmrNum}"`. QC_CMRs sends its number padded to 10 characters (`"         2"`), which is
 what the old files carry; eCMRs sends `2` or `CMR-YYMMDD-HHMMSS`, so nothing matches.
 
-**Fix**: an IDM Business Context Model entry for screen `CSI_eCMRs` that matches on the Item only
-(Implementation Plan 4c step 3.4). Confirm with the same `bc/search` request in the browser's
+**Fix**: a separate entity for eCMRs, `ECMR_Documents` → `ENF_CMRFiles`, whose XQuery matches on the
+Item only ([Enflite/IDM, eCMRs plan](https://github.com/Enflite/IDM/blob/main/docs/ecmrs/Implementation-Plan.md)). Confirm with the same `bc/search` request in the browser's
 network tab. Environments: TRN, then production.
 
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
