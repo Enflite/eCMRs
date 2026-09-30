@@ -855,6 +855,24 @@ works.
 
 **Environments**: TRN and production (same browser rule).
 
+## IDM documents (Related Information) empty on eCMRs
+
+**How it works** ([AddIDM guide](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx), Infor
+KB2024412): on each record the form posts a JSON business-context message. `StdFormPredisplay`
+loads the form's template (`SLFormExtMsgEntities.LoadJSONVar`, form `eCMRs`),
+`StdObjectSelectCurrentCompleted` fills it for the record (`FormatJSONVar`) and sends it
+(`JSONMSGTYPE(inforBusinessContext)`). IDM matches the entity type to a Business Context Model
+entry (`InforItemSpec` → document type `CS_Item`) and shows the documents whose attributes match.
+
+**If the panel is empty**, in this order:
+1. **Form External Message Entities** has no rows for form `eCMRs` (the entity types are defined per
+   form). Add `InforItemSpec` with `accountingEntity` = `V(Parm_Site)`, `id1` = `P(Item)`, copied
+   from the Items form's row (Implementation Plan 4c step 3).
+2. Case: attribute names and values are case sensitive (`id1`, not `ID1`).
+3. The form name in the JSON isn't `eCMRs` (the guide's note for extended forms): check it in the
+   **Context Viewer** app.
+4. The Item has no documents in IDM (check the same item on the **Items** form).
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),

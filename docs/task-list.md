@@ -95,8 +95,9 @@ Production has not been done yet - see "Production" at the end.
   Check that right-clicking a field opens that field's page, not `index.html`.
 - [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
   Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
-  fill before save, Notify email, right-click Help, IDM widget (needs the AddIDM set-up; add the
-  guide from `S:\Public\Engineering\Syteline\AddIDM` to `docs/`).
+  fill before save, Notify email, right-click Help, IDM widget (needs the **Form External Message
+  Entities** rows for `eCMRs`, Implementation Plan 4c step 3; guide:
+  [`reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx`](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx)).
 - [x] "Dash under the Next Assy label": the label wrapped ("Next _Assy"); now **Assy Desc:**.
 - [x] After the next import: **Help** button gone on TRN (screenshot 2026-09-30: nothing next to **Notify**). Had it stayed, the fix would go in the XML, not Design Mode.
 - [ ] CAR cross-referencing (`LaunchCAR`): out of scope for this build.

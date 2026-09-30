@@ -84,6 +84,7 @@ legacy forms are the requirements reference.
 - **2026-09-30:** After #17 the right-click menu didn't open on TRN. The help handlers are back to
   #16's (menu opened, script ran), with only the production domain changed (`docs/troubleshooting.md`).
 - **2026-09-30:** **Sub Assembly** removed from the form (hidden like Top Level PN; column and data kept).
+- **2026-09-30:** IDM: the form's handlers match Infor's AddIDM guide (KB2024412, in `docs/reference/`); the remaining step is the **Form External Message Entities** rows for `eCMRs` (plan 4c step 3).
 
 - **2026-09-30:** Right-click a field → **Help** opens that field's page in the Enflite help on TRN
   (**confirmed**, #21): the form's Help asks `ThisForm.GetCurrentComponentName()` directly. **F1** /
@@ -106,6 +107,7 @@ Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **producti
 | [`scripts/compare_live_lengths.py`](scripts/compare_live_lengths.py) | Checks live SQL / IDO exports against the schema; writes `docs/length-fixes.md` |
 | [`scripts/generate_schema_csv.py`](scripts/generate_schema_csv.py) | Schema master list (`FIELDS`); with `generate_ido_import.py`, `generate_sql_columns_import.py`, `generate_deploy_checklist.py`, `validate_schema_consistency.py`. `generate_form.py` is retired (built v1) |
 | `exports/ecmrs_*.csv` | Schema-generator output (design reference). For production use `exports/production/` |
+| [`docs/reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx`](docs/reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx) | Infor KB2024412 (the team's AddIDM guide): how a form feeds the IDM Related Information panel; used for plan 4c step 3 |
 | [`docs/reference/procedures/`](docs/reference/procedures/) | Released procedures the help updates: QA-300-037 Rev A, QA-300-003 Rev E (PDF, copied into the help by `scripts/build_help.py`) |
 | [`docs/help/`](docs/help/index.html) | **eCMRs help pages** (SyteLine-library layout): the form topic, one page per field and the updated [procedures](docs/help/procedures/index.html). Built from [`scripts/help_content.py`](scripts/help_content.py) and [`scripts/procedures_content.py`](scripts/procedures_content.py) by `scripts/build_help.py`. Copy the folder's contents to `S:\Engineering\Individual Folders\JSmith\eCMRs`; right-click → **Help** on the form opens `c/<component>.html` (one redirect per form component) from `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (`HELP_BUTTON_URL` in `tools/apply_form_changes.py`) |
 | [`docs/production-build-sheet.md`](docs/production-build-sheet.md) | Generated: every column and property to build, readable |
