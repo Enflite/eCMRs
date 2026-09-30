@@ -921,8 +921,35 @@ Design Mode.
 
 **Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
 
-**Environments**: TRN only. Production never had the URL-only `StdFormHelp`; Service Orders and
-Incidents had no help handlers before.
+**Confirmed on TRN 2026-09-30** (Enflite/eCMRs#16): the SCRIPTTEXT dialog is gone; SyteLine goes on
+to open the help link (see the pop-up entry below).
+
+**Environments**: TRN, then production with the same file. Service Orders and Incidents get the same
+scripts (no apostrophes) before their first import.
+
+## "Your pop-up Blocker may be enabled" on right-click → Help
+
+**Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up
+Blocker may be enabled. To avoid this message, add this site to your exception list.` with a
+**Click to open** link.
+
+**Cause**: the help page opens in a new tab from the `URL(V(EcmrsHelpUrl))` step, after the script
+step, not straight from the click, so the browser treats it as a pop-up. The form is working; this is
+a browser setting, not something the XML can change.
+
+**Fix**:
+1. For now: click **Click to open** in the dialog.
+2. Each user (Chrome): on the SyteLine tab, click the pop-up icon at the right end of the address
+   bar → **Always allow pop-ups and redirects from …** → **Done**. Or **Settings** → **Privacy and
+   security** → **Site settings** → **Pop-ups and redirects** → **Allowed to send pop-ups** → add the
+   SyteLine address.
+3. Everyone at once: IT allows pop-ups for the SyteLine address by browser policy (Chrome/Edge
+   `PopupsAllowedForUrls`).
+
+**Confirm**: right-click a field → **Help** opens the help page in a new tab with no dialog.
+
+**Environments**: every browser that uses SyteLine (TRN and production are separate addresses, allow
+both).
 
 ## "Dash" under the Next Assy label (shows "Next _Assy")
 
