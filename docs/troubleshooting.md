@@ -1001,6 +1001,20 @@ web scripting (`ThisForm` there is a `ScriptingDomain.ScriptForm`, not the Windo
 parameter calls removed). It compiles → the parameter calls were the problem; the same compile
 error → `GetCurrentComponentName` is.
 
+**Confirmed on TRN 2026-09-30 (#21)**: it compiles, and right-click a field → **Help** opens that
+field's page. So `ThisForm.GetCurrentComponentName()` works in the web client when called directly,
+and #20's compile error came from `CountParameter()`: Infor's method reference names it
+[`ParameterCount`](https://docs.infor.com/factorytrack/5.0/en-us/ftslolh/mergedProjects/winstudio/winstudioeditmode/scripts/parametercount_property__winstudio_scripts_.htm)
+(the scripting overview page says "CountParameter"). Parameters wouldn't have helped anyway: per
+[`GetParameter`](https://docs.infor.com/factorytrack/5.0/en-us/ftslolh/mergedProjects/winstudio/winstudioeditmode/scripts/getparameter_method__winstudio_scripts_.htm)
+they are the values written in the handler's own definition, and ours define none.
+
+**Working pattern**: in `StdFormHelp` and `StdFormComponentHelp` step 0, call
+`ThisForm.GetCurrentComponentName()` and `ThisForm.Variables("EcmrsHelpUrl")` directly (never through
+an `Object` variable), no comments, split into `<Response>`/`<Response2>`; step 1
+`URL(V(EcmrsHelpUrl)) ( )`. It helps when the cursor is in the field (click into it first); with no
+focused field the form page opens (`via=focusempty`).
+
 ## "Your pop-up Blocker may be enabled" on right-click → Help
 
 **Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up

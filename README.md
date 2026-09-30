@@ -84,6 +84,10 @@ legacy forms are the requirements reference.
 - **2026-09-30:** After #17 the right-click menu didn't open on TRN. The help handlers are back to
   #16's (menu opened, script ran), with only the production domain changed (`docs/troubleshooting.md`).
 
+- **2026-09-30:** Right-click a field → **Help** opens that field's page in the Enflite help on TRN
+  (**confirmed**, #21): the form's Help asks `ThisForm.GetCurrentComponentName()` directly. **F1** /
+  **Help → Current Field** now use the same script; to import and check on TRN.
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout

@@ -422,6 +422,10 @@ def build(text):
     # CountParameter/GetParameter (the other scripts call "ParameterCount", which isn't Infor's
     # name, so they never saw any), ask GetCurrentComponentName() for the focused field, and put
     # it all in the link: via=focus|focusempty|focuserr, e=any error.
+    # CONFIRMED on TRN 2026-09-30 (#21): right-click a field > Help opens that field's page. The
+    # field's own help (StdFormComponentHelp: F1, Help > Current Field) now uses the same script.
+    # ENF_FindHelpField is no longer raised; it stays in the file because FormSync keeps what the
+    # file leaves out.
     # #20 (direct CountParameter/GetParameter + GetCurrentComponentName) failed to compile on TRN
     # with no detail ("Error compiling script EvHandler_StdFormHelp_0->"), so one call at a time:
     # this version has only ThisForm.GetCurrentComponentName(); parameters come back once it compiles.
@@ -429,15 +433,16 @@ def build(text):
     # late-bound calls through an Object variable ("Attempt by method ...InvokeMethod... to access
     # method ...ScriptForm.Variables(System.String) failed", TRN 2026-09-30), which is also why the
     # older scripts' f.GetCurrentComponentName() and f.Components(p) never answered (via=none).
-    form_help = (
-        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
-        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
-        'Dim c As String = "", v As String = "focusempty", e As String = ""\r\n'
-        'Try\r\nc = ThisForm.GetCurrentComponentName()\r\nIf c <> "" Then v = "focus"\r\n'
-        'Catch x As Exception\r\nv = "focuserr"\r\ne = x.Message\r\nEnd Try\r\n'
-        f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
-        ' & "&ev=form&e=" & Uri.EscapeDataString(If(e.Length > 200, e.Substring(0, 200), e))\r\n'
-        'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
+    def focus_help(event, ev):
+        return (
+            "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
+            f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
+            'Dim c As String = "", v As String = "focusempty", e As String = ""\r\n'
+            'Try\r\nc = ThisForm.GetCurrentComponentName()\r\nIf c <> "" Then v = "focus"\r\n'
+            'Catch x As Exception\r\nv = "focuserr"\r\ne = x.Message\r\nEnd Try\r\n'
+            f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
+            f' & "&ev={ev}&e=" & Uri.EscapeDataString(If(e.Length > 200, e.Substring(0, 200), e))\r\n'
+            'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
 
     handlers = [
         ("ENF_NotifyUser", 0, 49,
@@ -445,9 +450,9 @@ def build(text):
         ("ENF_NotifyUser", 1, 43,
          "EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! "
          "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
-        ("StdFormComponentHelp", 0, 33, help_script("StdFormComponentHelp", "field")),
+        ("StdFormComponentHelp", 0, 33, focus_help("StdFormComponentHelp", "field")),
         ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("StdFormHelp", 0, 33, form_help),
+        ("StdFormHelp", 0, 33, focus_help("StdFormHelp", "form")),
         ("StdFormHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
         ("ENF_FindHelpField", 0, 33, help_script("ENF_FindHelpField", "form")),
         ("StdFormPredisplay", 0, 0,
