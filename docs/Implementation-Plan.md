@@ -167,7 +167,7 @@ where they had it.
 | Dept / WC Description only fill after save | **Validate Immediately** on Dept and Work Center (Flags 33, as on Infor's own Dept fields) | Pick a Dept: the description fills straight away. Same for Work Center |
 | Fix the Notify button | Notify raises `ENF_NotifyUserWithCMR` (Enflite's email event from QC_CMRs) with `CmrNum`, the Assigned employee's username (email), `Priority` | **EMAIL SENT!**, and the Assigned person gets it |
 | Right-click → Help should open our docs | Handlers for the standard events `StdFormComponentHelp` and `StdFormHelp` open the [Enflite help](https://github.com/Enflite/help) at `<HELP_SITE>/go/syteline/ecmrs/<component>`, which redirects to that field's page. **Confirmed** the handler runs (TRN 2026-09-29). `HELP_SITE` is the hosted help on Vercel (`https://help-212448u20-hellojakesmiths-projects.vercel.app`, 2026-09-30; was `http://localhost:5173`); re-import after changing it | Right-click a field → **Help**: that field's eCMRs page opens |
-| Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form. If FormSync leaves it on TRN, delete it once in **Design Mode** (TRN only: production never had it) |
+| Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form (TRN screenshot 2026-09-30: no **Help** next to **Notify**). If FormSync ever leaves it, the fix goes in the XML (the build script adds `btn_help` back with `Hidden` set, re-import), never Design Mode |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Sub Assembly | Findings under open item 8 | Team decides |
 | Dash under Next Assy label | The label wrapped ("Next _Assy"); now **Assy Desc:** | Label reads **Assy Desc:** on two lines |
@@ -178,7 +178,7 @@ Before importing:
 2. **Event Handlers** form: open `ENF_NotifyUserWithCMR` and check its actions only use `CmrNum`, `EAddres` and `Priority` (the eCMRs values: `CMR-...` number, the username, High/Medium/Low), and don't look the CMR up in the old `rs_cmr` table. If they do, write down what they read: they need an eCMRs version.
 3. IDM: do the form set-up from the AddIDM guide for form name **`eCMRs`**, with the **Item** as what to look up. Until this is done, opening eCMRs may show a message from `LoadJSONVar`; if it does, that's the sign the set-up is missing.
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
-5. If the **Help** button is still there (FormSync may keep a component that isn't in the file): **Design Mode** → select **Help** → **Delete** → save. TRN only.
+5. If the **Help** button is still there (FormSync may keep a component that isn't in the file): report it; the fix goes in the XML (hide `btn_help` through the build script) and is re-imported. No Design Mode edits.
 
 If right-click → Help still opens Infor's topic (or both open): SyteLine runs its own help too. Write it
 down in [`troubleshooting.md`](troubleshooting.md).

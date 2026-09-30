@@ -898,6 +898,29 @@ Infor's topic opens as well, SyteLine still runs its built-in help after ours: w
 If the index page opens for every field, `GetCurrentComponentName` didn't return the clicked
 component: write that down too. If nothing opens: the browser blocks the `file:` link (see above).
 
+## "SCRIPTTEXT keyword required for InlineScript event handlers" on right-click → Help
+
+**Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows a dialog **Infor SyteLine -
+eCMRs**: `SCRIPTTEXT keyword required for InlineScript event handlers`, after importing the build
+where `StdFormHelp` runs the find-the-field script.
+
+**Cause (likely, not confirmed)**: TRN already had `StdFormHelp` step 0 as a **URL** response
+(`URL(<HELP_SITE>/go/syteline/ecmrs) ( )`). The new export makes step 0 an inline script (type 33,
+`SCRIPTTEXT(...)`). FormSync merged into the existing step and kept its old `URL(...)` text under the
+new type. The export itself is correct: both `StdFormComponentHelp` and `StdFormHelp` step 0 start
+with `SCRIPTTEXT(`.
+
+**Fix (in the XML, 2026-09-30)**: `StdFormHelp` step 0 keeps the inline-script type TRN now has
+and becomes a one-line script, `ThisForm.GenerateEvent("ENF_FindHelpField")`. The find-the-field
+script moved to the new event `ENF_FindHelpField` (step 0), which TRN has never had, so FormSync
+adds it whole. Step 1 is unchanged (`URL(V(EcmrsHelpUrl))`). `tools/apply_form_changes.py`, rebuilt
+`exports/eCMRs_v2.XML`. Import it through **FormSync**; no Design Mode.
+
+**Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
+
+**Environments**: TRN only. Production never had the URL-only `StdFormHelp`; Service Orders and
+Incidents had no help handlers before.
+
 ## "Dash" under the Next Assy label (shows "Next _Assy")
 
 **Symptom** (TRN, 2026-09-29): the label left of Next Assy's description reads "Next" / "_Assy",
@@ -910,6 +933,13 @@ with "Desc:" missing.
 `tools/apply_form_changes.py` step 13d. Confirm: the label reads **Assy Desc:**. TRN, then production.
 
 ## General debugging order for "it's not working" reports
+
+**Rule (team, 2026-09-30): every fix goes in the XML, never in Design Mode.** Change the build
+script, rebuild `exports/eCMRs_v2.XML`, commit both, and re-import through **FormSync**. Design
+Mode is only for looking (checking a property, a handler, a binding), not for changing the form.
+When FormSync keeps an old setting, fix it in the file: re-import once more if only the text of a
+step or property changed, or give the component or event a new name so FormSync creates it fresh
+(`c_reason_code_v2`).
 
 1. **Check our own generated files first** (`generate_form.py`'s output,
    `generate_schema_csv.py`'s `FIELDS`) before assuming it's a live
