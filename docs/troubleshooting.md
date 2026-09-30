@@ -953,6 +953,28 @@ change at a time, each tested on TRN.
 
 **Confirm**: right-click a field → the menu opens; **Help** opens the help (pop-up allowed).
 
+## Which Help event runs, and what it knows (Infor docs, 2026-09-30)
+
+- [`StdFormComponentHelp`](https://docs.infor.com/csi/9.01.x/en-us/csbiolh/lsm1454148059452.html): **F1**,
+  **Help → Current Field**, or **What's This?** then clicking a component. Not the right-click menu.
+- [`StdFormHelp`](https://docs.infor.com/csi/9.01.x/en-us/csbiolh/lsm1454148062494.html): **Help → Current
+  Form**, or **What's This?** then clicking outside a component. On TRN, right-click a field → **Help**
+  raised this one (`ev=form`).
+- [`GetCurrentComponentName()`](https://docs.infor.com/csi/9.01.x/en-us/csbiolh/lsm1454148086019.html): the
+  component that has focus, not necessarily the one right-clicked.
+- [Scripts](https://docs.infor.com/csi/9.01.x/en-us/csbiolh/lsm1454148040187.html): a script reads its
+  event's parameters with **`CountParameter`** and **`GetParameter`**. Our earlier scripts called
+  `ParameterCount`, which isn't Infor's name, so the `Try` swallowed the error and they never saw a
+  parameter.
+- [Limits](https://docs.infor.com/csi/9.01.x/en-us/csbiolh/lsm1454148260301.html): inline scripts and
+  response parameters are limited to 1,500 characters.
+
+**Diagnostic (2026-09-30), `StdFormHelp` step 0 only**: reads the parameters with `CountParameter` /
+`GetParameter`, asks `GetCurrentComponentName()`, and puts both in the link (`via=focus`, `focusempty`
+or `nofocusapi`; `p=` the parameters, or `err`). No second event, no change to `StdFormComponentHelp`,
+the grid or menus. Import only after checking that the right-click menu opens on other forms and
+that **F1** in **Item** works.
+
 ## "Your pop-up Blocker may be enabled" on right-click → Help
 
 **Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up

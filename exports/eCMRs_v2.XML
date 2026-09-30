@@ -3242,12 +3242,27 @@ Namespace SyteLine.GlobalScripts
 Public Class EvHandler_StdFormHelp_0
 Inherits GlobalScript
 Sub Main()
-ThisForm.GenerateEvent("ENF_FindHelpField")
+Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none", q As String = ""
+Try
+For i As Integer = 0 To CInt(s.CountParameter()) - 1
+q = q &amp; "," &amp; CStr(s.GetParameter(i))
+Next
+Catch
+q = "err"
+End Try
+Try
+c = CStr(f.GetCurrentComponentName())
+v = If(c = "", "focu</Response>
+               <Response2>sempty", "focus")
+Catch
+v = "nofocusapi"
+End Try
+f.Variables("EcmrsHelpUrl").Value = "https://help-seven-xi.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=form&amp;p=" &amp; System.Uri.EscapeDataString(q)
 ReturnValue = "0"
 End Sub
 End Class
 End Namespace
-)</Response>
+)</Response2>
             </EventHandler>
             <EventHandler Name="StdFormHelp" Sequence="1">
                <ResponseType>39</ResponseType>

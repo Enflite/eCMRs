@@ -416,6 +416,24 @@ def build(text):
             out += f"               <Response2>{html.escape(tail, quote=False)}</Response2>\r\n"
         return out
 
+    # StdFormHelp step 0 (2026-09-30): Infor documents StdFormHelp for Help > Current Form, but on TRN
+    # right-click a field > Help raised it (ev=form). Diagnostic, in this handler only (no second
+    # event: #17 raised one and the menu stopped opening): read what SyteLine passes with Infor's
+    # CountParameter/GetParameter (the other scripts call "ParameterCount", which isn't Infor's
+    # name, so they never saw any), ask GetCurrentComponentName() for the focused field, and put
+    # it all in the link: via=focus|focusempty|nofocusapi, p=the parameters (or err).
+    form_help = (
+        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
+        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
+        'Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none", q As String = ""\r\n'
+        "Try\r\nFor i As Integer = 0 To CInt(s.CountParameter()) - 1\r\n"
+        'q = q & "," & CStr(s.GetParameter(i))\r\nNext\r\nCatch\r\nq = "err"\r\nEnd Try\r\n'
+        'Try\r\nc = CStr(f.GetCurrentComponentName())\r\nv = If(c = "", "focusempty", "focus")\r\n'
+        'Catch\r\nv = "nofocusapi"\r\nEnd Try\r\n'
+        f'f.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v'
+        ' & "&ev=form&p=" & System.Uri.EscapeDataString(q)\r\n'
+        'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
+
     handlers = [
         ("ENF_NotifyUser", 0, 49,
          "SLEmployees( FILTER(EmpNum=FP(AssignedEmpNum)) SETV(EcmrsNotifyEmail=Username) )"),
@@ -424,7 +442,7 @@ def build(text):
          "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
         ("StdFormComponentHelp", 0, 33, help_script("StdFormComponentHelp", "field")),
         ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("StdFormHelp", 0, 33, raise_find_field),
+        ("StdFormHelp", 0, 33, form_help),
         ("StdFormHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
         ("ENF_FindHelpField", 0, 33, help_script("ENF_FindHelpField", "form")),
         ("StdFormPredisplay", 0, 0,
