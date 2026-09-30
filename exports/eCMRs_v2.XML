@@ -3200,29 +3200,18 @@ Namespace SyteLine.GlobalScripts
 Public Class EvHandler_StdFormComponentHelp_0
 Inherits GlobalScript
 Sub Main()
-Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none"
+Dim s As Object = Me, q As String = "field"
 Try
 For i As Integer = 0 To CInt(s.ParameterCount) - 1
-Dim p As String = CStr(s.GetParameter(i))
-If c = "" AndAlso p &lt;&gt; "" Then
-Try
-If f.Components(p) IsNot Nothing Then c = p : v = "parm"
-Catch
-En</Response>
-               <Response2>d Try
-End If
+q = q &amp; "," &amp; CStr(s.GetParameter(i))
 Next
 Catch
+q = q &amp; ",err"
 End Try
-If c = "" Then
-Try
-c = CStr(f.GetCurrentComponentName())
-If c &lt;&gt; "" Then v = "focus"
-Catch
-End Try
-End If
-ThisForm.Variables("EcmrsHelpUrl").Value = "https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=field"
-ReturnValue = "0"
+ThisForm.Variables("EcmrsHelpParms").Value = q
+ThisForm.GenerateEvent("ENF_FindHelpField")
+ReturnValue = "0"</Response>
+               <Response2>
 End Sub
 End Class
 End Namespace
@@ -3242,12 +3231,22 @@ Namespace SyteLine.GlobalScripts
 Public Class EvHandler_StdFormHelp_0
 Inherits GlobalScript
 Sub Main()
+Dim s As Object = Me, q As String = "form"
+Try
+For i As Integer = 0 To CInt(s.ParameterCount) - 1
+q = q &amp; "," &amp; CStr(s.GetParameter(i))
+Next
+Catch
+q = q &amp; ",err"
+End Try
+ThisForm.Variables("EcmrsHelpParms").Value = q
 ThisForm.GenerateEvent("ENF_FindHelpField")
 ReturnValue = "0"
 End Sub
-End Class
+</Response>
+               <Response2>End Class
 End Namespace
-)</Response>
+)</Response2>
             </EventHandler>
             <EventHandler Name="StdFormHelp" Sequence="1">
                <ResponseType>39</ResponseType>
@@ -3263,28 +3262,26 @@ Namespace SyteLine.GlobalScripts
 Public Class EvHandler_ENF_FindHelpField_0
 Inherits GlobalScript
 Sub Main()
-Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none"
-Try
-For i As Integer = 0 To CInt(s.ParameterCount) - 1
-Dim p As String = CStr(s.GetParameter(i))
+Dim f As Object = ThisForm, c As String = "", v As String = "none"
+Dim q As String = CStr(f.Variables("EcmrsHelpParms").Value)
+For Each p As String In q.Split(","c)
 If c = "" AndAlso p &lt;&gt; "" Then
 Try
 If f.Components(p) IsNot Nothing Then c = p : v = "parm"
 Catch
-End T</Response>
-               <Response2>ry
+End Try
 End If
 Next
-Catch
-End Try
-If c = "" Then
+</Response>
+               <Response2>If c = "" Then
 Try
 c = CStr(f.GetCurrentComponentName())
-If c &lt;&gt; "" Then v = "focus"
+v = If(c = "", "focusempty", "focus")
 Catch
+v = "nofocusapi"
 End Try
 End If
-ThisForm.Variables("EcmrsHelpUrl").Value = "https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=form"
+f.Variables("EcmrsHelpUrl").Value = "https://help-seven-xi.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=" &amp; q.Split(","c)(0) &amp; "&amp;p=" &amp; System.Uri.EscapeDataString(q)
 ReturnValue = "0"
 End Sub
 End Class
@@ -3332,7 +3329,13 @@ End Namespace
                <Description />
             </Variable>
             <Variable Name="EcmrsHelpUrl">
-               <Value>https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs</Value>
+               <Value>https://help-seven-xi.vercel.app/go/syteline/ecmrs</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+            <Variable Name="EcmrsHelpParms">
+               <Value />
                <Value2 />
                <Value3 />
                <Description />

@@ -859,7 +859,7 @@ works.
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),
 > React + Express + MongoDB). The script now builds `<HELP_SITE>/go/syteline/ecmrs/<component>`
-> (`HELP_SITE` = `https://help-212448u20-hellojakesmiths-projects.vercel.app` since 2026-09-30; before that `http://localhost:5173`, the help's dev server), and the help
+> (`HELP_SITE` = `https://help-seven-xi.vercel.app`, the Vercel production domain, since 2026-09-30; before that `https://help-212448u20-hellojakesmiths-projects.vercel.app`, one fixed deployment, and `http://localhost:5173`, the help's dev server), and the help
 > redirects to the field's page. The `docs/help/c/` pages below are the old S: drive version.
 >
 > **Which field was clicked**: the script tries an event parameter that names a form component
@@ -868,6 +868,13 @@ works.
 > (`help link syteline/ecmrs component=c_item via=focus -> /syteline/ecmrs/fields/item`). If it
 > says `via=none`, SyteLine didn't tell the script which field: click into the field first, then
 > right-click → Help, and report what the log shows.
+>
+> **2026-09-30, TRN: `ev=form via=none`.** SyteLine raised the form's Help for right-click a field,
+> and the script found neither a parameter naming a component nor a focused component. The script
+> now says which: both help events pass the event's parameters to `ENF_FindHelpField` (variable
+> `EcmrsHelpParms`), and the link carries them as `&p=` plus a finer `via=`: `parm`, `focus`,
+> `focusempty` (`GetCurrentComponentName()` exists but returned nothing), `nofocusapi` (the method
+> doesn't exist here) or `none`. Vercel's request log lists every query value (**Search Params**).
 >
 > **2026-09-30, TRN: right-click a field → Help opened the eCMRs form page, not the field's.**
 > Cause: the help log showed `GET /go/syteline/ecmrs` with no `?via=`, the link the form's own Help
@@ -921,8 +928,35 @@ Design Mode.
 
 **Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
 
-**Environments**: TRN only. Production never had the URL-only `StdFormHelp`; Service Orders and
-Incidents had no help handlers before.
+**Confirmed on TRN 2026-09-30** (Enflite/eCMRs#16): the SCRIPTTEXT dialog is gone; SyteLine goes on
+to open the help link (see the pop-up entry below).
+
+**Environments**: TRN, then production with the same file. Service Orders and Incidents get the same
+scripts (no apostrophes) before their first import.
+
+## "Your pop-up Blocker may be enabled" on right-click → Help
+
+**Symptom** (TRN, 2026-09-30): right-click a field → **Help** shows **Open or Save Link**: `Your pop-up
+Blocker may be enabled. To avoid this message, add this site to your exception list.` with a
+**Click to open** link.
+
+**Cause**: the help page opens in a new tab from the `URL(V(EcmrsHelpUrl))` step, after the script
+step, not straight from the click, so the browser treats it as a pop-up. The form is working; this is
+a browser setting, not something the XML can change.
+
+**Fix**:
+1. For now: click **Click to open** in the dialog.
+2. Each user (Chrome): on the SyteLine tab, click the pop-up icon at the right end of the address
+   bar → **Always allow pop-ups and redirects from …** → **Done**. Or **Settings** → **Privacy and
+   security** → **Site settings** → **Pop-ups and redirects** → **Allowed to send pop-ups** → add the
+   SyteLine address.
+3. Everyone at once: IT allows pop-ups for the SyteLine address by browser policy (Chrome/Edge
+   `PopupsAllowedForUrls`).
+
+**Confirm**: right-click a field → **Help** opens the help page in a new tab with no dialog.
+
+**Environments**: every browser that uses SyteLine (TRN and production are separate addresses, allow
+both).
 
 ## "Dash" under the Next Assy label (shows "Next _Assy")
 

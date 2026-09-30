@@ -75,6 +75,12 @@ legacy forms are the requirements reference.
   `ENF_FindHelpField`, raised by `StdFormHelp` (`docs/troubleshooting.md`); rebuilt
   `exports/eCMRs_v2.XML`, to import on TRN.
 
+- **2026-09-30:** Right-click → Help runs on TRN with no SCRIPTTEXT error (#16, confirmed). The browser's
+  pop-up blocker stops the new tab: allow pop-ups for the SyteLine address (`docs/troubleshooting.md`).
+
+- **2026-09-30:** `HELP_SITE` is now the help's Vercel production domain, `https://help-seven-xi.vercel.app`. The
+  `help-212448u20-…` address was one fixed deployment, so it never got the help's later fixes.
+
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
 ## Layout

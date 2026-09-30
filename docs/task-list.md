@@ -91,7 +91,7 @@ Production has not been done yet - see "Production" at the end.
   `https://` address (internal web server / Azure Static Web App) and change `HELP_BUTTON_URL`.
   **2026-09-29:** now points at the Enflite help (`Enflite/help`) on `http://localhost:5173` (`HELP_SITE`):
   works on a PC running `npm run dev` there. **2026-09-30:** `HELP_SITE` is now the hosted help
-  (`https://help-212448u20-hellojakesmiths-projects.vercel.app`); rebuilt, to import on TRN.
+  (`https://help-seven-xi.vercel.app`, the production domain, which always serves the latest deployment); rebuilt, to import on TRN.
   Check that right-clicking a field opens that field's page, not `index.html`.
 - [ ] **Team feedback round 1** (2026-09-29, Implementation Plan 4c): built; import on TRN and check:
   Item Desc wider, Top Level PN hidden, Requested Action / General Note labels, Dept/WC Description
