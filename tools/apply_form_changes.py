@@ -372,55 +372,45 @@ def build(text):
     # script left TRN with the new type but the old URL(...) text ("SCRIPTTEXT keyword required for
     # InlineScript event handlers"). Step 0 keeps the inline-script type now, so importing this is a
     # text change there, and ENF_FindHelpField is new, so FormSync adds it whole.
-    help_script = lambda event, ev: (
-        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
-        "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
-        f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\n"
-        "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
-        "            ' Which component was right-clicked: an event parameter naming a component on the\r\n"
-        "            ' form, else the component with the focus. Late-bound in Try blocks, so a member this\r\n"
-        "            ' SyteLine version lacks falls through instead of failing to compile. via= shows in the\r\n"
-        "            ' help server's log which one worked.\r\n"
-        "            Dim frm As Object = ThisForm\r\n"
-        "            Dim scr As Object = Me\r\n"
-        "            Dim comp As String = \"\"\r\n"
-        "            Dim via As String = \"none\"\r\n"
-        "            Try\r\n"
-        "                Dim n As Integer = CInt(scr.ParameterCount)\r\n"
-        "                For i As Integer = 0 To n - 1\r\n"
-        "                    Dim p As String = CStr(scr.GetParameter(i))\r\n"
-        "                    If comp = \"\" AndAlso p &lt;&gt; \"\" Then\r\n"
-        "                        Try\r\n"
-        "                            If frm.Components(p) IsNot Nothing Then\r\n"
-        "                                comp = p\r\n"
-        "                                via = \"parm\"\r\n"
-        "                            End If\r\n"
-        "                        Catch\r\n"
-        "                        End Try\r\n"
-        "                    End If\r\n"
-        "                Next\r\n"
-        "            Catch\r\n"
-        "            End Try\r\n"
-        "            If comp = \"\" Then\r\n"
-        "                Try\r\n"
-        "                    comp = CStr(frm.GetCurrentComponentName())\r\n"
-        "                    If comp &lt;&gt; \"\" Then via = \"focus\"\r\n"
-        "                Catch\r\n"
-        "                    comp = \"\"\r\n"
-        "                End Try\r\n"
-        "            End If\r\n"
-        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via &amp; \"&amp;ev={ev}\"\r\n"
-        "            ReturnValue = \"0\"\r\n"
-        "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
+    def help_script(event, ev):
+        """The find-the-field script: the clicked component is an event parameter naming one, else
+        the focused one. Plain text, escaped and split into <Response>/<Response2> when written.
+        No comments: a VB comment starts with an apostrophe, and SyteLine reads ' in a response as
+        a quote, so an unmatched one hides the keyword ("SCRIPTTEXT keyword required for InlineScript
+        event handlers", TRN 2026-09-30). Infor's own inline scripts have none either."""
+        return (
+            "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
+            f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
+            'Dim f As Object = ThisForm, s As Object = Me, c As String = "", v As String = "none"\r\n'
+            "Try\r\nFor i As Integer = 0 To CInt(s.ParameterCount) - 1\r\n"
+            "Dim p As String = CStr(s.GetParameter(i))\r\n"
+            'If c = "" AndAlso p <> "" Then\r\nTry\r\nIf f.Components(p) IsNot Nothing Then c = p : v = "parm"\r\n'
+            "Catch\r\nEnd Try\r\nEnd If\r\nNext\r\nCatch\r\nEnd Try\r\n"
+            'If c = "" Then\r\nTry\r\nc = CStr(f.GetCurrentComponentName())\r\nIf c <> "" Then v = "focus"\r\n'
+            "Catch\r\nEnd Try\r\nEnd If\r\n"
+            f'ThisForm.Variables("EcmrsHelpUrl").Value = "{HELP_FORM_URL}" & If(c = "", "", "/" & c) & "?via=" & v & "&ev={ev}"\r\n'
+            'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
     raise_find_field = (
-        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
-        "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
-        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\n"
-        "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
-        "            ' Find the clicked field (sets EcmrsHelpUrl); step 1 opens it.\r\n"
-        "            ThisForm.GenerateEvent(\"ENF_FindHelpField\")\r\n"
-        "            ReturnValue = \"0\"\r\n"
-        "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
+        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\nImports System\r\nImports Mongoose.Scripting\r\n"
+        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\nInherits GlobalScript\r\nSub Main()\r\n"
+        'ThisForm.GenerateEvent("ENF_FindHelpField")\r\n'
+        'ReturnValue = "0"\r\nEnd Sub\r\nEnd Class\r\nEnd Namespace\r\n)')
+
+    def response_xml(text):
+        """<Response>, plus <Response2> for a long script: Infor's exports split a response at 500
+        characters. Written escaped, so the split never falls inside an entity."""
+        if text.startswith("SCRIPTTEXT(") and "'" in text:
+            raise SystemExit("inline script contains an apostrophe: SyteLine reads it as a quote")
+        head, tail = text[:500], text[500:]
+        if head.endswith("\r"):
+            head, tail = head[:-1], "\r" + tail
+        if len(tail) > 480:
+            raise SystemExit(f"response too long for <Response> + <Response2>: {len(text)} characters")
+        out = f"               <Response>{html.escape(head, quote=False)}</Response>\r\n"
+        if tail:
+            out += f"               <Response2>{html.escape(tail, quote=False)}</Response2>\r\n"
+        return out
+
     handlers = [
         ("ENF_NotifyUser", 0, 49,
          "SLEmployees( FILTER(EmpNum=FP(AssignedEmpNum)) SETV(EcmrsNotifyEmail=Username) )"),
@@ -449,7 +439,7 @@ def build(text):
     f.text = f.text.replace(anchor, "".join(
         f'            <EventHandler Name="{name}" Sequence="{seq}">\r\n'
         f'               <ResponseType>{rt}</ResponseType>\r\n'
-        f'               <Response>{resp}</Response>\r\n'
+        + response_xml(resp) +
         '            </EventHandler>\r\n' for name, seq, rt, resp in handlers) + anchor, 1)
     variables = [
         ("ehp1_ENF_NotifyUser0", "CmrNum=P(CmrNum), EAddres=V(EcmrsNotifyEmail), Priority = P(Priority)"),
