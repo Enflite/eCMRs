@@ -64,6 +64,8 @@ legacy forms are the requirements reference.
 - **2026-09-29:** Right-click → Help points at the Enflite help ([Enflite/help](https://github.com/Enflite/help))
   on `http://localhost:5173` for now (`HELP_SITE` in `tools/apply_form_changes.py`); `docs/help/` here is
   the old S: drive copy, replaced by that repo.
+- **2026-09-30:** `HELP_SITE` is now the hosted help on Vercel (`https://help-212448u20-hellojakesmiths-projects.vercel.app`), so right-click → Help
+  works without the help running on your PC. Rebuilt `exports/eCMRs_v2.XML`; to import on TRN.
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 

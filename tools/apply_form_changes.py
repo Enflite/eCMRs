@@ -83,8 +83,8 @@ What it changes (v1 -> v2):
      from an event parameter naming a form component, else GetCurrentComponentName() (the focused
      component), with ?via=parm|focus|none so the help server's log shows which one worked -
      (<HELP_SITE>/go/syteline/ecmrs/<component>, which the Enflite help redirects to that field's
-     page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is http://localhost:5173
-     for now (the help's dev server). HelpFileName stays as the Infor
+     page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is the hosted help
+     (https://help-212448u20-hellojakesmiths-projects.vercel.app; was http://localhost:5173, the dev server). HelpFileName stays as the Infor
      topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
      handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
   18. Help button deleted (team, 2026-09-29: keep right-click -> Help, delete the button): btn_help
@@ -128,9 +128,9 @@ HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_
 # HelpFileName: SyteLine puts Infor's help address in front of any HelpFileName, and browsers won't
 # open file: links from SyteLine (GetFile.aspx page, TRN 2026-09-29). The help's /go/<space>/<form>/
 # <component> link redirects to the page for the component clicked (its aliases), else the form's page.
-# For now: the help's dev server on the user's own PC (npm run dev in Enflite/help: client on :5173,
-# which passes /go to the API on :3000). Change HELP_SITE to the https:// address once it is hosted.
-HELP_SITE = "http://localhost:5173"
+# HELP_SITE is the hosted help on Vercel (2026-09-30; was http://localhost:5173, the dev server).
+# Change it here, rebuild and re-import if the site moves.
+HELP_SITE = "https://help-212448u20-hellojakesmiths-projects.vercel.app"
 HELP_FORM_URL = f"{HELP_SITE}/go/syteline/ecmrs"
 HELP_BUTTON_URL = HELP_FORM_URL  # used by StdFormHelp and as EcmrsHelpUrl's start value
 HELP_BASE_URL = HELP_FORM_URL + "/"

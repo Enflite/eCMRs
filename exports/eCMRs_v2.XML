@@ -3237,7 +3237,7 @@ Sub Main()
                     comp = ""
                 End Try
             End If
-            ThisForm.Variables("EcmrsHelpUrl").Value = "http://localhost:5173/go/syteline/ecmrs" &amp; If(comp = "", "", "/" &amp; comp) &amp; "?via=" &amp; via
+            ThisForm.Variables("EcmrsHelpUrl").Value = "https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs" &amp; If(comp = "", "", "/" &amp; comp) &amp; "?via=" &amp; via
             ReturnValue = "0"
 End Sub
 End Class
@@ -3250,7 +3250,7 @@ End Namespace
             </EventHandler>
             <EventHandler Name="StdFormHelp" Sequence="0">
                <ResponseType>39</ResponseType>
-               <Response>URL(http://localhost:5173/go/syteline/ecmrs) ( )</Response>
+               <Response>URL(https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs) ( )</Response>
             </EventHandler>
             <EventHandler Name="StdFormPredisplay" Sequence="0">
                <ResponseType>0</ResponseType>
@@ -3293,7 +3293,7 @@ End Namespace
                <Description />
             </Variable>
             <Variable Name="EcmrsHelpUrl">
-               <Value>http://localhost:5173/go/syteline/ecmrs</Value>
+               <Value>https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs</Value>
                <Value2 />
                <Value3 />
                <Description />
