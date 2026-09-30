@@ -364,10 +364,13 @@ def build(text):
     if not m:
         raise SystemExit("NotifyEngineering handler not found")
     f.text = f.text[:m.start()] + f.text[m.end():]
-    help_script = (
+    # The same script runs for both help events: on TRN (2026-09-30) right-click a field -> Help
+    # raised StdFormHelp, not StdFormComponentHelp (the help log showed /go/syteline/ecmrs with no
+    # ?via=), so the form's Help also looks for the field. ev= says which event sent the link.
+    help_script = lambda event, ev: (
         "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
         "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
-        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormComponentHelp_0\r\n"
+        f"Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_{event}_0\r\n"
         "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
         "            ' Which component was right-clicked: an event parameter naming a component on the\r\n"
         "            ' form, else the component with the focus. Late-bound in Try blocks, so a member this\r\n"
@@ -401,7 +404,7 @@ def build(text):
         "                    comp = \"\"\r\n"
         "                End Try\r\n"
         "            End If\r\n"
-        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via\r\n"
+        f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via &amp; \"&amp;ev={ev}\"\r\n"
         "            ReturnValue = \"0\"\r\n"
         "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
     handlers = [
@@ -410,9 +413,10 @@ def build(text):
         ("ENF_NotifyUser", 1, 43,
          "EVENT(ENF_NotifyUserWithCMR) PARMS(V(ehp1_ENF_NotifyUser0))  ERRORMESSAGE(FAIL TO SEND EMAIL! "
          "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
-        ("StdFormComponentHelp", 0, 33, help_script),
+        ("StdFormComponentHelp", 0, 33, help_script("StdFormComponentHelp", "field")),
         ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("StdFormHelp", 0, 39, f"URL({HELP_BUTTON_URL}) ( )"),
+        ("StdFormHelp", 0, 33, help_script("StdFormHelp", "form")),
+        ("StdFormHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
         ("StdFormPredisplay", 0, 0,
          "SLFormExtMsgEntities.LoadJSONVar( PARMS(VAR eCMRs, RVAR V(JSONVarNotInterpretWithLIT)) )"),
         ("StdFormPredisplay", 1, 22, "SETVARVALUES(JSONVarNotInterpret=V(JSONVarNotInterpretWithLIT))"),
