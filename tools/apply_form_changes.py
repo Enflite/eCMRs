@@ -367,6 +367,11 @@ def build(text):
     # The same script runs for both help events: on TRN (2026-09-30) right-click a field -> Help
     # raised StdFormHelp, not StdFormComponentHelp (the help log showed /go/syteline/ecmrs with no
     # ?via=), so the form's Help also looks for the field. ev= says which event sent the link.
+    # For StdFormHelp the script lives in a new event, ENF_FindHelpField, and StdFormHelp step 0 is
+    # a one-line script raising it: importing the version where step 0 changed from a URL to a
+    # script left TRN with the new type but the old URL(...) text ("SCRIPTTEXT keyword required for
+    # InlineScript event handlers"). Step 0 keeps the inline-script type now, so importing this is a
+    # text change there, and ENF_FindHelpField is new, so FormSync adds it whole.
     help_script = lambda event, ev: (
         "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
         "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
@@ -407,6 +412,15 @@ def build(text):
         f"            ThisForm.Variables(\"EcmrsHelpUrl\").Value = \"{HELP_FORM_URL}\" &amp; If(comp = \"\", \"\", \"/\" &amp; comp) &amp; \"?via=\" &amp; via &amp; \"&amp;ev={ev}\"\r\n"
         "            ReturnValue = \"0\"\r\n"
         "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
+    raise_find_field = (
+        "SCRIPTTEXT(Option Explicit On\r\nOption Strict Off\r\n\r\nImports System\r\n"
+        "Imports Microsoft.VisualBasic\r\nImports Mongoose.IDO.Protocol\r\nImports Mongoose.Scripting\r\n\r\n"
+        "Namespace SyteLine.GlobalScripts\r\nPublic Class EvHandler_StdFormHelp_0\r\n"
+        "Inherits GlobalScript\r\n\r\nSub Main()\r\n"
+        "            ' Find the clicked field (sets EcmrsHelpUrl); step 1 opens it.\r\n"
+        "            ThisForm.GenerateEvent(\"ENF_FindHelpField\")\r\n"
+        "            ReturnValue = \"0\"\r\n"
+        "End Sub\r\nEnd Class\r\nEnd Namespace\r\n)")
     handlers = [
         ("ENF_NotifyUser", 0, 49,
          "SLEmployees( FILTER(EmpNum=FP(AssignedEmpNum)) SETV(EcmrsNotifyEmail=Username) )"),
@@ -415,8 +429,9 @@ def build(text):
          "CHECK THE ASSIGNED EMPLOYEE, OR USER DOES NOT HAVE ACCESS TO THIS ACTION.) SUCCESSMESSAGE(EMAIL SENT!)"),
         ("StdFormComponentHelp", 0, 33, help_script("StdFormComponentHelp", "field")),
         ("StdFormComponentHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
-        ("StdFormHelp", 0, 33, help_script("StdFormHelp", "form")),
+        ("StdFormHelp", 0, 33, raise_find_field),
         ("StdFormHelp", 1, 39, "URL(V(EcmrsHelpUrl)) ( )"),
+        ("ENF_FindHelpField", 0, 33, help_script("ENF_FindHelpField", "form")),
         ("StdFormPredisplay", 0, 0,
          "SLFormExtMsgEntities.LoadJSONVar( PARMS(VAR eCMRs, RVAR V(JSONVarNotInterpretWithLIT)) )"),
         ("StdFormPredisplay", 1, 22, "SETVARVALUES(JSONVarNotInterpret=V(JSONVarNotInterpretWithLIT))"),

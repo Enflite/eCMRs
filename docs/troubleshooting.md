@@ -910,12 +910,11 @@ where `StdFormHelp` runs the find-the-field script.
 new type. The export itself is correct: both `StdFormComponentHelp` and `StdFormHelp` step 0 start
 with `SCRIPTTEXT(`.
 
-**Fix** (no Design Mode): import the same `exports/eCMRs_v2.XML` through **FormSync** again. Step 0
-is now already an inline script on TRN, so the second import only changes its text, and FormSync
-does update text on an existing step (the `HELP_SITE` change from `localhost:5173` to the Vercel
-address reached TRN that way). If the dialog still shows after that, the next step is to move the
-script to an event name TRN has never had, so FormSync creates it fresh (as with
-`c_reason_code_v2` above).
+**Fix (in the XML, 2026-09-30)**: `StdFormHelp` step 0 keeps the inline-script type TRN now has
+and becomes a one-line script, `ThisForm.GenerateEvent("ENF_FindHelpField")`. The find-the-field
+script moved to the new event `ENF_FindHelpField` (step 0), which TRN has never had, so FormSync
+adds it whole. Step 1 is unchanged (`URL(V(EcmrsHelpUrl))`). `tools/apply_form_changes.py`, rebuilt
+`exports/eCMRs_v2.XML`. Import it through **FormSync**; no Design Mode.
 
 **Confirm**: right-click **Item** → **Help** opens the Item page with no dialog.
 
