@@ -859,7 +859,7 @@ works.
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),
 > React + Express + MongoDB). The script now builds `<HELP_SITE>/go/syteline/ecmrs/<component>`
-> (`HELP_SITE` = `https://help-212448u20-hellojakesmiths-projects.vercel.app` since 2026-09-30; before that `http://localhost:5173`, the help's dev server), and the help
+> (`HELP_SITE` = `https://help-seven-xi.vercel.app`, the Vercel production domain, since 2026-09-30; before that `https://help-212448u20-hellojakesmiths-projects.vercel.app`, one fixed deployment, and `http://localhost:5173`, the help's dev server), and the help
 > redirects to the field's page. The `docs/help/c/` pages below are the old S: drive version.
 >
 > **Which field was clicked**: the script tries an event parameter that names a form component

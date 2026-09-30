@@ -3281,7 +3281,7 @@ Catch
 v = "nofocusapi"
 End Try
 End If
-f.Variables("EcmrsHelpUrl").Value = "https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=" &amp; q.Split(","c)(0) &amp; "&amp;p=" &amp; System.Uri.EscapeDataString(q)
+f.Variables("EcmrsHelpUrl").Value = "https://help-seven-xi.vercel.app/go/syteline/ecmrs" &amp; If(c = "", "", "/" &amp; c) &amp; "?via=" &amp; v &amp; "&amp;ev=" &amp; q.Split(","c)(0) &amp; "&amp;p=" &amp; System.Uri.EscapeDataString(q)
 ReturnValue = "0"
 End Sub
 End Class
@@ -3329,7 +3329,7 @@ End Namespace
                <Description />
             </Variable>
             <Variable Name="EcmrsHelpUrl">
-               <Value>https://help-212448u20-hellojakesmiths-projects.vercel.app/go/syteline/ecmrs</Value>
+               <Value>https://help-seven-xi.vercel.app/go/syteline/ecmrs</Value>
                <Value2 />
                <Value3 />
                <Description />

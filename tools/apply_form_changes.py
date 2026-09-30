@@ -84,7 +84,8 @@ What it changes (v1 -> v2):
      component), with ?via=parm|focus|none so the help server's log shows which one worked -
      (<HELP_SITE>/go/syteline/ecmrs/<component>, which the Enflite help redirects to that field's
      page) and a ResponseType 39 URL(V(EcmrsHelpUrl)) opens it. HELP_SITE is the hosted help
-     (https://help-212448u20-hellojakesmiths-projects.vercel.app; was http://localhost:5173, the dev server). HelpFileName stays as the Infor
+     (https://help-seven-xi.vercel.app, the Vercel production domain, 2026-09-30; before that a single-deployment
+     address, and http://localhost:5173, the dev server). HelpFileName stays as the Infor
      topic, used if SyteLine still runs its own help after ours. Confirmed on TRN 2026-09-29: the
      handler runs (the browser then shows SyteLine's GetFile.aspx page for the file: address).
   18. Help button deleted (team, 2026-09-29: keep right-click -> Help, delete the button): btn_help
@@ -128,9 +129,10 @@ HELP_URL = "default.html?helpcontent=mergedProjects/sl_qcs/forms/nonmaterial/qc_
 # HelpFileName: SyteLine puts Infor's help address in front of any HelpFileName, and browsers won't
 # open file: links from SyteLine (GetFile.aspx page, TRN 2026-09-29). The help's /go/<space>/<form>/
 # <component> link redirects to the page for the component clicked (its aliases), else the form's page.
-# HELP_SITE is the hosted help on Vercel (2026-09-30; was http://localhost:5173, the dev server).
+# HELP_SITE is the help's Vercel production domain (2026-09-30), which always serves the latest
+# deployment (the help-212448u20-... address before it was one fixed deployment).
 # Change it here, rebuild and re-import if the site moves.
-HELP_SITE = "https://help-212448u20-hellojakesmiths-projects.vercel.app"
+HELP_SITE = "https://help-seven-xi.vercel.app"
 HELP_FORM_URL = f"{HELP_SITE}/go/syteline/ecmrs"
 HELP_BUTTON_URL = HELP_FORM_URL  # used by StdFormHelp and as EcmrsHelpUrl's start value
 HELP_BASE_URL = HELP_FORM_URL + "/"
