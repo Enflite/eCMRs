@@ -876,6 +876,19 @@ attributes match its XQuery.
    **Context Viewer** app.
 5. There are no matching documents in IDM yet.
 
+## IDM finds the files on QC_CMRs but not on eCMRs (CmrNum doesn't match)
+
+**Symptom** (TRN 2026-09-30): same Item and Job on both forms; the IDM `bc/search` request from
+QC_CMRs returns the files, the one from eCMRs (`screenId: CSI_eCMRs`) returns none.
+
+**Cause**: both use the shared `CMR_Documents` Business Context Model, whose query requires
+`@CmrNum = "{CmrNum}"`. QC_CMRs sends its number padded to 10 characters (`"         2"`), which is
+what the old files carry; eCMRs sends `2` or `CMR-YYMMDD-HHMMSS`, so nothing matches.
+
+**Fix**: an IDM Business Context Model entry for screen `CSI_eCMRs` that matches on the Item only
+(Implementation Plan 4c step 3.4). Confirm with the same `bc/search` request in the browser's
+network tab. Environments: TRN, then production.
+
 ## Right-click → Help opening the eCMRs pages (`StdFormComponentHelp`)
 
 > **2026-09-29:** the pages moved to the Enflite help ([Enflite/help](https://github.com/Enflite/help),

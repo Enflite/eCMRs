@@ -192,7 +192,10 @@ Before importing:
       | `VendNum` | `P(Vendor)` |
 
    3. **BOD Reference**: copy what QC_CMRs has there (blank if blank). Save.
-   4. In IDM, open the **Business Context Model** entry for entity `CMR_Documents`. If it names a screen (`QC_CMRs`), add the same entry for screen `eCMRs`; if the screen is blank it already applies. Its XQuery decides what the panel matches on: to see an Item's CMR documents on every CMR for that Item (the team's ask), it has to match on `Item` (`@Item = "{Item}"`); matching on `CmrNum` shows only that CMR's documents (old QC_CMRs documents carry the old CMR numbers, so they won't show on new eCMRs numbers).
+   4. **Done on TRN 2026-09-30:** eCMRs sends `CMR_Documents` (IDM search request from screen `CSI_eCMRs`). But the shared Business Context Model query requires `@CmrNum` to match (`@CmrNum = "{CmrNum}" AND (@JobNum ... OR @Item = "{Item}")`), and old QC_CMRs files carry the padded old number (`"         2"`), which an eCMRs number (`2`, or `CMR-260930-111742`) never equals. Decision (team, 2026-09-30): the CMR number must not be required; match on the **Item**. In IDM **Business Context Model**, add an entry for entity `CMR_Documents`, document type `ENF_CMRFiles`, screen `CSI_eCMRs` (QC_CMRs keeps the shared entry), with the query:
+      `/ENF_CMRFiles[@AccountingEntity = "{accountingEntity}" AND @EntityType = "{entityType}" AND @Item = "{Item}"]`
+      Keep sending `CmrNum` (step 2): files attached from eCMRs are stamped with it, so each file still records its CMR. Check: re-open eCMRs on a CMR with Item `85274-01`; the browser's `bc/search` request shows the query ending `@Item = "85274-01"]` and returns that Item's files (4 on TRN). If it still shows the old query, IDM is using the shared entry: tell the team before changing it, because that changes QC_CMRs too.
+      Open: a CMR with no Item sends `Item = ""` and would match every file with a blank Item. Make **Item** required on eCMRs, unless some CMRs have no Item (team to confirm).
    5. After the import (step 4): open eCMRs on a CMR with an Item and open the **Related Information** panel. The **Context Viewer** app shows the JSON eCMRs sends (`"entityType": "CMR_Documents"` with the values above).
    Until the row exists, `LoadJSONVar` has nothing to load for `eCMRs`: the panel stays empty (and a message may show when the form opens).
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
@@ -216,7 +219,7 @@ Tick each step as you go.
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
 - [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. Right-click → **Help** opens pages from there.
-- [ ] 2b. IDM: in production's **Form External Message Entities**, add the same `eCMRs` / `CMR_Documents` row as on TRN (4c step 3), and the Business Context Model entry if one was needed. Export TRN's rows to Excel first as the checklist.
+- [ ] 2b. IDM: in production's **Form External Message Entities**, add the same `eCMRs` / `CMR_Documents` row as on TRN, and in IDM the `CSI_eCMRs` Business Context Model entry matching on Item (4c step 3). Export TRN's rows to Excel first as the checklist.
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**
