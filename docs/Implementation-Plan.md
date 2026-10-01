@@ -154,7 +154,7 @@ Why each one is built this way (and what failed first): [`troubleshooting.md`](t
 
 ### 4c. Team feedback round 1 (2026-09-29)
 
-Built by [`tools/apply_form_changes.py`](../tools/apply_form_changes.py) (steps 13-17) into
+Built by [`tools/apply_form_changes.py`](../tools/apply_form_changes.py) (steps 13-20) into
 [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML). New and moved things keep the purple highlight
 where they had it.
 
@@ -170,6 +170,8 @@ where they had it.
 | Delete the Help button, keep right-click Help (2026-09-29) | `btn_help` and its `OpenEcmrsHelp` handler removed from the file | Not on the form (TRN screenshot 2026-09-30: no **Help** next to **Notify**). If FormSync ever leaves it, the fix goes in the XML (the build script adds `btn_help` back with `Hidden` set, re-import), never Design Mode |
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Remove Sub Assembly (2026-09-30) | **Sub Assembly** hidden (label and field), like Top Level PN. Column and data kept | Not on the form; old CMRs open without errors |
+| Item required (2026-09-30) | **Item** marked required (`Flags` 513: bit 512 = Required) so the IDM look-up always has an Item | Save a CMR with no Item: SyteLine asks for it. Existing CMRs without an Item need one on their next save |
+| Purple highlight colour (2026-10-01) | Highlighted fields' background is the team's purple **#E0CDE6** (`BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )`, step 20), was #EDE0FF. Text colour unchanged | Highlighted fields show the new, slightly greyer purple |
 | Dash under Next Assy label | The label wrapped ("Next _Assy"); now **Assy Desc:** | Label reads **Assy Desc:** on two lines |
 
 Before importing:
@@ -177,7 +179,7 @@ Before importing:
 1. Copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` again (it now has the `c\` folder for right-click Help and the procedures).
 2. **Event Handlers** form: open `ENF_NotifyUserWithCMR` and check its actions only use `CmrNum`, `EAddres` and `Priority` (the eCMRs values: `CMR-...` number, the username, High/Medium/Low), and don't look the CMR up in the old `rs_cmr` table. If they do, write down what they read: they need an eCMRs version.
 3. IDM (from the [AddIDM guide](reference/Add_IDM_Capabilities_to_a_SyteLine_Form.docx), SyteLine 10 part). eCMRs sends the same entity as the old **QC_CMRs** form, **`CMR_Documents`**, so the CMR document type and its IDM Business Context Model already exist. On TRN, QC_CMRs's row (screenshot 2026-09-30) is: `accountingEntity` = `V(Parm_Site)`, `CmrNum` = `P(CmrNum)`, `Item` = `P(RsCrcvrItem)`, `JobNum` = `P(rs_cmrUf_ENF_CMR_JobNum)`, `PoLine` = `P(rs_cmrUf_ENF_CMR_PoNumLine)`, `PoNum` = `P(rs_cmrUf_ENF_CMR_PoNum)`, `RFQNum` = `P(rs_cmrUf_ENF_CMR_RFQNum)`, `VendNum` = `P(rs_cmrUf_ENF_CMR_Vendor)`.
-   1. **Form External Message Entities** → **New**: **Form Name** `eCMRs`, **External Message Entity** `CMR_Documents`.
+   1. **Form External Message Entities** → **New**: **Form Name** `eCMRs`, **External Message Entity** `CMR_Documents` (done 2026-09-30; to change to `ECMR_Documents`, step 4).
    2. **Entity Attributes**: the same attribute names (case sensitive), with the eCMRs properties as values:
 
       | Attribute | Value |
@@ -192,10 +194,7 @@ Before importing:
       | `VendNum` | `P(Vendor)` |
 
    3. **BOD Reference**: copy what QC_CMRs has there (blank if blank). Save.
-   4. **Done on TRN 2026-09-30:** eCMRs sends `CMR_Documents` (IDM search request from screen `CSI_eCMRs`). But the shared Business Context Model query requires `@CmrNum` to match (`@CmrNum = "{CmrNum}" AND (@JobNum ... OR @Item = "{Item}")`), and old QC_CMRs files carry the padded old number (`"         2"`), which an eCMRs number (`2`, or `CMR-260930-111742`) never equals. Decision (team, 2026-09-30): the CMR number must not be required; match on the **Item**. In IDM **Business Context Model**, add an entry for entity `CMR_Documents`, document type `ENF_CMRFiles`, screen `CSI_eCMRs` (QC_CMRs keeps the shared entry), with the query:
-      `/ENF_CMRFiles[@AccountingEntity = "{accountingEntity}" AND @EntityType = "{entityType}" AND @Item = "{Item}"]`
-      Keep sending `CmrNum` (step 2): files attached from eCMRs are stamped with it, so each file still records its CMR. Check: re-open eCMRs on a CMR with Item `85274-01`; the browser's `bc/search` request shows the query ending `@Item = "85274-01"]` and returns that Item's files (4 on TRN). If it still shows the old query, IDM is using the shared entry: tell the team before changing it, because that changes QC_CMRs too.
-      Open: a CMR with no Item sends `Item = ""` and would match every file with a blank Item. Make **Item** required on eCMRs, unless some CMRs have no Item (team to confirm).
+   4. **Done on TRN 2026-09-30:** eCMRs sends its message (IDM search request from screen `CSI_eCMRs`), but QC_CMRs's `CMR_Documents` model requires the CMR number to match, and old files carry the padded QC_CMRs number. Decision (team, 2026-09-30): look up by **Item**. The IDM set-up for that is planned in **[Enflite/IDM, eCMRs plan](https://github.com/Enflite/IDM/blob/main/docs/ecmrs/Implementation-Plan.md)**: a new entity **`ECMR_Documents`** → `ENF_CMRFiles` with XQuery `/ENF_CMRFiles[@AccountingEntity = "{accountingEntity}" AND @EntityType = "{entityType}" AND @Item = "{Item}"]` (documents attached from eCMRs only; old QC_CMRs files and numbers are not used on eCMRs), and this form's row switched from `CMR_Documents` to `ECMR_Documents` (same attribute rows). QC_CMRs's set-up is not touched. **Answered** (team, 2026-09-30): **Item** is required on eCMRs (build script step 19), so a CMR can't be saved without one.
    5. After the import (step 4): open eCMRs on a CMR with an Item and open the **Related Information** panel. The **Context Viewer** app shows the JSON eCMRs sends (`"entityType": "CMR_Documents"` with the values above).
    Until the row exists, `LoadJSONVar` has nothing to load for `eCMRs`: the panel stays empty (and a message may show when the form opens).
 4. Import `exports/eCMRs_v2.XML` through **FormSync** (Site scope), then check each row above.
@@ -219,7 +218,7 @@ Tick each step as you go.
 - [ ] 1. TRN sign-off from the team (section 6 all ticked). *Done 2026-09-29.*
 - [ ] 2. In production, check nothing named `ue_ecmrs` (table or IDO) or `eCMRs` (form) exists yet. If it does, stop and compare it with TRN first.
 - [ ] 2a. Help pages: copy [`help/`](help/) to `S:\Engineering\Individual Folders\JSmith\eCMRs\docs\help` (so `index.html` is in that folder), replacing what's there. Right-click → **Help** opens pages from there.
-- [ ] 2b. IDM: in production's **Form External Message Entities**, add the same `eCMRs` / `CMR_Documents` row as on TRN, and in IDM the `CSI_eCMRs` Business Context Model entry matching on Item (4c step 3). Export TRN's rows to Excel first as the checklist.
+- [ ] 2b. IDM: in production, the `ECMR_Documents` Business Context Model and the `eCMRs` Form External Message Entities row, per [Enflite/IDM's eCMRs plan](https://github.com/Enflite/IDM/blob/main/docs/ecmrs/Implementation-Plan.md) section 5. Export TRN's rows to Excel first as the checklist.
 - [ ] 3. Have these files ready from GitHub: [`exports/production/ue_ecmrs_SqlColumns_import.csv`](../exports/production/ue_ecmrs_SqlColumns_import.csv), [`exports/production/ue_ecmrs_IdoProperties_import.csv`](../exports/production/ue_ecmrs_IdoProperties_import.csv), [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML), and [`production-build-sheet.md`](production-build-sheet.md) open for checking.
 
 **Table**

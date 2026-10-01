@@ -94,8 +94,9 @@ FIELDS = [
          text=["What is being asked for: describe the problem and the change requested. Always state "
                "what the part should be versus what it is, with sheet number and zone if applicable."]),
     dict(key="item", section="header", label="Item", components=["c_item"],
-         text=["The item (part number) the change is for. Selecting an item also filters the "
-               "Next Lvl Assy, Serial # and LOT # lists."],
+         text=["The item (part number) the change is for. Required: a CMR can't be saved without "
+               "one. Selecting an item also filters the Next Lvl Assy, Serial # and LOT # lists, and "
+               "the IDM Related Info panel shows the documents attached to CMRs for this item."],
          filled="Item Desc is filled in from the item.", related=["item_description", "serial_num", "lot_num"]),
     dict(key="item_description", section="header", label="Item Desc", components=["edit1_SITE"],
          text=["The description of the selected item."], filled="Filled in when an Item is selected. You can type over it.",

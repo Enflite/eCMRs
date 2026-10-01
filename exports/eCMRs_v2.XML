@@ -148,7 +148,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_close_date">
                <DeviceID>-1</DeviceID>
@@ -389,7 +389,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sDepartment</EffectiveCaption>
             </Component>
             <Component Name="c_dept_description">
@@ -411,7 +411,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sDescription</EffectiveCaption>
             </Component>
             <Component Name="c_due_date">
@@ -565,7 +565,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sNote</EffectiveCaption>
             </Component>
             <Component Name="c_hold_on_po">
@@ -610,7 +610,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_item">
                <DeviceID>-1</DeviceID>
@@ -630,11 +630,11 @@
                <ComboListSource>STDOLE SLItems(  PROPERTIES(Item,Description) DISPLAY(1,2))</ComboListSource>
                <DefaultFrom>Item(ItemDescription)</DefaultFrom>
                <PropertyClassName>Item</PropertyClassName>
-               <Flags>1</Flags>
+               <Flags>513</Flags>
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
             <Component Name="c_job_num">
@@ -701,7 +701,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_mdl">
                <DeviceID>-1</DeviceID>
@@ -1120,7 +1120,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_reported_by">
                <DeviceID>-1</DeviceID>
@@ -1141,7 +1141,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_req_costing">
                <DeviceID>-1</DeviceID>
@@ -1162,7 +1162,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>Req: Costing</EffectiveCaption>
             </Component>
             <Component Name="c_req_documentation">
@@ -1184,7 +1184,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>Req: Documentation</EffectiveCaption>
             </Component>
             <Component Name="c_req_material">
@@ -1206,7 +1206,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>Req: Material</EffectiveCaption>
             </Component>
             <Component Name="c_req_process">
@@ -1228,7 +1228,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>Req: Process</EffectiveCaption>
             </Component>
             <Component Name="c_req_tool_machine">
@@ -1250,7 +1250,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>Req: Tool/Machine</EffectiveCaption>
             </Component>
             <Component Name="c_requested_action">
@@ -1338,7 +1338,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_sox_impacted">
                <DeviceID>-1</DeviceID>
@@ -1403,7 +1403,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_top_level_pn">
                <DeviceID>-1</DeviceID>
@@ -1424,7 +1424,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
             </Component>
             <Component Name="c_vendor">
                <DeviceID>-1</DeviceID>
@@ -1492,7 +1492,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sWC</EffectiveCaption>
             </Component>
             <Component Name="c_wc_description">
@@ -1514,7 +1514,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; )</Post301Format>
+               <Post301Format>FORECOLOR(107,63,160) BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )</Post301Format>
                <EffectiveCaption>sDescription</EffectiveCaption>
             </Component>
             <Component Name="edit1_SITE">
@@ -1979,7 +1979,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Cause Code:</EffectiveCaption>
             </Component>
             <Component Name="l_close_date">
@@ -2177,7 +2177,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Dept:</EffectiveCaption>
             </Component>
             <Component Name="l_dept_description">
@@ -2199,7 +2199,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Dept Description:</EffectiveCaption>
             </Component>
             <Component Name="l_due_date">
@@ -2352,7 +2352,7 @@
                <ReadOnly>False</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>General Note:</EffectiveCaption>
             </Component>
             <Component Name="l_initial_change">
@@ -2374,7 +2374,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Initial Change:</EffectiveCaption>
             </Component>
             <Component Name="l_item">
@@ -2396,7 +2396,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Item:</EffectiveCaption>
             </Component>
             <Component Name="l_item1_SITE">
@@ -2418,7 +2418,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Item Desc:</EffectiveCaption>
             </Component>
             <Component Name="l_job_num">
@@ -2484,7 +2484,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>LOT #:</EffectiveCaption>
             </Component>
             <Component Name="l_mdl">
@@ -2858,7 +2858,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Reason Code:</EffectiveCaption>
             </Component>
             <Component Name="l_reported_by">
@@ -2880,7 +2880,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Reported By:</EffectiveCaption>
             </Component>
             <Component Name="l_requested_action">
@@ -2967,7 +2967,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Serial #:</EffectiveCaption>
             </Component>
             <Component Name="l_status">
@@ -3011,7 +3011,7 @@
                <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Sub Assembly:</EffectiveCaption>
             </Component>
             <Component Name="l_top_level_pn">
@@ -3033,7 +3033,7 @@
                <Hidden>True</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Top Level PN:</EffectiveCaption>
             </Component>
             <Component Name="l_vendor">
@@ -3099,7 +3099,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>Work Center:</EffectiveCaption>
             </Component>
             <Component Name="l_wc_description">
@@ -3121,7 +3121,7 @@
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
                <Format>JUSTIFY(R)</Format>
-               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)</Post301Format>
+               <Post301Format>BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)</Post301Format>
                <EffectiveCaption>WC Description:</EffectiveCaption>
             </Component>
          </Components>

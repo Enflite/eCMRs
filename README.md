@@ -89,6 +89,7 @@ legacy forms are the requirements reference.
 - **2026-09-30:** Right-click a field → **Help** opens that field's page in the Enflite help on TRN
   (**confirmed**, #21): the form's Help asks `ThisForm.GetCurrentComponentName()` directly. **F1** /
   **Help → Current Field** now use the same script; to import and check on TRN.
+- **2026-09-30:** **Item** is required (IDM looks documents up by Item).
 
 Production go-live gets a line here: `- **YYYY-MM-DD:** eCMRs live in **production** (after TRN).`
 
