@@ -93,6 +93,8 @@ What it changes (v1 -> v2):
      and its OpenEcmrsHelp handler are no longer in the file, so production never gets them. TRN
      already has them: if FormSync leaves the button there, delete it once in Design Mode (Implementation
      Plan 4c). HELP_BUTTON_URL is still the help address used by right-click -> Help.
+  20. Purple highlight colour (team, 2026-10-01): the background of the highlighted (new/changed)
+     fields becomes #E0CDE6 (224,205,230), from #EDE0FF (237,224,255). Text colour unchanged.
   19. Item is required (team, 2026-09-30): the IDM look-up matches on the Item, and a blank Item
      would match every document with a blank Item. Flags 1 -> 513 on c_item: bit 512 is REQUIRED
      (Mongoose ComponentFlags, read from WSEnums.dll: VALIDATE_IMMEDIATELY = 32, REQUIRED = 512;
@@ -366,6 +368,11 @@ def build(text):
         f.set(name, "Flags", "33")
     # 19. Item required.
     f.set("c_item", "Flags", "513")
+    # 20. Highlight background #E0CDE6.
+    old_bg, new_bg = "ARGB=[255, 237,224,255]", "ARGB=[255, 224,205,230]"
+    if old_bg not in f.text:
+        raise SystemExit("highlight background not found")
+    f.text = f.text.replace(old_bg, new_bg)
 
     # 15-17. New event handlers and the variables they use.
     f.set("btn_notify", "EventToGenerate", "ENF_NotifyUser")

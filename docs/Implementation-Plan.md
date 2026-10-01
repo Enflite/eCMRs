@@ -154,7 +154,7 @@ Why each one is built this way (and what failed first): [`troubleshooting.md`](t
 
 ### 4c. Team feedback round 1 (2026-09-29)
 
-Built by [`tools/apply_form_changes.py`](../tools/apply_form_changes.py) (steps 13-17) into
+Built by [`tools/apply_form_changes.py`](../tools/apply_form_changes.py) (steps 13-20) into
 [`exports/eCMRs_v2.XML`](../exports/eCMRs_v2.XML). New and moved things keep the purple highlight
 where they had it.
 
@@ -171,6 +171,7 @@ where they had it.
 | IDM widget should look up the Item | Infor's business-context handlers (`LoadJSONVar` / `FormatJSONVar` for form `eCMRs`, `inforBusinessContext`) | After the AddIDM setup (open item 11): the IDM widget shows the Item's documents |
 | Remove Sub Assembly (2026-09-30) | **Sub Assembly** hidden (label and field), like Top Level PN. Column and data kept | Not on the form; old CMRs open without errors |
 | Item required (2026-09-30) | **Item** marked required (`Flags` 513: bit 512 = Required) so the IDM look-up always has an Item | Save a CMR with no Item: SyteLine asks for it. Existing CMRs without an Item need one on their next save |
+| Purple highlight colour (2026-10-01) | Highlighted fields' background is the team's purple **#E0CDE6** (`BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; )`, step 20), was #EDE0FF. Text colour unchanged | Highlighted fields show the new, slightly greyer purple |
 | Dash under Next Assy label | The label wrapped ("Next _Assy"); now **Assy Desc:** | Label reads **Assy Desc:** on two lines |
 
 Before importing:

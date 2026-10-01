@@ -141,7 +141,7 @@ IMPL_ROW = "impl_row"  # checkbox + Reviewer: combo + name, one row (Implementat
 TOP_ROW = "top_row"    # Status / Assigned ID / Assigned / Notify - the real form's very
                        # first row, four components wide, unlike anything else on the form
 
-# Matches the design mockup's .new-box class exactly (background: #ede0ff -> RGB 237,224,255).
+# Matches the design mockup's .new-box class exactly (was #ede0ff; team colour #e0cde6 -> RGB 224,205,230 since 2026-10-01).
 # Marks every brand-new/carried-over field (Change Request Fields, Additional Fields, Reason
 # Code/Cause Code) so they visually stand out as additions on the live form. SyteLine's
 # Post301Format has no border property, so the mockup's #9b6fd1 border can't be replicated -
@@ -149,7 +149,7 @@ TOP_ROW = "top_row"    # Status / Assigned ID / Assigned / Notify - the real for
 # direct request - the same purple already used for the section GROUPLABEL text
 # ("Change Request Fields"/"Additional Fields") - so the new fields' labels, values, and
 # checkboxes carry purple TEXT as well as the purple background, not background alone.
-HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 237,224,255]; ) FORECOLOR(107,63,160)"
+HIGHLIGHT_FORMAT = "BACKCOLOR(TYPE=0; ARGB=[255, 224,205,230]; ) FORECOLOR(107,63,160)"
 
 def f(label, column, ctype, list_source=None, readonly=False, maintain_from_spec=None, property_class_name=None, default_from=None, highlight=False, ctrl_w=None, tall=True):
     # ctrl_w: optional per-field override of the control width the row's slot (A/A2/B) would
